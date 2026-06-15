@@ -8,7 +8,7 @@ Use this catalog to map reusable Agent Skills to MAPS phases.
 | --- | --- | --- | --- | --- |
 | Align | scaffold | `skills/scaffold` | Recommended | Creates the initial MAPS repository structure before phase work begins. |
 | Align |  |  |  |  |
-| Define | define-agent | `skills/define-agent` | Recommended | Creates the agent brief, including job, authorization boundary, scope, proof, escalation, and risks. |
+| Define | /define-agent | `skills/define-agent` | Recommended | Creates the agent brief, including job, authorization boundary, scope, proof, escalation, and risks. |
 | Define | agent-skills-authoring | https://github.com/zebbern/agent-skills-authoring | Useful reference | Strong reference for writing reusable, discoverable SKILL.md workflows. |
 | Design |  |  |  |  |
 | Build |  |  |  |  |

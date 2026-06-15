@@ -222,7 +222,7 @@ def docs_phase1(name: str) -> str:
 ## Risks And Assumptions</code></pre>
               <h2>Phase 1 Resources</h2>
               <section class="resources">
-                <article><h3>Skills</h3><ul data-maps-skills><li><strong>define-agent</strong></li></ul></article>
+                <article><h3>Skills</h3><ul data-maps-skills><li><strong>/define-agent</strong></li></ul></article>
                 <article><h3>Repos</h3><ul data-maps-repos><li>AesopScott/maps</li></ul></article>
                 <article><h3>Tools</h3><ul data-maps-tools><li>Agent Skills</li></ul></article>
                 <article><h3>Templates</h3><ul data-maps-templates><li>templates/agent-brief.md</li></ul></article>
@@ -258,7 +258,7 @@ def docs_css() -> str:
 def docs_manifest() -> str:
     phases = ",\n    ".join(f'"{p.number}-{p.slug}.md"' for p in PHASES)
     skills = ",\n    ".join(
-        f'{{ name: "{p.skill}", files: ["SKILL.md"] }}' for p in PHASES
+        f'{{ name: "{p.skill}", displayName: "/{p.skill}", files: ["SKILL.md"] }}' for p in PHASES
     )
     return dedent(
         f"""\
@@ -351,7 +351,7 @@ def docs_render() -> str:
           const byName = (items, names, key = "name") => (names || []).map((name) => items.find((item) => item[key] === name)).filter(Boolean);
           const skills = byName(manifest.skills, phaseResources.skills);
           const repos = byName(manifest.repos, phaseResources.repos, "label");
-          fill("[data-maps-skills]", skills, (li, item) => li.append(item.name === "scaffold" ? "/scaffold" : item.name));
+          fill("[data-maps-skills]", skills, (li, item) => li.append(item.displayName || (item.name === "scaffold" ? "/scaffold" : item.name)));
           fill("[data-maps-repos]", repos, (li, item) => {
             const a = document.createElement("a");
             a.href = item.url;

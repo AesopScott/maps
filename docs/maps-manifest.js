@@ -33,6 +33,7 @@ window.MAPS_MANIFEST = {
     },
     {
       name: "define-agent",
+      displayName: "/define-agent",
       files: ["SKILL.md"]
     },
     {

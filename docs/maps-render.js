@@ -65,7 +65,7 @@
 
     renderResourceList("[data-maps-skills]", skillItems, (li, skill) => {
       const strong = document.createElement("strong");
-      strong.textContent = skill.name === "scaffold" ? "/scaffold" : skill.name;
+      strong.textContent = skill.displayName || (skill.name === "scaffold" ? "/scaffold" : skill.name);
       li.appendChild(strong);
       li.append(` includes ${skill.files.join(", ")}.`);
     });
