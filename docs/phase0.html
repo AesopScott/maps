@@ -6,6 +6,8 @@
     <title>MAPS: Phase Alignment</title>
     <meta name="description" content="MAPS structures Multi-Agent Pipeline Skills, starting with Phase 00: Phase Alignment.">
     <link rel="stylesheet" href="./styles.css">
+    <script src="./maps-manifest.js" defer></script>
+    <script src="./maps-render.js" defer></script>
   </head>
   <body>
     <div class="shell">
@@ -169,28 +171,12 @@
           </div>
 
           <div class="structure">
-            <pre class="file-tree" aria-label="MAPS repository structure"><code>maps/
+            <pre class="file-tree" aria-label="MAPS repository structure"><code data-maps-tree>maps/
   docs/
     phase0.html
-    styles.css
-  phases/
-    00-phase-alignment.md
-    01-define.md
-    ...
   skills/
-    phase-alignment/
-      SKILL.md
-    define-agent/
-      SKILL.md
-    ...
-  templates/
-    phase-alignment-brief.md
-    agent-brief.md
-    ...
-  catalogs/
-    repos.md
-    skills.md
-    tools.md</code></pre>
+    scaffold/
+      SKILL.md</code></pre>
 
             <div class="artifact-list">
               <div class="artifact">
@@ -224,36 +210,29 @@
           <div class="resource-grid">
             <article class="resource-panel">
               <h3>Skills</h3>
-              <ul>
-                <li><strong>/scaffold</strong> creates the MAPS repo structure, phase docs, phase skills, templates, catalogs, project page, README, license, and gitignore.</li>
-                <li><strong>phase-alignment</strong> captures lifecycle names, boundaries, scaffolding decisions, and open questions.</li>
+              <ul data-maps-skills>
+                <li><strong>/scaffold</strong> includes SKILL.md and scripts/create_maps_scaffold.py.</li>
               </ul>
             </article>
 
             <article class="resource-panel">
               <h3>Repos</h3>
-              <ul>
-                <li><a href="https://github.com/AesopScott/maps">AesopScott/maps</a> is the working MAPS repository.</li>
-                <li><a href="https://github.com/VoltAgent/awesome-agent-skills">VoltAgent/awesome-agent-skills</a> is a reference catalog for reusable agent skills.</li>
-                <li><a href="https://github.com/hqhq1025/skill-optimizer">hqhq1025/skill-optimizer</a> is a reference for skill lifecycle tooling.</li>
+              <ul data-maps-repos>
+                <li><a href="https://github.com/AesopScott/maps">AesopScott/maps</a></li>
               </ul>
             </article>
 
             <article class="resource-panel">
               <h3>Tools</h3>
-              <ul>
-                <li><strong>Python</strong> runs the scaffold generator.</li>
-                <li><strong>GitHub CLI</strong> creates and pushes the remote repo.</li>
-                <li><strong>Git</strong> records the scaffold and later phase changes.</li>
+              <ul data-maps-tools>
+                <li><strong>Python</strong></li>
               </ul>
             </article>
 
             <article class="resource-panel">
               <h3>Catalogs</h3>
-              <ul>
-                <li><code>catalogs/skills.md</code> records skills by MAPS phase.</li>
-                <li><code>catalogs/repos.md</code> records useful repositories by MAPS phase.</li>
-                <li><code>catalogs/tools.md</code> records tools and services by MAPS phase.</li>
+              <ul data-maps-catalogs>
+                <li><code>catalogs/skills.md</code></li>
               </ul>
             </article>
           </div>

@@ -141,11 +141,28 @@ def docs_phase0(name: str) -> str:
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>{name}: Phase Alignment</title>
             <link rel="stylesheet" href="./styles.css">
+            <script src="./maps-manifest.js" defer></script>
+            <script src="./maps-render.js" defer></script>
           </head>
           <body>
             <main>
               <h1>{name}</h1>
               <p>Start with Phase 00: Phase Alignment. Agree on the scaffold before defining, designing, building, equipping, evaluating, deploying, observing, or improving agents.</p>
+              <h2>Repository Structure</h2>
+              <pre><code data-maps-tree>maps/
+  docs/
+    phase0.html
+  skills/
+    scaffold/
+      SKILL.md</code></pre>
+              <h2>Phase 0 Resources</h2>
+              <section class="resources">
+                <article><h3>Skills</h3><ul data-maps-skills><li><strong>/scaffold</strong></li></ul></article>
+                <article><h3>Repos</h3><ul data-maps-repos><li>AesopScott/maps</li></ul></article>
+                <article><h3>Tools</h3><ul data-maps-tools><li>Python</li></ul></article>
+                <article><h3>Catalogs</h3><ul data-maps-catalogs><li>catalogs/skills.md</li></ul></article>
+              </section>
+              <h2>Phase Sequence</h2>
               <ol>
                 <li>Phase Alignment</li>
                 <li>Define</li>
@@ -172,8 +189,100 @@ def docs_css() -> str:
         main { max-width: 860px; margin: 0 auto; padding: 64px 24px; }
         h1 { font-size: clamp(42px, 8vw, 84px); line-height: 1; margin: 0 0 24px; }
         p { color: #58645f; font-size: 20px; }
+        pre { overflow-x: auto; padding: 18px; border-radius: 8px; color: #e8f1ec; background: #17211f; }
         ol { display: grid; gap: 10px; padding: 0; list-style-position: inside; }
         li { padding: 14px 16px; border: 1px solid #d8dfdb; border-radius: 8px; background: white; }
+        .resources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        article { padding: 16px; border: 1px solid #d8dfdb; border-radius: 8px; background: white; }
+        article ul { padding-left: 20px; }
+        article li { padding: 0; border: 0; }
+        @media (max-width: 720px) { .resources { grid-template-columns: 1fr; } }
+        """
+    )
+
+
+def docs_manifest() -> str:
+    phases = ",\n    ".join(f'"{p.number}-{p.slug}.md"' for p in PHASES)
+    skills = ",\n    ".join(
+        f'{{ name: "{p.skill}", files: ["SKILL.md"] }}' for p in PHASES
+    )
+    return dedent(
+        f"""\
+        window.MAPS_MANIFEST = {{
+          pages: [{{ file: "phase0.html", label: "Phase 0", title: "Phase Alignment" }}],
+          phases: [
+            {phases}
+          ],
+          skills: [
+            {{ name: "scaffold", files: ["SKILL.md", "scripts/create_maps_scaffold.py"] }},
+            {skills}
+          ],
+          templates: [
+            "phase-alignment-brief.md",
+            "agent-brief.md",
+            "workflow-spec.md",
+            "tool-map.md",
+            "eval-scorecard.md",
+            "deployment-plan.md",
+            "observation-report.md",
+            "improvement-backlog.md"
+          ],
+          catalogs: ["repos.md", "skills.md", "tools.md"],
+          repos: [
+            {{ label: "AesopScott/maps", url: "https://github.com/AesopScott/maps" }},
+            {{ label: "VoltAgent/awesome-agent-skills", url: "https://github.com/VoltAgent/awesome-agent-skills" }},
+            {{ label: "hqhq1025/skill-optimizer", url: "https://github.com/hqhq1025/skill-optimizer" }}
+          ],
+          tools: ["Python", "GitHub CLI", "Git"]
+        }};
+        """
+    )
+
+
+def docs_render() -> str:
+    return dedent(
+        """\
+        (function () {
+          const manifest = window.MAPS_MANIFEST;
+          if (!manifest) return;
+          const line = (depth, text) => `${"  ".repeat(depth)}${text}`;
+          const tree = document.querySelector("[data-maps-tree]");
+          if (tree) {
+            const lines = ["maps/", line(1, "docs/")];
+            manifest.pages.forEach((page) => lines.push(line(2, page.file)));
+            lines.push(line(2, "styles.css"), line(2, "maps-manifest.js"), line(2, "maps-render.js"), line(1, "phases/"));
+            manifest.phases.forEach((phase) => lines.push(line(2, phase)));
+            lines.push(line(1, "skills/"));
+            manifest.skills.forEach((skill) => {
+              lines.push(line(2, `${skill.name}/`));
+              skill.files.forEach((file) => lines.push(line(3, file)));
+            });
+            lines.push(line(1, "templates/"));
+            manifest.templates.forEach((template) => lines.push(line(2, template)));
+            lines.push(line(1, "catalogs/"));
+            manifest.catalogs.forEach((catalog) => lines.push(line(2, catalog)));
+            tree.textContent = lines.join("\\n");
+          }
+          const fill = (selector, items, render) => {
+            const target = document.querySelector(selector);
+            if (!target) return;
+            target.innerHTML = "";
+            items.forEach((item) => {
+              const li = document.createElement("li");
+              render(li, item);
+              target.appendChild(li);
+            });
+          };
+          fill("[data-maps-skills]", manifest.skills.slice(0, 2), (li, item) => li.append(item.name === "scaffold" ? "/scaffold" : item.name));
+          fill("[data-maps-repos]", manifest.repos, (li, item) => {
+            const a = document.createElement("a");
+            a.href = item.url;
+            a.textContent = item.label;
+            li.appendChild(a);
+          });
+          fill("[data-maps-tools]", manifest.tools, (li, item) => li.append(item));
+          fill("[data-maps-catalogs]", manifest.catalogs, (li, item) => li.append(`catalogs/${item}`));
+        })();
         """
     )
 
@@ -214,6 +323,8 @@ def build(target: Path, name: str, force: bool) -> list[Path]:
         "LICENSE": "MIT License\n\nCopyright (c) 2026\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, subject to the conditions of the MIT License.\n",
         "docs/phase0.html": docs_phase0(name),
         "docs/styles.css": docs_css(),
+        "docs/maps-manifest.js": docs_manifest(),
+        "docs/maps-render.js": docs_render(),
         "docs/contributing.md": "# Contributing\n\nAdd phase docs, skills, templates, and catalog entries that strengthen a MAPS phase.\n",
         "catalogs/repos.md": "# Repository Catalog\n\n| Phase | Repo | Label | Notes |\n| --- | --- | --- | --- |\n",
         "catalogs/skills.md": "# Skills Catalog\n\n| Phase | Skill | Source | Label | Why it helps |\n| --- | --- | --- | --- | --- |\n",
