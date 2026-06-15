@@ -54,7 +54,7 @@ python skills/scaffold/scripts/create_maps_scaffold.py /path/to/new-maps-repo
 
 ## Project Site
 
-Open `docs/index.html` to view the static project page for MAPS scaffolding and Phase 00 structure.
+Open `docs/phase0.html` to view the static project page for MAPS scaffolding and Phase 00 structure.
 
 ## Curation Model
 

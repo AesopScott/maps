@@ -35,7 +35,7 @@ The script creates:
 - `README.md`
 - `.gitignore`
 - `LICENSE`
-- `docs/index.html`
+- `docs/phase0.html`
 - `docs/styles.css`
 - `docs/contributing.md`
 - `phases/00-phase-alignment.md` through `phases/08-improve.md`

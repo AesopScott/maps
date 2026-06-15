@@ -131,7 +131,7 @@ def readme(name: str) -> str:
     )
 
 
-def docs_index(name: str) -> str:
+def docs_phase0(name: str) -> str:
     return dedent(
         f"""\
         <!doctype html>
@@ -212,7 +212,7 @@ def build(target: Path, name: str, force: bool) -> list[Path]:
         "README.md": readme(name),
         ".gitignore": ".DS_Store\nThumbs.db\n*.tmp\n*.log\n",
         "LICENSE": "MIT License\n\nCopyright (c) 2026\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, subject to the conditions of the MIT License.\n",
-        "docs/index.html": docs_index(name),
+        "docs/phase0.html": docs_phase0(name),
         "docs/styles.css": docs_css(),
         "docs/contributing.md": "# Contributing\n\nAdd phase docs, skills, templates, and catalog entries that strengthen a MAPS phase.\n",
         "catalogs/repos.md": "# Repository Catalog\n\n| Phase | Repo | Label | Notes |\n| --- | --- | --- | --- |\n",
