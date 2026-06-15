@@ -4,6 +4,11 @@ window.MAPS_MANIFEST = {
       file: "phase0.html",
       label: "Phase 0",
       title: "Phase Alignment"
+    },
+    {
+      file: "phase1.html",
+      label: "Phase 1",
+      title: "Define"
     }
   ],
   phases: [
@@ -92,5 +97,21 @@ window.MAPS_MANIFEST = {
     "Python",
     "GitHub CLI",
     "Git"
-  ]
+  ],
+  phaseResources: {
+    "0": {
+      skills: ["scaffold", "phase-alignment"],
+      repos: ["AesopScott/maps", "VoltAgent/awesome-agent-skills", "hqhq1025/skill-optimizer"],
+      tools: ["Python", "GitHub CLI", "Git"],
+      templates: ["phase-alignment-brief.md"],
+      catalogs: ["skills.md", "repos.md", "tools.md"]
+    },
+    "1": {
+      skills: ["define-agent"],
+      repos: ["AesopScott/maps"],
+      tools: ["Git", "Agent Skills"],
+      templates: ["agent-brief.md"],
+      catalogs: ["skills.md", "repos.md", "tools.md"]
+    }
+  }
 };

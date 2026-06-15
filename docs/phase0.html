@@ -9,7 +9,7 @@
     <script src="./maps-manifest.js" defer></script>
     <script src="./maps-render.js" defer></script>
   </head>
-  <body>
+  <body data-maps-phase="0">
     <div class="shell">
       <header class="topbar">
         <nav class="nav" aria-label="Primary">
@@ -126,10 +126,10 @@
               <strong>00 Alignment</strong>
               <span>Scaffold and agree</span>
             </a>
-            <span class="phase-link future">
+            <a class="phase-link" href="./phase1.html">
               <strong>01 Define</strong>
               <span>Agent brief</span>
-            </span>
+            </a>
             <span class="phase-link future">
               <strong>02 Design</strong>
               <span>System design</span>
@@ -226,6 +226,13 @@
               <h3>Tools</h3>
               <ul data-maps-tools>
                 <li><strong>Python</strong></li>
+              </ul>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Templates</h3>
+              <ul data-maps-templates>
+                <li><code>templates/phase-alignment-brief.md</code></li>
               </ul>
             </article>
 

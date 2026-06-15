@@ -55,27 +55,41 @@
   }
 
   function renderResources() {
-    renderResourceList("[data-maps-skills]", manifest.skills.slice(0, 2), (li, skill) => {
+    const phase = document.body.getAttribute("data-maps-phase") || "0";
+    const phaseResources = manifest.phaseResources?.[phase] || {};
+    const skillItems = (phaseResources.skills || []).map((name) => manifest.skills.find((skill) => skill.name === name)).filter(Boolean);
+    const repoItems = (phaseResources.repos || []).map((label) => manifest.repos.find((repo) => repo.label === label)).filter(Boolean);
+    const toolItems = phaseResources.tools || [];
+    const templateItems = phaseResources.templates || [];
+    const catalogItems = phaseResources.catalogs || [];
+
+    renderResourceList("[data-maps-skills]", skillItems, (li, skill) => {
       const strong = document.createElement("strong");
       strong.textContent = skill.name === "scaffold" ? "/scaffold" : skill.name;
       li.appendChild(strong);
       li.append(` includes ${skill.files.join(", ")}.`);
     });
 
-    renderResourceList("[data-maps-repos]", manifest.repos, (li, repo) => {
+    renderResourceList("[data-maps-repos]", repoItems, (li, repo) => {
       const anchor = document.createElement("a");
       anchor.href = repo.url;
       anchor.textContent = repo.label;
       li.appendChild(anchor);
     });
 
-    renderResourceList("[data-maps-tools]", manifest.tools, (li, tool) => {
+    renderResourceList("[data-maps-tools]", toolItems, (li, tool) => {
       const strong = document.createElement("strong");
       strong.textContent = tool;
       li.appendChild(strong);
     });
 
-    renderResourceList("[data-maps-catalogs]", manifest.catalogs, (li, catalog) => {
+    renderResourceList("[data-maps-templates]", templateItems, (li, template) => {
+      const code = document.createElement("code");
+      code.textContent = `templates/${template}`;
+      li.appendChild(code);
+    });
+
+    renderResourceList("[data-maps-catalogs]", catalogItems, (li, catalog) => {
       const code = document.createElement("code");
       code.textContent = `catalogs/${catalog}`;
       li.appendChild(code);

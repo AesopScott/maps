@@ -144,7 +144,7 @@ def docs_phase0(name: str) -> str:
             <script src="./maps-manifest.js" defer></script>
             <script src="./maps-render.js" defer></script>
           </head>
-          <body>
+          <body data-maps-phase="0">
             <main>
               <h1>{name}</h1>
               <p>Start with Phase 00: Phase Alignment. Agree on the scaffold before defining, designing, building, equipping, evaluating, deploying, observing, or improving agents.</p>
@@ -160,6 +160,7 @@ def docs_phase0(name: str) -> str:
                 <article><h3>Skills</h3><ul data-maps-skills><li><strong>/scaffold</strong></li></ul></article>
                 <article><h3>Repos</h3><ul data-maps-repos><li>AesopScott/maps</li></ul></article>
                 <article><h3>Tools</h3><ul data-maps-tools><li>Python</li></ul></article>
+                <article><h3>Templates</h3><ul data-maps-templates><li>templates/phase-alignment-brief.md</li></ul></article>
                 <article><h3>Catalogs</h3><ul data-maps-catalogs><li>catalogs/skills.md</li></ul></article>
               </section>
               <h2>Phase Sequence</h2>
@@ -174,6 +175,51 @@ def docs_phase0(name: str) -> str:
                 <li>Observe</li>
                 <li>Improve</li>
               </ol>
+            </main>
+          </body>
+        </html>
+        """
+    )
+
+
+def docs_phase1(name: str) -> str:
+    return dedent(
+        f"""\
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>{name}: Define</title>
+            <link rel="stylesheet" href="./styles.css">
+            <script src="./maps-manifest.js" defer></script>
+            <script src="./maps-render.js" defer></script>
+          </head>
+          <body data-maps-phase="1">
+            <main>
+              <h1>Define</h1>
+              <p>Phase 1 turns an agent idea into an agent brief with the job, user, outcome, boundaries, success criteria, failure criteria, escalation points, risks, and assumptions.</p>
+              <h2>Agent Brief</h2>
+              <pre><code># Agent Brief
+
+## Name
+## User Or Operator
+## Job To Be Done
+## Desired Outcome
+## In Scope
+## Out Of Scope
+## Success Criteria
+## Failure Criteria
+## Human Escalation Points
+## Risks And Assumptions</code></pre>
+              <h2>Phase 1 Resources</h2>
+              <section class="resources">
+                <article><h3>Skills</h3><ul data-maps-skills><li><strong>define-agent</strong></li></ul></article>
+                <article><h3>Repos</h3><ul data-maps-repos><li>AesopScott/maps</li></ul></article>
+                <article><h3>Tools</h3><ul data-maps-tools><li>Agent Skills</li></ul></article>
+                <article><h3>Templates</h3><ul data-maps-templates><li>templates/agent-brief.md</li></ul></article>
+                <article><h3>Catalogs</h3><ul data-maps-catalogs><li>catalogs/skills.md</li></ul></article>
+              </section>
             </main>
           </body>
         </html>
@@ -209,7 +255,10 @@ def docs_manifest() -> str:
     return dedent(
         f"""\
         window.MAPS_MANIFEST = {{
-          pages: [{{ file: "phase0.html", label: "Phase 0", title: "Phase Alignment" }}],
+          pages: [
+            {{ file: "phase0.html", label: "Phase 0", title: "Phase Alignment" }},
+            {{ file: "phase1.html", label: "Phase 1", title: "Define" }}
+          ],
           phases: [
             {phases}
           ],
@@ -233,7 +282,23 @@ def docs_manifest() -> str:
             {{ label: "VoltAgent/awesome-agent-skills", url: "https://github.com/VoltAgent/awesome-agent-skills" }},
             {{ label: "hqhq1025/skill-optimizer", url: "https://github.com/hqhq1025/skill-optimizer" }}
           ],
-          tools: ["Python", "GitHub CLI", "Git"]
+          tools: ["Python", "GitHub CLI", "Git", "Agent Skills"],
+          phaseResources: {{
+            "0": {{
+              skills: ["scaffold", "phase-alignment"],
+              repos: ["AesopScott/maps", "VoltAgent/awesome-agent-skills", "hqhq1025/skill-optimizer"],
+              tools: ["Python", "GitHub CLI", "Git"],
+              templates: ["phase-alignment-brief.md"],
+              catalogs: ["skills.md", "repos.md", "tools.md"]
+            }},
+            "1": {{
+              skills: ["define-agent"],
+              repos: ["AesopScott/maps"],
+              tools: ["Git", "Agent Skills"],
+              templates: ["agent-brief.md"],
+              catalogs: ["skills.md", "repos.md", "tools.md"]
+            }}
+          }}
         }};
         """
     )
@@ -273,15 +338,21 @@ def docs_render() -> str:
               target.appendChild(li);
             });
           };
-          fill("[data-maps-skills]", manifest.skills.slice(0, 2), (li, item) => li.append(item.name === "scaffold" ? "/scaffold" : item.name));
-          fill("[data-maps-repos]", manifest.repos, (li, item) => {
+          const phase = document.body.getAttribute("data-maps-phase") || "0";
+          const phaseResources = manifest.phaseResources?.[phase] || {};
+          const byName = (items, names, key = "name") => (names || []).map((name) => items.find((item) => item[key] === name)).filter(Boolean);
+          const skills = byName(manifest.skills, phaseResources.skills);
+          const repos = byName(manifest.repos, phaseResources.repos, "label");
+          fill("[data-maps-skills]", skills, (li, item) => li.append(item.name === "scaffold" ? "/scaffold" : item.name));
+          fill("[data-maps-repos]", repos, (li, item) => {
             const a = document.createElement("a");
             a.href = item.url;
             a.textContent = item.label;
             li.appendChild(a);
           });
-          fill("[data-maps-tools]", manifest.tools, (li, item) => li.append(item));
-          fill("[data-maps-catalogs]", manifest.catalogs, (li, item) => li.append(`catalogs/${item}`));
+          fill("[data-maps-tools]", phaseResources.tools || [], (li, item) => li.append(item));
+          fill("[data-maps-templates]", phaseResources.templates || [], (li, item) => li.append(`templates/${item}`));
+          fill("[data-maps-catalogs]", phaseResources.catalogs || [], (li, item) => li.append(`catalogs/${item}`));
         })();
         """
     )
@@ -322,6 +393,7 @@ def build(target: Path, name: str, force: bool) -> list[Path]:
         ".gitignore": ".DS_Store\nThumbs.db\n*.tmp\n*.log\n",
         "LICENSE": "MIT License\n\nCopyright (c) 2026\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, subject to the conditions of the MIT License.\n",
         "docs/phase0.html": docs_phase0(name),
+        "docs/phase1.html": docs_phase1(name),
         "docs/styles.css": docs_css(),
         "docs/maps-manifest.js": docs_manifest(),
         "docs/maps-render.js": docs_render(),
