@@ -20,7 +20,7 @@ Clarify what the agent or multi-agent system is supposed to accomplish before de
 
 ## Outputs
 
-- Agent brief
+- Completed Agent Brief from `templates/agent-brief.md`
 - Authorization boundary
 - Success metrics
 - Non-goals and boundaries
@@ -34,6 +34,6 @@ Clarify what the agent or multi-agent system is supposed to accomplish before de
 - The team knows what the agent must not do.
 - Unknowns are explicit.
 
-## Teaching Exercise
+## Phase Artifact
 
-Take a vague agent idea and produce a one-page agent brief using `templates/agent-brief.md`.
+Use `/define-agent` to turn a vague agent idea into a completed Agent Brief. This brief is the artifact Phase 2 Design uses to decide behavior, workflow, handoffs, controls, and tool needs.
