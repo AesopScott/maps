@@ -13,25 +13,33 @@ Use this skill to turn a vague agent idea into an agent brief. Prefer clarity ov
 
 1. Identify the user or operator.
 2. State the job to be done in one sentence.
-3. Define the authorization level: advise, draft, act with approval, or act autonomously within explicit limits.
-4. Name actions that require approval and actions that are forbidden.
-5. Separate in-scope work from out-of-scope work.
-6. Define observable success and failure criteria.
-7. Name human escalation points.
-8. Capture risks, assumptions, and unknowns.
-9. Produce or update an agent brief.
+3. Assign a stable agent handle and role or mandate.
+4. Define persona and tone when the agent will communicate with humans or other agents.
+5. Define the authorization level: advise, draft, act with approval, or act autonomously within explicit limits.
+6. Name actions allowed without approval, actions that require approval, and actions that are forbidden.
+7. List requested tool access separately from granted authorization.
+8. Separate in-scope work from out-of-scope work.
+9. Define observable success and failure criteria.
+10. Name human escalation points.
+11. Capture risks, assumptions, and unknowns.
+12. Produce or update an agent brief.
 
 ## Output
 
 Return a concise brief with:
 
 - Name
+- Agent handle
+- Role or mandate
 - User or operator
 - Job to be done
 - Desired outcome
+- Persona and tone
 - Authorization level
+- Allowed without approval
 - Approval required for
 - Forbidden actions
+- Tool access requested
 - In scope
 - Out of scope
 - Success criteria

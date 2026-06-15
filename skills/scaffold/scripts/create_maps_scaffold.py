@@ -34,7 +34,7 @@ PHASES = [
 
 TEMPLATES = {
     "phase-alignment-brief.md": "# Phase Alignment Brief\n\n## Framework Name\n\n## Purpose\n\n## Audience\n\n## Phase Sequence\n\n```text\nphase alignment -> define -> design -> build -> equip -> evaluate -> deploy -> observe -> improve\n```\n\n## Phase Definitions\n\n| Phase | Purpose | Primary output |\n| --- | --- | --- |\n\n## Repository Or Project Structure\n\n## Naming Decisions\n\n## What Belongs Where\n\n## Open Questions\n\n## Done Criteria\n",
-    "agent-brief.md": "# Agent Brief\n\n## Name\n\n## User Or Operator\n\n## Job To Be Done\n\n## Desired Outcome\n\n## Authorization Level\n\n## Approval Required For\n\n## Forbidden Actions\n\n## In Scope\n\n## Out Of Scope\n\n## Success Criteria\n\n## Failure Criteria\n\n## Human Escalation Points\n\n## Risks And Assumptions\n",
+    "agent-brief.md": "# Agent Brief\n\n## Name\n\n## Agent Handle\n\n## Role Or Mandate\n\n## User Or Operator\n\n## Job To Be Done\n\n## Desired Outcome\n\n## Persona And Tone\n\n## Authorization Level\n\n## Allowed Without Approval\n\n## Approval Required For\n\n## Forbidden Actions\n\n## Tool Access Requested\n\n## In Scope\n\n## Out Of Scope\n\n## Success Criteria\n\n## Failure Criteria\n\n## Human Escalation Points\n\n## Risks And Assumptions\n",
     "workflow-spec.md": "# Workflow Spec\n\n## System Goal\n\n## Agent Roles\n\n| Role | Responsibility | Inputs | Outputs | Escalates when |\n| --- | --- | --- | --- | --- |\n\n## Workflow\n\n1.\n\n## State And Memory\n\n## Guardrails\n\n## Human Approval Gates\n\n## Open Questions\n",
     "tool-map.md": "# Tool Map\n\n| Capability | Tool or source | Permission | Used by | Failure behavior |\n| --- | --- | --- | --- | --- |\n\n## Context Sources\n\n## Memory Policy\n\n## Audit Requirements\n\n## Security Notes\n",
     "eval-scorecard.md": "# Eval Scorecard\n\n| Scenario | Expected behavior | Actual behavior | Score | Notes |\n| --- | --- | --- | --- | --- |\n\n## Pass Criteria\n\n## Failure Categories\n\n## Release Recommendation\n",
@@ -203,12 +203,17 @@ def docs_phase1(name: str) -> str:
               <pre><code># Agent Brief
 
 ## Name
+## Agent Handle
+## Role Or Mandate
 ## User Or Operator
 ## Job To Be Done
 ## Desired Outcome
+## Persona And Tone
 ## Authorization Level
+## Allowed Without Approval
 ## Approval Required For
 ## Forbidden Actions
+## Tool Access Requested
 ## In Scope
 ## Out Of Scope
 ## Success Criteria

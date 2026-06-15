@@ -29,3 +29,7 @@ Use this catalog to map useful repositories to MAPS phases.
 | All | https://github.com/microsoft/ai-agents-for-beginners | Useful reference | Strong curriculum coverage for agent concepts and production topics. |
 | Skills | https://github.com/VoltAgent/awesome-agent-skills | Useful reference | Broad index of Agent Skills-compatible repositories. |
 | Skills | https://github.com/hqhq1025/skill-optimizer | Useful reference | Skill lifecycle tooling for mining, personalizing, and generalizing skills. |
+| Define | https://github.com/TerminalSkills/skills | Useful reference | Large Agent Skills catalog; useful for marketplace conventions, categories, install patterns, and skill quality checks. |
+| Define | https://github.com/tmchow/agent-skills | Useful reference | Cross-runtime skill repository with clear human README vs agent SKILL.md separation and runtime-specific install lanes. |
+| Define | https://github.com/zebbern/agent-skills-authoring | Useful reference | Skill authoring guide with frontmatter, trigger, examples, progressive disclosure, and validation patterns. |
+| Define | https://github.com/GSA-TTS/devCrew_s/blob/master/docs/templates/AI%20Agent%20Specification%20Template.md | Useful reference | Agent specification template with handle, mandate, responsibilities, tool manifest, and resource permissions. |
