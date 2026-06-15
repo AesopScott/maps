@@ -6,6 +6,7 @@ Use this catalog to map reusable Agent Skills to MAPS phases.
 
 | Phase | Skill | Source | Label | Why it helps |
 | --- | --- | --- | --- | --- |
+| Align | scaffold | `skills/scaffold` | Recommended | Creates the initial MAPS repository structure before phase work begins. |
 | Align |  |  |  |  |
 | Define |  |  |  |  |
 | Design |  |  |  |  |

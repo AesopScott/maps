@@ -44,6 +44,14 @@ Install or copy the folders under `skills/` into an Agent Skills-compatible dire
 
 Each skill is intentionally small. The phase detail lives in `phases/` and the reusable deliverable shells live in `templates/`.
 
+## Scaffold A New MAPS Repo
+
+Use `skills/scaffold` when invoking `/scaffold` or creating a new MAPS-compatible repository structure.
+
+```bash
+python skills/scaffold/scripts/create_maps_scaffold.py /path/to/new-maps-repo
+```
+
 ## Project Site
 
 Open `docs/index.html` to view the static project page for MAPS scaffolding and Phase 00 structure.
