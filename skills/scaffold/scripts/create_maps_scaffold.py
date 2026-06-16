@@ -33,6 +33,7 @@ PHASES = [
 
 
 TEMPLATES = {
+    "maps-scaffold-template.md": "# MAPS Scaffold Template\n\nThis template defines the repeatable repository structure created by `/scaffold`.\n\n## Purpose\n\nCreate a MAPS-ready repository with phase docs, phase skills, reusable templates, catalogs, and lightweight docs pages.\n\n## Repository Structure\n\n```text\nmaps/\n  README.md\n  LICENSE\n  .gitignore\n  docs/\n    phase0.html\n    phase1.html\n    styles.css\n    maps-manifest.js\n    maps-render.js\n    contributing.md\n  phases/\n    00-phase-alignment.md\n    01-define.md\n    02-design.md\n    03-build.md\n    04-equip.md\n    05-evaluate.md\n    06-deploy.md\n    07-observe.md\n    08-improve.md\n  skills/\n    phase-alignment/\n      SKILL.md\n      agents/openai.yaml\n    define-agent/\n      SKILL.md\n      agents/openai.yaml\n    design-agent/\n      SKILL.md\n      agents/openai.yaml\n    build-agent/\n      SKILL.md\n      agents/openai.yaml\n    equip-agent/\n      SKILL.md\n      agents/openai.yaml\n    evaluate-agent/\n      SKILL.md\n      agents/openai.yaml\n    deploy-agent/\n      SKILL.md\n      agents/openai.yaml\n    observe-agent/\n      SKILL.md\n      agents/openai.yaml\n    improve-agent/\n      SKILL.md\n      agents/openai.yaml\n  templates/\n    maps-scaffold-template.md\n    phase-alignment-brief.md\n    agent-definition-template.md\n    workflow-spec.md\n    tool-map.md\n    eval-scorecard.md\n    deployment-plan.md\n    observation-report.md\n    improvement-backlog.md\n  catalogs/\n    repos.md\n    skills.md\n    tools.md\n```\n\n## Required Guarantees\n\n- Every APS phase has a phase doc.\n- Every APS phase has a `SKILL.md`.\n- Every generated skill has valid frontmatter.\n- Templates are reusable input shells, not completed outputs.\n- Catalogs are present before resources are curated.\n- Docs pages expose the scaffold and current phase resources.\n\n## Instantiation\n\nUse `/scaffold` to instantiate this template into a target directory.\n",
     "phase-alignment-brief.md": "# Phase Alignment Brief\n\n## Framework Name\n\n## Purpose\n\n## Audience\n\n## Phase Sequence\n\n```text\nphase alignment -> define -> design -> build -> equip -> evaluate -> deploy -> observe -> improve\n```\n\n## Phase Definitions\n\n| Phase | Purpose | Primary output |\n| --- | --- | --- |\n\n## Repository Or Project Structure\n\n## Naming Decisions\n\n## What Belongs Where\n\n## Open Questions\n\n## Done Criteria\n",
     "agent-definition-template.md": "# Agent Brief\n\n## Name\n\n## Agent Handle\n\n## Role Or Mandate\n\n## User Or Operator\n\n## Job To Be Done\n\n## Desired Outcome\n\n## Persona And Tone\n\n## Authorization Level\n\n## Allowed Without Approval\n\n## Approval Required For\n\n## Forbidden Actions\n\n## Tool Access Requested\n\n## In Scope\n\n## Out Of Scope\n\n## Success Criteria\n\n## Failure Criteria\n\n## Human Escalation Points\n\n## Risks And Assumptions\n",
     "workflow-spec.md": "# Workflow Spec\n\n## System Goal\n\n## Source Brief\n\n`agents/{agent-handle}/agent-brief.md`\n\n## Research Summary\n\n## Comparable Agents Or Patterns Reviewed\n\n| Source or pattern | What it suggests | Fit for this agent | Caveats |\n| --- | --- | --- | --- |\n\n## Recommendation Table\n\n| Design question | Recommendation | Reasoning | User override |\n| --- | --- | --- | --- |\n| Operating model |  |  |  |\n| Roles and responsibilities |  |  |  |\n| Workflow states |  |  |  |\n| Decision points |  |  |  |\n| Memory and context |  |  |  |\n| Tools and integrations |  |  |  |\n| Approval gates |  |  |  |\n| Escalation paths |  |  |  |\n| Failure handling |  |  |  |\n| Observability |  |  |  |\n\n## Agent Roles\n\n| Role | Responsibility | Inputs | Outputs | Escalates when |\n| --- | --- | --- | --- | --- |\n\n## Workflow\n\n1.\n\n## Decision Points\n\n## State And Memory\n\n## Tools And Integrations\n\n## Guardrails\n\n## Human Approval Gates\n\n## Handoffs\n\n## Failure Modes\n\n## Observability Needs\n\n## Open Questions\n",
@@ -160,7 +161,7 @@ def docs_phase0(name: str) -> str:
                 <article><h3>Skills</h3><ul data-maps-skills><li><strong>/scaffold</strong></li></ul></article>
                 <article><h3>Repos</h3><ul data-maps-repos><li>AesopScott/maps</li></ul></article>
                 <article><h3>Tools</h3><ul data-maps-tools><li>Python</li></ul></article>
-                <article><h3>Templates</h3><ul data-maps-templates><li>templates/phase-alignment-brief.md</li></ul></article>
+                <article><h3>Templates</h3><ul data-maps-templates><li>templates/maps-scaffold-template.md</li><li>templates/phase-alignment-brief.md</li></ul></article>
                 <article><h3>Catalogs</h3><ul data-maps-catalogs><li>catalogs/skills.md</li></ul></article>
               </section>
               <h2>Phase Sequence</h2>
@@ -276,6 +277,7 @@ def docs_manifest() -> str:
             {skills}
           ],
           templates: [
+            "maps-scaffold-template.md",
             "phase-alignment-brief.md",
             "agent-definition-template.md",
             "workflow-spec.md",
@@ -297,7 +299,7 @@ def docs_manifest() -> str:
               skills: ["scaffold", "phase-alignment"],
               repos: ["AesopScott/maps", "VoltAgent/awesome-agent-skills", "hqhq1025/skill-optimizer"],
               tools: ["Python", "GitHub CLI", "Git"],
-              templates: ["phase-alignment-brief.md"],
+              templates: ["maps-scaffold-template.md", "phase-alignment-brief.md"],
               catalogs: ["skills.md", "repos.md", "tools.md"]
             }},
             "1": {{

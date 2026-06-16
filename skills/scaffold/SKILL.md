@@ -1,21 +1,24 @@
 ---
 name: scaffold
-description: Build a MAPS repository scaffold. Use when the user invokes /scaffold or asks to create a Multi-Agent Pipeline Skills repo with phase docs, phase skills, templates, catalogs, docs page placeholders, README, gitignore, and MIT license.
+description: Instantiate the MAPS scaffold template. Use when the user invokes /scaffold or asks to create a Multi-Agent Pipeline Skills repo from templates/maps-scaffold-template.md with phase docs, phase skills, templates, catalogs, docs page placeholders, README, gitignore, and MIT license.
 ---
 
 # Scaffold
 
 ## Overview
 
-Use this skill to create the base MAPS repository structure for a new project. Prefer the bundled script for deterministic scaffolding.
+Use this skill to instantiate the repeatable MAPS repository structure defined in `templates/maps-scaffold-template.md`. Prefer the bundled script for deterministic scaffolding.
+
+The skill is the action. The template is the structure.
 
 ## Workflow
 
 1. Confirm or infer the target directory.
-2. Run `scripts/create_maps_scaffold.py <target-directory>`.
-3. Review the generated file list.
-4. If the target should be a git repo, initialize git after scaffolding.
-5. Report the target path and key generated artifacts.
+2. Treat `templates/maps-scaffold-template.md` as the structure contract.
+3. Run `scripts/create_maps_scaffold.py <target-directory>`.
+4. Review the generated file list against the scaffold template.
+5. If the target should be a git repo, initialize git after scaffolding.
+6. Report the target path and key generated artifacts.
 
 ## Script
 
@@ -40,6 +43,7 @@ The script creates:
 - `docs/contributing.md`
 - `phases/00-phase-alignment.md` through `phases/08-improve.md`
 - `skills/phase-alignment` plus one phase skill per lifecycle phase
+- `templates/maps-scaffold-template.md`
 - `templates/` deliverable shells
 - `catalogs/repos.md`, `catalogs/skills.md`, and `catalogs/tools.md`
 

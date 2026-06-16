@@ -66,6 +66,7 @@ window.MAPS_MANIFEST = {
     }
   ],
   templates: [
+    "maps-scaffold-template.md",
     "phase-alignment-brief.md",
     "agent-definition-template.md",
     "workflow-spec.md",
@@ -104,7 +105,7 @@ window.MAPS_MANIFEST = {
       skills: ["scaffold", "phase-alignment"],
       repos: ["AesopScott/maps", "VoltAgent/awesome-agent-skills", "hqhq1025/skill-optimizer"],
       tools: ["Python", "GitHub CLI", "Git"],
-      templates: ["phase-alignment-brief.md"],
+      templates: ["maps-scaffold-template.md", "phase-alignment-brief.md"],
       catalogs: ["skills.md", "repos.md", "tools.md"]
     },
     "1": {

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Agree on the MAPS process before applying it. This phase captures the scaffolding, naming, phase boundaries, repo structure, teaching intent, and decision rules that make the rest of the pipeline coherent.
+Agree on the MAPS process before applying it. This phase captures the scaffolding, naming, phase boundaries, repo structure, project intent, and decision rules that make the rest of the pipeline coherent.
 
 ## Inputs
 
@@ -17,13 +17,14 @@ Agree on the MAPS process before applying it. This phase captures the scaffoldin
 - Name the lifecycle and its phases.
 - Decide what each phase means and does not mean.
 - Agree on phase order, labels, and outputs.
-- Define repository, curriculum, or skill scaffolding.
+- Define repository, project, or skill scaffolding.
 - Identify what belongs in docs, skills, templates, and catalogs.
 - Capture unresolved naming or scope questions.
 
 ## Outputs
 
 - Phase alignment brief
+- MAPS scaffold template
 - Agreed phase map
 - Initial scaffold plan
 - Naming and structure decisions
@@ -37,7 +38,6 @@ Agree on the MAPS process before applying it. This phase captures the scaffoldin
 - The team knows where future work belongs.
 - Open questions are visible instead of buried.
 
-## Teaching Exercise
+## Practice
 
-Take a vague framework idea and produce a phase alignment brief using `templates/phase-alignment-brief.md`.
-
+Take a vague framework idea and produce a phase alignment brief using `templates/phase-alignment-brief.md`. If the repository structure should be reused, capture it in `templates/maps-scaffold-template.md`.
