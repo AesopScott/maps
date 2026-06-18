@@ -54,12 +54,27 @@ The preference file is project memory, not a generated artifact to ignore. Commi
 
 ## Output
 
-- Completed `project-foundation.md`
-- Created notes, sources, and memory scaffold
-- Initial source inventory
-- Initial evidence index
+Create or update these concrete outputs in the current project:
+
+- `project-foundation.md`: completed M0 foundation artifact from `templates/project-foundation.md`.
+- `.maps/foundation-preferences.json`: selected notes, sources, memory, and RAG locations for the next `/foundation` run.
+- Notes scaffold: the selected notes root with `daily/`, `interviews/`, `research/`, and `decisions/`.
+- Sources scaffold: the selected sources root with `docs/`, `transcripts/`, `screenshots/`, and `links.md`.
+- Memory scaffold: the selected memory root with `project-context.md`, `glossary.md`, and `entity-map.md`.
+
+The completed `project-foundation.md` must include:
+
+- Project/customer intent
+- Customer story
+- Current workflow
 - EventStorming Lite notes
 - Service Blueprint Lite notes
-- Initial RAG-readiness plan
-- `.maps/foundation-preferences.json` updated with the selected notes, sources, memory, and RAG locations
+- Evidence index
+- Source inventory
+- Assumptions
+- Decisions
+- Open questions
+- RAG-readiness plan
 - M1 handoff recommendation: Scope First, Single-Agent / APS, or Multi-Agent / MAPS
+
+If the user chooses custom locations, create/update those locations and record them in `.maps/foundation-preferences.json`.
