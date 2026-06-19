@@ -51,6 +51,7 @@ MAPS keeps skill behavior consistent across sessions with three layers:
 - Always-on instructions in `AGENTS.md` and global Codex instructions for one-question interviews, memory helper usage, completion reports, skill versioning, and validation before publish.
 - Per-skill contracts inside every `SKILL.md`, including `Versioning`, `Changelog`, `Output`, `Completion report`, project-foundation lookup, one-question interviews, and memory-helper instructions.
 - A repo validator at `scripts/validate_maps_skills.py` that checks every MAPS skill for the required operating contract.
+- Source catalogs in `catalogs/global-installs.md` and `catalogs/skill-rules.md` that define global installs, skill rules, and their implementation locations for the MAPS program/plugin.
 
 Run the validator before publishing skill changes:
 
@@ -85,3 +86,11 @@ MAPS catalogs repos and skills by phase. A good catalog entry should explain:
 - Fit, maintenance, adoption, license, security, docs, and builder value.
 
 Start with `catalogs/repos.md` and `catalogs/skills.md`.
+
+## Global Installs And Rule Catalogs
+
+MAPS distinguishes project-local skills from global installs:
+
+- `catalogs/global-installs.md` defines global repos, plugins, hooks, vaults, context packets, and helper layers available to the MAPS program/plugin.
+- `catalogs/skill-rules.md` defines the MAPS skill operating rules and where each rule is implemented.
+- Website pages may explain these contracts, but the source catalogs are the durable plugin/program definitions.

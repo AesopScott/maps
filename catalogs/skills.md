@@ -6,6 +6,7 @@ Use this catalog to map reusable Agent Skills to MAPS phases.
 
 | Phase | Skill | Source | Label | Why it helps |
 | --- | --- | --- | --- | --- |
+| Program | /maps | `AesopScott/maps` | Recommended | Source program/plugin for MAPS skills, templates, catalogs, global installs, and rule contracts. |
 | Foundation | /foundation | `skills/foundation` | Recommended | Starts M0 Project Foundation with project intent, notes scaffold, evidence, source inventory, assumptions, decisions, EventStorming Lite, Service Blueprint Lite, and RAG readiness. |
 | Shape | /shape | `skills/shape` | Recommended | Runs M1 System Shape to decide Unknown / Scope First, Single-Agent / APS, or Multi-Agent / MAPS before roster or implementation work. |
 | Role Builder | /role | `skills/role` | Recommended | Creates organization role agents and decides whether each role should be advisory, workflow-owned, skill-backed, loop-backed, agentic, or persona-only. |

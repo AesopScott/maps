@@ -12,3 +12,5 @@ When working in this repository or editing any MAPS skill:
 - Every MAPS skill must maintain an in-body version and changelog. Do not add nonstandard version fields to YAML frontmatter.
 - Before publishing MAPS skill changes, run `python scripts/validate_maps_skills.py`.
 - Role artifacts must define explicit authority boundaries and a learning/growth loop before recommending expanded responsibilities or capabilities.
+- Define MAPS global installs in `catalogs/global-installs.md` before relying on them in a skill, website page, or classroom workflow.
+- Define MAPS skill rules and their implementation locations in `catalogs/skill-rules.md`; website prose should explain these source contracts, not replace them.
