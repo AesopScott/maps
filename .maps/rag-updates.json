@@ -1,0 +1,60 @@
+{
+  "updates": [
+    {
+      "needsReindex": true,
+      "notePath": "G:\\My Drive\\Mindshare\\foundation\\foundation.md",
+      "phase": "M0",
+      "ragIndexPath": "",
+      "ragLocation": "G:\\My Drive\\Mindshare",
+      "ragNotePath": "G:\\My Drive\\Mindshare\\foundation\\foundation.md",
+      "ragProvider": "Obsidian",
+      "skill": "/foundation",
+      "timestamp": "2026-06-18T20:10:00-06:00"
+    },
+    {
+      "needsReindex": true,
+      "notePath": "G:\\My Drive\\Mindshare\\maps-runs\\role-agentic-systems-program-manager.md",
+      "phase": "Role",
+      "ragIndexPath": "",
+      "ragLocation": "G:\\My Drive\\Mindshare",
+      "ragNotePath": "G:\\My Drive\\Mindshare\\maps-runs\\role-agentic-systems-program-manager.md",
+      "ragProvider": "Obsidian",
+      "skill": "/role",
+      "timestamp": "2026-06-18T20:36:49-06:00"
+    },
+    {
+      "needsReindex": true,
+      "notePath": "G:\\My Drive\\Mindshare\\maps-runs\\role-agentic-systems-program-manager.md",
+      "phase": "Role",
+      "ragIndexPath": "",
+      "ragLocation": "G:\\My Drive\\Mindshare",
+      "ragNotePath": "G:\\My Drive\\Mindshare\\maps-runs\\role-agentic-systems-program-manager.md",
+      "ragProvider": "Obsidian",
+      "skill": "/role",
+      "timestamp": "2026-06-18T21:03:34-06:00"
+    },
+    {
+      "needsReindex": true,
+      "notePath": "G:\\My Drive\\Mindshare\\maps-runs\\mindshare-shape-helper-notes.md",
+      "phase": "M1",
+      "ragIndexPath": "",
+      "ragLocation": "G:\\My Drive\\Mindshare",
+      "ragNotePath": "G:\\My Drive\\Mindshare\\maps-runs\\mindshare-shape-helper-notes.md",
+      "ragProvider": "Obsidian",
+      "skill": "/shape",
+      "timestamp": "2026-06-18T21:15:08-06:00"
+    },
+    {
+      "needsReindex": true,
+      "notePath": "G:\\My Drive\\Mindshare\\maps-runs\\mindshare-foundation-helper-notes.md",
+      "phase": "M0",
+      "ragIndexPath": "",
+      "ragLocation": "G:\\My Drive\\Mindshare",
+      "ragNotePath": "G:\\My Drive\\Mindshare\\maps-runs\\mindshare-foundation-helper-notes.md",
+      "ragProvider": "Obsidian",
+      "skill": "/foundation",
+      "timestamp": "2026-06-18T21:18:20-06:00"
+    }
+  ],
+  "version": 1
+}
