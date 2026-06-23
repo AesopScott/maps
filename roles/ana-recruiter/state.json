@@ -237,7 +237,7 @@
       }
     ]
   },
-  "last_updated": "2026-06-22T13:00:00-06:00",
+  "last_updated": "2026-06-23T02:45:57.432Z",
   "candidate_roles": [
     {
       "name": "Liz",
@@ -261,5 +261,19 @@
     "Approve Ana Level 5 policy packet for company-position research and leader hiring-demand conversations.",
     "Approve Ana leadership-role taxonomy before Level 5 activation."
   ],
-  "next_recommended_skill": "/build-agent"
+  "next_recommended_skill": "/build-agent",
+  "last_l4_lifecycle_check": {
+    "timestamp": "2026-06-23T02:45:57.432Z",
+    "automation_id": "ana-l4-recruiting-backlog-processing",
+    "eligible_backlog_items": 0,
+    "eligible_level_1_promotions": 0,
+    "eligible_level_2_promotions": 0,
+    "processed_backlog_items": 0,
+    "processed_level_1_promotions": 0,
+    "processed_level_2_promotions": 0,
+    "proof_paths": [],
+    "next_known_eligible_at": "2026-06-23T12:39:43-06:00",
+    "boundaries_held": "no external recruiting or candidate contact, no human hiring, no production or website edits, no Git/GitHub/release, no spending, no secrets, no hooks/global skill changes, no Level 4/5/6 promotion for hired roles, no broad autonomous runtime",
+    "result": "no eligible backlog item or timed promotion due"
+  }
 }
