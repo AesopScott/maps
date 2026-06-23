@@ -1,6 +1,6 @@
 # Autonomy Evaluation 1
 
-Version: 0.1.32
+Version: 0.1.33
 
 Date: 2026-06-22
 
@@ -75,6 +75,8 @@ Policy autonomy correction: Level 5 is not the next larger task after Level 4. P
 No current non-human role is approved as Level 6 Partner.
 
 Most active teammates sit at Level 3 Staff, meaning they are not broad autonomous agents. Ana, Vik, and Tess now have approved Level 4 scoped-autonomy lanes. Tess is operational Level 4 only inside the approved automation-baseline and promotion-packet scope: `tess-level-4-autonomy-backlog-processing` has produced review packets for Rae, Cal, Ana, Vik, Liz, Mae, Reid, Bea, Jay, Cole, June, Paige, and Lane, wrote state/proof, passed a pause/resume drill, restored the 30-minute cadence, and now requires visible log plus Heartbeat entries for every non-noop item. No one has approved Level 5 Principal or Level 6 Partner status under the corrected policy-autonomy standard. Ana is approved for internal recruiting backlog processing only; `ana-l4-recruiting-backlog-processing` is active as a heartbeat in Ana's room on the 4-hour steady cadence after three consecutive Level 1 standard proof runs. Vik is approved for Level 4 scoped research backlog loops. Cole, June, Paige, and Lane now have canonical autonomy contracts and Level 4 review packets, but remain Level 3 until Scott reviews and approves any promotion. Rae, Cal, Liz, Mae, Reid, Bea, and Jay also have review packets ready but remain Level 3. Matt is released legacy context.
+
+Source reconciliation note: `G:\My Drive\Mindshare\roles.md` current roster row for Ana matches Level 4 scoped autonomy, but the backup-map section still describes Ana's Level 4 backlog automation as being on a 3-minute proof-testing cadence. Current app automation source `C:\Users\scott\.codex\automations\ana-l4-recruiting-backlog-processing\automation.toml` shows the actual cadence is 4 hours. Treat the backup-map cadence text as stale until Ana/roster ownership updates it.
 
 ## Current Standing By Role
 
@@ -156,6 +158,7 @@ These roles are active operators by roster/contract. Their canonical `Autonomy.m
 | Broad runtime activation not approved | All non-human roles | Keep broad runtime blocked until contract, gates, evals, adapter, deployment/observe, audit, rollback, and Scott approval align. Ana, Vik, and Tess have approved narrow Level 4 scopes only. |
 | New Level 4 gate must be applied retroactively | Ana, Vik, Tess, future Level 4 candidates | Recheck every Level 4 claim against `level4-gate-checklist.md`; do not call a role operational Level 4 unless all gates pass. |
 | Level 4 proof cadence restored | Tess | `tess-level-4-autonomy-backlog-processing` is restored to 30-minute cadence after proof. Continue monitoring state/proof/visible log and do not expand scope. |
+| Roster backup-map cadence stale | Ana | Current automation source shows `ana-l4-recruiting-backlog-processing` runs every 4 hours; `G:\My Drive\Mindshare\roles.md` backup-map section still says 3-minute proof-testing cadence. Roster owner should correct the backup-map text; no standing change. |
 | Automation mistaken for autonomy | Roles with heartbeat/file-watch/scheduler | Keep explicit: automation presence is mechanical, not authority. |
 | G-drive primary-file risk | All roles | Primary team-member files stay in local repos. G drive may hold channels, handoffs, mirrors, indexes, and non-primary notes. |
 
@@ -204,3 +207,4 @@ These roles are active operators by roster/contract. Their canonical `Autonomy.m
 | 2026-06-22 | 0.1.30 | Recorded new Tess Level 4 evidence: review packets completed for Ana, Vik, Liz, and Mae, plus prior Rae and Cal packets; standings unchanged and no authority expanded. | Tess |
 | 2026-06-22 | 0.1.31 | Created canonical `Autonomy.md` contracts and Level 4 review packets for Cole, June, Paige, and Lane after Scott clarified that missing contracts should be repaired during readiness processing; no promotions or runtime activations performed. | Tess |
 | 2026-06-22 | 0.1.32 | Normalized packet evidence across all completed Tess Level 4 review items: Rae, Cal, Ana, Vik, Liz, Mae, Reid, Bea, Jay, Cole, June, Paige, and Lane. No standings changed. | Tess |
+| 2026-06-22 | 0.1.33 | Reconciled source evidence: Ana's live Level 4 automation is on the 4-hour steady cadence, while the `roles.md` backup-map section still says 3-minute proof-testing cadence. Marked backup-map text stale; no standings changed. | Tess |
