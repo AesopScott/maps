@@ -581,10 +581,76 @@
         const sessionNotifications = [];
         const notificationTimers = {};
         const NOTIFICATION_TTL_MS = 120000;
+        const OFFICE_STATE_STORAGE_KEY = 'mindshare.officeSessions.v1';
         const pendingAttachments = [];
         const departmentBackdrops = {
             "AI Engineering": "../assets/departments/ai-engineering-wiring.png"
         };
+
+        function persistOfficeState() {
+            try {
+                const serializableSessions = {};
+                Object.entries(roleSessions).forEach(([slug, session]) => {
+                    serializableSessions[slug] = {
+                        slug: session.slug,
+                        name: session.name,
+                        title: session.title,
+                        level: session.level,
+                        department: session.department,
+                        codexSessionId: session.codexSessionId,
+                        claudeSessionId: session.claudeSessionId,
+                        roleContext: session.roleContext,
+                        messages: session.messages,
+                        officeInjected: session.officeInjected,
+                        connectionIssue: session.connectionIssue
+                    };
+                });
+                localStorage.setItem(OFFICE_STATE_STORAGE_KEY, JSON.stringify({
+                    activeRoleSlug,
+                    activeEngine,
+                    codexAvailable,
+                    claudeAvailable,
+                    roleSessions: serializableSessions
+                }));
+            } catch (error) {
+                console.warn('Could not persist MindShare office state.', error);
+            }
+        }
+
+        function restoreOfficeState() {
+            try {
+                const raw = localStorage.getItem(OFFICE_STATE_STORAGE_KEY);
+                if (!raw) return;
+                const saved = JSON.parse(raw);
+                activeEngine = saved.activeEngine || activeEngine;
+                codexAvailable = Boolean(saved.codexAvailable);
+                claudeAvailable = Boolean(saved.claudeAvailable);
+                Object.entries(saved.roleSessions || {}).forEach(([slug, session]) => {
+                    roleSessions[slug] = {
+                        slug,
+                        name: session.name || slug,
+                        title: session.title || '',
+                        level: session.level || '',
+                        department: session.department || '',
+                        codexSessionId: session.codexSessionId || null,
+                        claudeSessionId: session.claudeSessionId || null,
+                        roleContext: session.roleContext || null,
+                        messages: Array.isArray(session.messages) ? session.messages : [],
+                        promptQueue: [],
+                        officeInjected: Boolean(session.officeInjected),
+                        connectionIssue: Boolean(session.connectionIssue),
+                        processing: false,
+                        processingEngine: null
+                    };
+                });
+                if (saved.activeRoleSlug && roleSessions[saved.activeRoleSlug]) {
+                    activeRoleSlug = saved.activeRoleSlug;
+                    activeRoleContext = roleSessions[activeRoleSlug].roleContext;
+                }
+            } catch (error) {
+                console.warn('Could not restore MindShare office state.', error);
+            }
+        }
 
         function ensureRoleSession(slug, name, title, level, department = '') {
             if (!roleSessions[slug]) {
@@ -628,6 +694,7 @@
             mainWindowTitle.textContent = `${name} · ${title} · ${level}`;
             activeRoleSlug = slug;
             activeRoleContext = roleSession.roleContext;
+            persistOfficeState();
             setChatDepartmentBackdrop(roleSession.department);
             renderTranscript(roleSession.messages);
             renderOfficeConnectionStatus(roleSession);
@@ -660,6 +727,7 @@
 
                 activeRoleContext = payload.roleContext;
                 roleSession.roleContext = payload.roleContext;
+                persistOfficeState();
                 renderOfficeFilesDropdown(payload.roleContext);
                 showOfficeContext({
                     name,
@@ -1016,6 +1084,7 @@
                 clearChatPlaceholder();
                 appendChatMessage(role, text);
             }
+            persistOfficeState();
             return entry;
         }
 
@@ -1208,6 +1277,7 @@
             if (activeRoleSlug === roleSession.slug) {
                 renderOfficeConnectionStatus(roleSession);
             }
+            persistOfficeState();
         }
 
         function markOfficeSessionConnected(roleSession) {
@@ -1216,6 +1286,7 @@
             if (activeRoleSlug === roleSession.slug) {
                 renderOfficeConnectionStatus(roleSession);
             }
+            persistOfficeState();
         }
 
         async function ensureProviderSession(roleSession, engine) {
@@ -1248,6 +1319,7 @@
             roleSession[sessionKey] = payload.sessionId;
             markOfficeSessionConnected(roleSession);
             injectOfficeEntry(roleSession, payload.initialMessage);
+            persistOfficeState();
             return {
                 ...payload,
                 reused: false
@@ -1317,6 +1389,7 @@
                 codexAvailable = true;
                 setProviderReady('codex', true);
                 activeEngine = 'codex';
+                persistOfficeState();
                 button.classList.remove('text-on-surface-variant');
                 button.classList.add('text-primary');
                 setChatStatus(activeRoleSlug
@@ -1370,6 +1443,7 @@
                 claudeAvailable = true;
                 setProviderReady('claude', true);
                 activeEngine = 'claude';
+                persistOfficeState();
                 button.classList.add('text-primary');
                 setChatStatus(activeRoleSlug
                     ? `${roleSessions[activeRoleSlug].name}'s Claude office session ${payload.reused ? 'is already connected' : 'connected'}.`
@@ -1411,6 +1485,7 @@
                 engine: activeEngine,
                 messageRecord
             });
+            persistOfficeState();
             renderActiveSessions();
             if (roleSession.processing) {
                 setChatStatus(`${roleSession.name} queued ${roleSession.promptQueue.length} prompt${roleSession.promptQueue.length === 1 ? '' : 's'}.`);
@@ -1451,6 +1526,7 @@
             const transcript = roleSession.messages.slice(Math.max(0, transcriptEnd - 12), transcriptEnd);
             roleSession.processing = true;
             roleSession.processingEngine = engine;
+            persistOfficeState();
             renderActiveSessions();
             if (activeRoleSlug === roleSession.slug) {
                 setChatStatus(`${roleSession.name} is working in ${engine === 'claude' ? 'Claude' : 'Codex'}${roleSession.promptQueue.length ? ` · ${roleSession.promptQueue.length} queued` : ''}...`);
@@ -1483,6 +1559,7 @@
             } finally {
                 roleSession.processing = false;
                 roleSession.processingEngine = null;
+                persistOfficeState();
                 renderActiveSessions();
                 if (roleSession.promptQueue.length) {
                     processPromptQueue(roleSession);
@@ -1494,10 +1571,34 @@
             enqueuePromptFromInput();
         }
 
+        function renderRestoredActiveOffice() {
+            if (!activeRoleSlug || !roleSessions[activeRoleSlug]) return;
+            const roleSession = roleSessions[activeRoleSlug];
+            activeRoleContext = roleSession.roleContext;
+            document.getElementById('main-window-title').textContent = `${roleSession.name} · ${roleSession.title} · ${roleSession.level}`;
+            setChatDepartmentBackdrop(roleSession.department);
+            renderTranscript(roleSession.messages);
+            renderOfficeConnectionStatus(roleSession);
+            renderOfficeFilesDropdown(activeRoleContext);
+            renderOfficeTitleDropdown(roleSession.title);
+            renderOfficeLevelDropdown(roleSession.level);
+            showOfficeContext({
+                name: roleSession.name,
+                title: roleSession.title,
+                level: roleSession.level,
+                filesText: activeRoleContext ? contextFilesText(activeRoleContext) : 'Context restored'
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            restoreOfficeState();
             const requestedDivision = new URLSearchParams(window.location.search).get('division') || 'strategy-and-operations';
             const selectedSlug = divisionDepartments[requestedDivision] ? requestedDivision : 'strategy-and-operations';
             setActiveDivision(selectedSlug);
+            setProviderReady('codex', codexAvailable);
+            setProviderReady('claude', claudeAvailable);
+            renderRestoredActiveOffice();
+            renderActiveSessions();
 
             document.querySelectorAll('[data-division-button]').forEach((button) => {
                 button.addEventListener('click', () => {
