@@ -23,6 +23,34 @@ let vikAutomationTimer = null;
 let configurationFileCache = null;
 let configurationFileCachePromise = null;
 
+function runPowerShell(script, timeoutMs = 5000) {
+  return new Promise((resolve) => {
+    const child = spawn('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-Command', script], {
+      windowsHide: true
+    });
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => {
+      child.kill();
+      resolve({ ok: false, stdout, stderr: stderr || 'PowerShell shortcut process timed out.' });
+    }, timeoutMs);
+    child.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+    child.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+    child.on('error', (error) => {
+      clearTimeout(timeout);
+      resolve({ ok: false, stdout, stderr: error.message || String(error) });
+    });
+    child.on('close', (code) => {
+      clearTimeout(timeout);
+      resolve({ ok: code === 0, code, stdout, stderr });
+    });
+  });
+}
+
 async function refreshConfigurationFileCache() {
   configurationFileCachePromise = listConfigurationFiles()
     .then((payload) => {
@@ -93,7 +121,7 @@ async function runAutomationNow(role) {
   return { ok: false, error: `No automation runner is registered for ${role}.` };
 }
 
-function triggerWindowsVoiceShortcut() {
+async function triggerWindowsVoiceShortcut() {
   if (process.platform !== 'win32') {
     return { ok: false, error: 'The microphone shortcut is currently wired for Windows only.' };
   }
@@ -102,26 +130,47 @@ Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 public static class KeyboardInput {
+  [StructLayout(LayoutKind.Sequential)]
+  public struct INPUT {
+    public UInt32 type;
+    public KEYBDINPUT ki;
+  }
+  [StructLayout(LayoutKind.Sequential)]
+  public struct KEYBDINPUT {
+    public UInt16 wVk;
+    public UInt16 wScan;
+    public UInt32 dwFlags;
+    public UInt32 time;
+    public UIntPtr dwExtraInfo;
+  }
   [DllImport("user32.dll")]
-  public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+  public static extern UInt32 SendInput(UInt32 nInputs, INPUT[] pInputs, Int32 cbSize);
 }
 "@
+$INPUT_KEYBOARD = 1
 $KEYUP = 0x0002
-[KeyboardInput]::keybd_event(0x11, 0, 0, [UIntPtr]::Zero)
-[KeyboardInput]::keybd_event(0x5B, 0, 0, [UIntPtr]::Zero)
-[KeyboardInput]::keybd_event(0x20, 0, 0, [UIntPtr]::Zero)
-Start-Sleep -Milliseconds 80
-[KeyboardInput]::keybd_event(0x20, 0, $KEYUP, [UIntPtr]::Zero)
-[KeyboardInput]::keybd_event(0x5B, 0, $KEYUP, [UIntPtr]::Zero)
-[KeyboardInput]::keybd_event(0x11, 0, $KEYUP, [UIntPtr]::Zero)
+$keys = @(0x11, 0x5B, 0x20, 0x20, 0x5B, 0x11)
+$flags = @(0, 0, 0, $KEYUP, $KEYUP, $KEYUP)
+$inputs = New-Object 'KeyboardInput+INPUT[]' $keys.Length
+for ($i = 0; $i -lt $keys.Length; $i++) {
+  $inputs[$i].type = $INPUT_KEYBOARD
+  $inputs[$i].ki.wVk = [UInt16]$keys[$i]
+  $inputs[$i].ki.wScan = 0
+  $inputs[$i].ki.dwFlags = [UInt32]$flags[$i]
+  $inputs[$i].ki.time = 0
+  $inputs[$i].ki.dwExtraInfo = [UIntPtr]::Zero
+}
+$sent = [KeyboardInput]::SendInput([UInt32]$inputs.Length, $inputs, [Runtime.InteropServices.Marshal]::SizeOf([KeyboardInput+INPUT]))
+if ($sent -ne $inputs.Length) {
+  throw "SendInput sent $sent of $($inputs.Length) keyboard events."
+}
+Write-Output "sent=$sent"
 `;
-  const child = spawn('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-Command', script], {
-    detached: true,
-    stdio: 'ignore',
-    windowsHide: true
-  });
-  child.unref();
-  return { ok: true };
+  const result = await runPowerShell(script);
+  if (!result.ok) {
+    return { ok: false, error: (result.stderr || result.stdout || 'Windows SendInput failed.').trim() };
+  }
+  return { ok: true, message: (result.stdout || '').trim() || 'Shortcut sent.' };
 }
 
 function createWindow() {

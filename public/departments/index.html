@@ -2518,7 +2518,7 @@ Configuration is loaded from the local MindShare workspace.
                     setChatStatus(result?.error || 'Microphone shortcut failed.');
                     return;
                 }
-                setChatStatus('Microphone shortcut sent: Ctrl + Windows + Space.');
+                setChatStatus(result?.message ? `Microphone shortcut sent: ${result.message}` : 'Microphone shortcut sent: Ctrl + Windows + Space.');
             } catch (error) {
                 setChatStatus(`Microphone shortcut failed: ${error.message || error}`);
             }
