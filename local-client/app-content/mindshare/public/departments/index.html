@@ -1276,7 +1276,7 @@ Configuration is loaded from the local MindShare workspace.
             persistOfficeState();
             setChatDepartmentBackdrop(roleSession.department);
             renderTranscript(roleSession.messages);
-            injectOfficeEntry(roleSession);
+            injectOfficeEntry(roleSession, null, { forceVisible: true });
             renderOfficeConnectionStatus(roleSession);
             renderOfficeFilesDropdown(activeRoleContext);
             renderOfficeTitleDropdown(title);
@@ -1966,22 +1966,20 @@ Configuration is loaded from the local MindShare workspace.
             return entry;
         }
 
-        function injectOfficeEntry(roleSession, text) {
+        function injectOfficeEntry(roleSession, text, options = {}) {
             const officeText = text || `This is ${roleSession.name}'s office.`;
             const officeNeedle = `${roleSession.name.toLowerCase()}'s office`;
             const hasOfficeEntry = roleSession.messages.some((message) =>
                 String(message.text || message.content || '').toLowerCase().includes(officeNeedle)
             );
-            if (roleSession.officeInjected && hasOfficeEntry) {
+            const latestMessage = roleSession.messages[roleSession.messages.length - 1];
+            const latestIsOfficeEntry = String(latestMessage?.text || latestMessage?.content || '').toLowerCase().includes(officeNeedle);
+            if (roleSession.officeInjected && hasOfficeEntry && (!options.forceVisible || latestIsOfficeEntry)) {
                 return;
             }
             roleSession.officeInjected = true;
-            if (!hasOfficeEntry) {
-                roleSession.messages.unshift({ role: 'user', text: officeText });
-                if (isActiveRoleSession(roleSession)) {
-                    renderTranscript(roleSession.messages);
-                }
-                persistOfficeState();
+            if (!hasOfficeEntry || options.forceVisible) {
+                addChatMessageToRole(roleSession, 'user', officeText);
             } else {
                 persistOfficeState();
             }
