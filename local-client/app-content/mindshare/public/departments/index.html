@@ -2551,16 +2551,19 @@ Configuration is loaded from the local MindShare workspace.
                 return;
             }
             const roleSession = roleSessions[activeRoleSlug];
-            const engine = await resolvePromptEngineForSend();
-            if (!engine) {
-                addChatError('Connect Codex or Claude once before sending a message.');
-                return;
-            }
-
             input.value = '';
             clearPendingAttachments();
             const displayMessage = [message, attachmentLabel(attachments)].filter(Boolean).join('\n');
             const messageRecord = addChatMessageToRole(roleSession, 'user', displayMessage);
+            setChatStatus(`Sending ${roleSession.name}'s prompt...`);
+
+            const engine = await resolvePromptEngineForSend();
+            if (!engine) {
+                addChatMessageToRole(roleSession, 'system', 'Connect Codex or Claude once before sending a message.');
+                clearChatStatus();
+                return;
+            }
+
             roleSession.promptQueue.push({
                 message,
                 attachments,
