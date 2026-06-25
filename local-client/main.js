@@ -1,4 +1,5 @@
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
+const { spawn } = require('node:child_process');
 const path = require('node:path');
 const {
   connectCodex,
@@ -51,6 +52,37 @@ async function runAutomationNow(role) {
   if (role === 'tess') return runTessLevel4Automation({ mode: 'manual' });
   if (role === 'vik') return runVikAutomation({ mode: 'manual' });
   return { ok: false, error: `No automation runner is registered for ${role}.` };
+}
+
+function triggerWindowsVoiceShortcut() {
+  if (process.platform !== 'win32') {
+    return { ok: false, error: 'The microphone shortcut is currently wired for Windows only.' };
+  }
+  const script = `
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+public static class KeyboardInput {
+  [DllImport("user32.dll")]
+  public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+}
+"@
+$KEYUP = 0x0002
+[KeyboardInput]::keybd_event(0x11, 0, 0, [UIntPtr]::Zero)
+[KeyboardInput]::keybd_event(0x5B, 0, 0, [UIntPtr]::Zero)
+[KeyboardInput]::keybd_event(0x20, 0, 0, [UIntPtr]::Zero)
+Start-Sleep -Milliseconds 80
+[KeyboardInput]::keybd_event(0x20, 0, $KEYUP, [UIntPtr]::Zero)
+[KeyboardInput]::keybd_event(0x5B, 0, $KEYUP, [UIntPtr]::Zero)
+[KeyboardInput]::keybd_event(0x11, 0, $KEYUP, [UIntPtr]::Zero)
+`;
+  const child = spawn('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-Command', script], {
+    detached: true,
+    stdio: 'ignore',
+    windowsHide: true
+  });
+  child.unref();
+  return { ok: true };
 }
 
 function createWindow() {
@@ -146,6 +178,7 @@ ipcMain.handle('mindshare:codex-message', async (_event, payload) => sendCodexMe
 ipcMain.handle('mindshare:claude-message', async (_event, payload) => sendClaudeMessage(payload));
 ipcMain.handle('mindshare:configuration-files', async () => listConfigurationFiles());
 ipcMain.handle('mindshare:open-configuration-file', async (_event, payload) => openConfigurationFile(payload));
+ipcMain.handle('mindshare:microphone-shortcut', async () => triggerWindowsVoiceShortcut());
 ipcMain.handle('mindshare:choose-files', async () => {
   const result = await dialog.showOpenDialog({
     title: 'Attach files',

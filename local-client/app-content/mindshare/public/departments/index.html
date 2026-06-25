@@ -394,7 +394,7 @@ Configuration is loaded from the local MindShare workspace.
 <button class="p-2 text-on-surface-variant hover:text-primary transition-colors" id="attach-file-button" type="button">
 <span class="material-symbols-outlined">attachment</span>
 </button>
-<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" id="microphone-shortcut-button" type="button" aria-label="Start microphone input">
 <span class="material-symbols-outlined">mic</span>
 </button>
 <button class="metallic-silver p-2 rounded-lg text-on-primary" id="send-message-button" type="button">
@@ -1835,6 +1835,27 @@ Configuration is loaded from the local MindShare workspace.
             return connectClaudeCli();
         }
 
+        async function triggerMicrophoneShortcut() {
+            const input = document.getElementById('chat-input');
+            input.focus();
+            const client = getLocalClient();
+            if (!client?.triggerMicrophoneShortcut) {
+                setChatStatus('Microphone shortcut is only available in the MindShare Electron app.');
+                return;
+            }
+            setChatStatus('Starting microphone input...');
+            try {
+                const result = await client.triggerMicrophoneShortcut();
+                if (!result?.ok) {
+                    setChatStatus(result?.error || 'Microphone shortcut failed.');
+                    return;
+                }
+                setChatStatus('Microphone shortcut sent: Ctrl + Windows + Space.');
+            } catch (error) {
+                setChatStatus(`Microphone shortcut failed: ${error.message || error}`);
+            }
+        }
+
         async function connectClaudeCli() {
             const button = document.getElementById('connect-claude-button');
             button.disabled = true;
@@ -2055,6 +2076,7 @@ Configuration is loaded from the local MindShare workspace.
             document.getElementById('global-search-results').addEventListener('click', (event) => event.stopPropagation());
             document.getElementById('send-message-button').addEventListener('click', sendCodexMessage);
             document.getElementById('attach-file-button').addEventListener('click', chooseAttachments);
+            document.getElementById('microphone-shortcut-button').addEventListener('click', triggerMicrophoneShortcut);
             document.getElementById('office-context-title').addEventListener('click', toggleOfficeTitleDropdown);
             document.getElementById('office-title-dropdown').addEventListener('click', (event) => event.stopPropagation());
             document.getElementById('office-context-autonomy').addEventListener('click', toggleOfficeAutonomyDropdown);

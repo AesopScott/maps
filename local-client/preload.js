@@ -11,5 +11,6 @@ contextBridge.exposeInMainWorld('MindShareLocalClient', {
   sendClaudeMessage: (payload) => ipcRenderer.invoke('mindshare:claude-message', payload),
   listConfigurationFiles: () => ipcRenderer.invoke('mindshare:configuration-files'),
   openConfigurationFile: (payload) => ipcRenderer.invoke('mindshare:open-configuration-file', payload),
+  triggerMicrophoneShortcut: () => ipcRenderer.invoke('mindshare:microphone-shortcut'),
   chooseFiles: () => ipcRenderer.invoke('mindshare:choose-files')
 });
