@@ -322,6 +322,14 @@ Configuration is loaded from the local MindShare workspace.
 <span class="font-label-sm text-[10px] uppercase tracking-widest text-on-surface-variant/50">No active processing</span>
 </div>
 </div>
+<div class="pt-4">
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-widest text-[10px]">AUTOMATION RUNS</h3>
+<div class="mt-3 space-y-3" id="automation-runs-list">
+<div class="h-16 glass-panel-heavy rounded-xl silver-edge flex items-center justify-center border-dashed border-white/10">
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-on-surface-variant/50">No automation runs</span>
+</div>
+</div>
+</div>
 </div>
 <!-- Footer CTA -->
 
@@ -364,6 +372,10 @@ Configuration is loaded from the local MindShare workspace.
 <div class="relative hidden" id="office-autonomy-control">
 <button class="glass-panel px-3 py-2 rounded-md text-primary silver-edge hover:border-primary/50 hover:text-primary-fixed transition-colors cursor-pointer" id="office-context-autonomy" type="button">Autonomy</button>
 <div class="hidden absolute right-0 top-full mt-2 w-[620px] max-w-[calc(100vw-2rem)] opaque-dropdown silver-edge rounded-lg p-4 z-50 normal-case tracking-normal text-left" id="office-autonomy-dropdown"></div>
+</div>
+<div class="relative hidden" id="office-runs-control">
+<button class="glass-panel px-3 py-2 rounded-md text-primary silver-edge hover:border-primary/50 hover:text-primary-fixed transition-colors cursor-pointer" id="office-context-runs" type="button">Automation Runs</button>
+<div class="hidden absolute right-0 top-full mt-2 w-[620px] max-w-[calc(100vw-2rem)] max-h-96 overflow-y-auto custom-scrollbar opaque-dropdown silver-edge rounded-lg p-4 z-50 normal-case tracking-normal text-left" id="office-runs-dropdown"></div>
 </div>
 <div class="relative">
 <button class="glass-panel px-3 py-2 rounded-md text-on-surface-variant silver-edge hover:border-primary/50 hover:text-primary transition-colors cursor-pointer" id="office-context-title" type="button">Title</button>
@@ -731,8 +743,10 @@ Configuration is loaded from the local MindShare workspace.
         const sessionNotifications = [];
         const notificationTimers = {};
         let configurationFileIndex = [];
+        let automationRuns = [];
         const NOTIFICATION_TTL_MS = 120000;
         const OFFICE_STATE_STORAGE_KEY = 'mindshare.officeSessions.v1';
+        const AUTOMATION_RUNS_STORAGE_KEY = 'mindshare.automationRuns.v1';
         const TESS_AUTOMATION_LAST_RUN_KEY = 'mindshare.tessLevel4Automation.lastRun.v1';
         const VIK_AUTOMATION_LAST_RUN_KEY = 'mindshare.vikAutomation.lastRun.v1';
         const TESS_AUTOMATION_MIN_INTERVAL_MS = 5 * 60 * 1000;
@@ -915,6 +929,24 @@ Configuration is loaded from the local MindShare workspace.
             }
         }
 
+        function persistAutomationRuns() {
+            try {
+                localStorage.setItem(AUTOMATION_RUNS_STORAGE_KEY, JSON.stringify(automationRuns.slice(0, 50)));
+            } catch (error) {
+                console.warn('Could not persist automation runs.', error);
+            }
+        }
+
+        function restoreAutomationRuns() {
+            try {
+                const raw = localStorage.getItem(AUTOMATION_RUNS_STORAGE_KEY);
+                automationRuns = raw ? JSON.parse(raw).filter((run) => run && run.id && run.roleSlug).slice(0, 50) : [];
+            } catch (error) {
+                console.warn('Could not restore automation runs.', error);
+                automationRuns = [];
+            }
+        }
+
         function ensureRoleSession(slug, name, title, level, department = '') {
             if (!roleSessions[slug]) {
                 roleSessions[slug] = {
@@ -937,6 +969,74 @@ Configuration is loaded from the local MindShare workspace.
                 Object.assign(roleSessions[slug], { name, title, level, department: department || roleSessions[slug].department });
             }
             return roleSessions[slug];
+        }
+
+        function automationRunStatusDot(status) {
+            if (status === 'running') return 'bg-emerald-400 animate-pulse';
+            if (status === 'complete' || status === 'paused') return 'bg-primary';
+            if (status === 'failed' || status === 'blocked') return 'bg-error';
+            return 'bg-yellow-300';
+        }
+
+        function automationRunStatusText(status) {
+            if (status === 'running') return 'Running';
+            if (status === 'complete') return 'Complete';
+            if (status === 'paused') return 'Paused';
+            if (status === 'failed') return 'Failed';
+            if (status === 'blocked') return 'Blocked';
+            return 'Queued';
+        }
+
+        function shortTime(value) {
+            if (!value) return '';
+            try {
+                return new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } catch {
+                return '';
+            }
+        }
+
+        function createAutomationRun(roleSession, { level = 'level4', action = 'run', mode = 'manual', label = '' } = {}) {
+            const now = new Date().toISOString();
+            const run = {
+                id: `${roleSession.slug}-${level}-${action}-${Date.now()}`,
+                roleSlug: roleSession.slug,
+                roleName: roleSession.name,
+                roleTitle: roleSession.title,
+                level,
+                action,
+                mode,
+                label: label || `${level.toUpperCase()} ${action}`,
+                status: action === 'pause' ? 'paused' : 'running',
+                startedAt: now,
+                updatedAt: now,
+                completedAt: null,
+                summary: action === 'pause' ? 'Pause requested.' : 'Run started.',
+                details: ''
+            };
+            automationRuns.unshift(run);
+            automationRuns = automationRuns.slice(0, 50);
+            persistAutomationRuns();
+            renderAutomationRuns();
+            renderOfficeRunsControl(findRoleEntry(activeRoleSlug));
+            return run;
+        }
+
+        function updateAutomationRun(runId, patch = {}) {
+            const run = automationRuns.find((candidate) => candidate.id === runId);
+            if (!run) return null;
+            Object.assign(run, patch, { updatedAt: new Date().toISOString() });
+            if (['complete', 'failed', 'blocked', 'paused'].includes(run.status) && !run.completedAt) {
+                run.completedAt = run.updatedAt;
+            }
+            persistAutomationRuns();
+            renderAutomationRuns();
+            renderOfficeRunsControl(findRoleEntry(activeRoleSlug));
+            return run;
+        }
+
+        function automationRunsForRole(roleSlug) {
+            return automationRuns.filter((run) => run.roleSlug === roleSlug);
         }
 
         function setChatDepartmentBackdrop(department) {
@@ -967,6 +1067,7 @@ Configuration is loaded from the local MindShare workspace.
             renderOfficeTitleDropdown('');
             renderOfficeLevelDropdown('');
             renderOfficeAutonomyControl(null);
+            renderOfficeRunsControl(null);
             showOfficeContext({
                 name: 'Agent Name',
                 title: department,
@@ -992,6 +1093,7 @@ Configuration is loaded from the local MindShare workspace.
             renderOfficeTitleDropdown(title);
             renderOfficeLevelDropdown(level);
             renderOfficeAutonomyControl(findRoleEntry(slug));
+            renderOfficeRunsControl(findRoleEntry(slug));
             closeContextDropdowns();
             showOfficeContext({
                 name,
@@ -1021,6 +1123,7 @@ Configuration is loaded from the local MindShare workspace.
                 persistOfficeState();
                 renderOfficeFilesDropdown(payload.roleContext);
                 renderOfficeAutonomyControl(findRoleEntry(slug));
+                renderOfficeRunsControl(findRoleEntry(slug));
                 showOfficeContext({
                     name,
                     title,
@@ -1053,14 +1156,25 @@ Configuration is loaded from the local MindShare workspace.
             if (Date.now() - lastRun < TESS_AUTOMATION_MIN_INTERVAL_MS) return;
             localStorage.setItem(TESS_AUTOMATION_LAST_RUN_KEY, String(Date.now()));
             setChatStatus('Running Tess Level 4 automation from bundled Electron files...');
+            const run = createAutomationRun(roleSession, { level: 'level4', action: 'run', mode: 'scheduled', label: 'Level 4 scheduled run' });
             try {
                 const result = await client.runTessLevel4Automation({ mode: 'scheduled' });
                 const state = result.state;
                 const summary = state
                     ? `Tess Level 4 automation ran from Electron bundle: ${state.result}; backlog=${state.backlog_counts?.backlog ?? 'unknown'}; Reid route gaps=${state.reid_durability?.active_automation_route_gaps?.length ?? 'unknown'}.`
                     : `Tess Level 4 automation ${result.ok ? 'ran' : 'failed'} from Electron bundle.${result.error ? ` ${result.error}` : ''}`;
+                updateAutomationRun(run.id, {
+                    status: result.ok === false ? 'failed' : 'complete',
+                    summary,
+                    details: result.error || JSON.stringify(state || result || {}, null, 2)
+                });
                 console.info(summary);
             } catch (error) {
+                updateAutomationRun(run.id, {
+                    status: 'failed',
+                    summary: `Tess Level 4 automation failed in Electron: ${error.message || error}`,
+                    details: String(error.stack || error.message || error)
+                });
                 console.warn(`Tess Level 4 automation failed in Electron: ${error.message || error}`);
             } finally {
                 if (activeRoleSlug === roleSession.slug) clearChatStatus();
@@ -1075,6 +1189,7 @@ Configuration is loaded from the local MindShare workspace.
             if (Date.now() - lastRun < VIK_AUTOMATION_MIN_INTERVAL_MS) return;
             localStorage.setItem(VIK_AUTOMATION_LAST_RUN_KEY, String(Date.now()));
             setChatStatus('Running Vik automation from bundled Electron files...');
+            const run = createAutomationRun(roleSession, { level: 'level5', action: 'run', mode: 'scheduled', label: 'Level 4/5 scheduled run' });
             try {
                 const result = await client.runVikAutomation({ mode: 'scheduled' });
                 const level4 = result.level4?.state;
@@ -1082,8 +1197,18 @@ Configuration is loaded from the local MindShare workspace.
                 const summary = level4 || level5
                     ? `Vik automation ran from Electron bundle: Level 4=${level4?.result || 'unknown'}; eligible=${level4?.counts?.eligible_items ?? 'unknown'}; Level 5=${level5?.result || 'unknown'}; unreviewed=${level5?.counts?.unreviewed_completed_reports ?? 'unknown'}.`
                     : `Vik automation ${result.ok ? 'ran' : 'failed'} from Electron bundle.`;
+                updateAutomationRun(run.id, {
+                    status: result.ok === false ? 'failed' : 'complete',
+                    summary,
+                    details: result.error || JSON.stringify(result || {}, null, 2)
+                });
                 console.info(summary);
             } catch (error) {
+                updateAutomationRun(run.id, {
+                    status: 'failed',
+                    summary: `Vik automation failed in Electron: ${error.message || error}`,
+                    details: String(error.stack || error.message || error)
+                });
                 console.warn(`Vik automation failed in Electron: ${error.message || error}`);
             } finally {
                 if (activeRoleSlug === roleSession.slug) clearChatStatus();
@@ -1235,11 +1360,16 @@ Configuration is loaded from the local MindShare workspace.
             document.getElementById('office-autonomy-dropdown')?.classList.add('hidden');
         }
 
+        function closeOfficeRunsDropdown() {
+            document.getElementById('office-runs-dropdown')?.classList.add('hidden');
+        }
+
         function closeContextDropdowns() {
             closeOfficeFilesDropdown();
             closeOfficeLevelDropdown();
             closeOfficeTitleDropdown();
             closeOfficeAutonomyDropdown();
+            closeOfficeRunsDropdown();
         }
 
         function toggleOfficeFilesDropdown(event) {
@@ -1250,6 +1380,7 @@ Configuration is loaded from the local MindShare workspace.
             closeOfficeLevelDropdown();
             closeOfficeTitleDropdown();
             closeOfficeAutonomyDropdown();
+            closeOfficeRunsDropdown();
             dropdown.classList.toggle('hidden');
         }
 
@@ -1298,6 +1429,7 @@ Configuration is loaded from the local MindShare workspace.
             closeOfficeFilesDropdown();
             closeOfficeTitleDropdown();
             closeOfficeAutonomyDropdown();
+            closeOfficeRunsDropdown();
             dropdown.classList.toggle('hidden');
         }
 
@@ -1361,6 +1493,7 @@ Configuration is loaded from the local MindShare workspace.
             closeOfficeFilesDropdown();
             closeOfficeLevelDropdown();
             closeOfficeAutonomyDropdown();
+            closeOfficeRunsDropdown();
             dropdown.classList.toggle('hidden');
         }
 
@@ -1420,6 +1553,7 @@ Configuration is loaded from the local MindShare workspace.
             closeOfficeFilesDropdown();
             closeOfficeLevelDropdown();
             closeOfficeTitleDropdown();
+            closeOfficeRunsDropdown();
             dropdown.classList.toggle('hidden');
         }
 
@@ -1431,9 +1565,15 @@ Configuration is loaded from the local MindShare workspace.
                 return;
             }
             setChatStatus(`${action === 'run' ? 'Running' : 'Pausing'} ${roleSession.name} ${level.toUpperCase()} automation...`);
+            const run = createAutomationRun(roleSession, { level, action, mode: 'manual', label: `${level.toUpperCase()} ${action}` });
             try {
                 const result = await client.controlAutomation({ role, action, level });
                 if (!result.ok) {
+                    updateAutomationRun(run.id, {
+                        status: 'failed',
+                        summary: result.error || `${roleSession.name} automation ${action} failed.`,
+                        details: JSON.stringify(result || {}, null, 2)
+                    });
                     addChatMessageToRole(roleSession, 'system', result.error || `${roleSession.name} automation ${action} failed.`);
                     return;
                 }
@@ -1446,8 +1586,18 @@ Configuration is loaded from the local MindShare workspace.
                 } else if (action === 'pause') {
                     summary = `${roleSession.name} automation timer paused.`;
                 }
+                updateAutomationRun(run.id, {
+                    status: action === 'pause' ? 'paused' : 'complete',
+                    summary,
+                    details: JSON.stringify(result || {}, null, 2)
+                });
                 addChatMessageToRole(roleSession, 'system', summary);
             } catch (error) {
+                updateAutomationRun(run.id, {
+                    status: 'failed',
+                    summary: `${roleSession.name} automation ${action} failed: ${error.message || error}`,
+                    details: String(error.stack || error.message || error)
+                });
                 addChatMessageToRole(roleSession, 'system', `${roleSession.name} automation ${action} failed: ${error.message || error}`);
             } finally {
                 if (activeRoleSlug === role) clearChatStatus();
@@ -1670,6 +1820,127 @@ Configuration is loaded from the local MindShare workspace.
                     }
                 });
             });
+        }
+
+        function renderAutomationRuns() {
+            const container = document.getElementById('automation-runs-list');
+            if (!container) return;
+            const visibleRuns = automationRuns.slice(0, 8);
+            if (!visibleRuns.length) {
+                container.innerHTML = `
+                    <div class="h-16 glass-panel-heavy rounded-xl silver-edge flex items-center justify-center border-dashed border-white/10">
+                        <span class="font-label-sm text-[10px] uppercase tracking-widest text-on-surface-variant/50">No automation runs</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = visibleRuns.map((run) => `
+                <button class="w-full min-h-16 glass-panel-heavy rounded-xl silver-edge flex items-center justify-between gap-3 px-4 py-3 text-left hover:border-primary/40 transition-colors" type="button" data-automation-run="${run.id}">
+                    <span class="min-w-0">
+                        <span class="block truncate text-sm font-medium text-primary">${escapeHtml(run.roleName)}</span>
+                        <span class="block truncate text-[10px] uppercase tracking-widest text-on-surface-variant">${escapeHtml(run.label)} · ${escapeHtml(shortTime(run.updatedAt))}</span>
+                    </span>
+                    <span class="flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-widest text-on-surface-variant">
+                        <span class="w-2 h-2 rounded-full ${automationRunStatusDot(run.status)}"></span>
+                        ${escapeHtml(automationRunStatusText(run.status))}
+                    </span>
+                </button>
+            `).join('');
+
+            container.querySelectorAll('[data-automation-run]').forEach((button) => {
+                button.addEventListener('click', () => showAutomationRun(button.dataset.automationRun));
+            });
+        }
+
+        function renderOfficeRunsControl(entry) {
+            const control = document.getElementById('office-runs-control');
+            const dropdown = document.getElementById('office-runs-dropdown');
+            const button = document.getElementById('office-context-runs');
+            if (!control || !dropdown || !button) return;
+            const runs = activeRoleSlug ? automationRunsForRole(activeRoleSlug) : [];
+            control.classList.toggle('hidden', !activeRoleSlug);
+            button.textContent = runs.length ? `Automation Runs (${runs.length})` : 'Automation Runs';
+            if (!activeRoleSlug) {
+                dropdown.innerHTML = '';
+                return;
+            }
+            if (!runs.length) {
+                dropdown.innerHTML = `
+                    <div class="rounded-lg border border-white/10 bg-surface-container-lowest p-4 text-sm text-on-surface-variant">
+                        No automation runs have been recorded for this office yet.
+                    </div>
+                `;
+                return;
+            }
+            dropdown.innerHTML = `
+                <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
+                    <div>
+                        <div class="font-label-sm text-[10px] uppercase tracking-widest text-primary">Automation Runs</div>
+                        <div class="mt-1 font-body-md text-sm text-on-surface">${escapeHtml(roleSessions[activeRoleSlug]?.name || 'Current office')}</div>
+                    </div>
+                    <button class="text-on-surface-variant hover:text-primary" type="button" data-close-runs>
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+                <div class="mt-4 space-y-3">
+                    ${runs.map((run) => `
+                        <div class="rounded-lg border border-white/10 bg-surface-container-lowest p-3">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 font-label-sm text-[10px] uppercase tracking-widest text-primary">
+                                        <span class="w-2 h-2 rounded-full ${automationRunStatusDot(run.status)}"></span>
+                                        ${escapeHtml(automationRunStatusText(run.status))}
+                                    </div>
+                                    <div class="mt-2 text-sm font-medium text-on-surface">${escapeHtml(run.label)}</div>
+                                    <p class="mt-1 text-sm leading-relaxed text-on-surface-variant">${escapeHtml(run.summary || 'No summary yet.')}</p>
+                                    <div class="mt-2 font-mono text-[11px] text-on-surface-variant">${escapeHtml(run.startedAt)}${run.completedAt ? ` -> ${escapeHtml(run.completedAt)}` : ''}</div>
+                                </div>
+                                <button class="glass-panel px-3 py-2 rounded-md text-primary silver-edge hover:border-primary/60 transition-colors" type="button" data-view-run="${run.id}">View</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            dropdown.querySelector('[data-close-runs]')?.addEventListener('click', closeOfficeRunsDropdown);
+            dropdown.querySelectorAll('[data-view-run]').forEach((button) => {
+                button.addEventListener('click', () => showAutomationRun(button.dataset.viewRun));
+            });
+        }
+
+        function toggleOfficeRunsDropdown(event) {
+            event?.stopPropagation();
+            const dropdown = document.getElementById('office-runs-dropdown');
+            if (!dropdown || !activeRoleSlug) return;
+            renderOfficeRunsControl(findRoleEntry(activeRoleSlug));
+            closeOfficeFilesDropdown();
+            closeOfficeLevelDropdown();
+            closeOfficeTitleDropdown();
+            closeOfficeAutonomyDropdown();
+            dropdown.classList.toggle('hidden');
+        }
+
+        function showAutomationRun(runId) {
+            const run = automationRuns.find((candidate) => candidate.id === runId);
+            if (!run) return;
+            const session = roleSessions[run.roleSlug] || findRoleEntry(run.roleSlug);
+            if (session?.slug && roleSessions[session.slug]) {
+                selectRole(session.slug, session.name, session.title, session.level, session.department);
+            }
+            const details = [
+                `${run.roleName} automation run`,
+                `Status: ${automationRunStatusText(run.status)}`,
+                `Run: ${run.label}`,
+                `Started: ${run.startedAt}`,
+                run.completedAt ? `Completed: ${run.completedAt}` : '',
+                `Summary: ${run.summary || 'No summary yet.'}`,
+                run.details ? `Details: ${run.details}` : ''
+            ].filter(Boolean).join('\n');
+            const roleSession = roleSessions[run.roleSlug];
+            if (roleSession) {
+                addChatMessageToRole(roleSession, 'system', details);
+            }
+            closeOfficeRunsDropdown();
         }
 
         function removeSessionNotification(id) {
@@ -2133,6 +2404,8 @@ Configuration is loaded from the local MindShare workspace.
             renderOfficeFilesDropdown(activeRoleContext);
             renderOfficeTitleDropdown(roleSession.title);
             renderOfficeLevelDropdown(roleSession.level);
+            renderOfficeAutonomyControl(findRoleEntry(roleSession.slug));
+            renderOfficeRunsControl(findRoleEntry(roleSession.slug));
             showOfficeContext({
                 name: roleSession.name,
                 title: roleSession.title,
@@ -2143,6 +2416,7 @@ Configuration is loaded from the local MindShare workspace.
 
         document.addEventListener('DOMContentLoaded', () => {
             restoreOfficeState();
+            restoreAutomationRuns();
             const requestedDivision = new URLSearchParams(window.location.search).get('division') || 'strategy-and-operations';
             const selectedSlug = divisionDepartments[requestedDivision] ? requestedDivision : 'strategy-and-operations';
             setActiveDivision(selectedSlug);
@@ -2150,6 +2424,7 @@ Configuration is loaded from the local MindShare workspace.
             setProviderReady('claude', claudeAvailable);
             renderRestoredActiveOffice();
             renderActiveSessions();
+            renderAutomationRuns();
 
             document.querySelectorAll('[data-division-button]').forEach((button) => {
                 button.addEventListener('click', () => {
@@ -2186,6 +2461,8 @@ Configuration is loaded from the local MindShare workspace.
             document.getElementById('office-title-dropdown').addEventListener('click', (event) => event.stopPropagation());
             document.getElementById('office-context-autonomy').addEventListener('click', toggleOfficeAutonomyDropdown);
             document.getElementById('office-autonomy-dropdown').addEventListener('click', (event) => event.stopPropagation());
+            document.getElementById('office-context-runs').addEventListener('click', toggleOfficeRunsDropdown);
+            document.getElementById('office-runs-dropdown').addEventListener('click', (event) => event.stopPropagation());
             document.getElementById('office-context-level').addEventListener('click', toggleOfficeLevelDropdown);
             document.getElementById('office-level-dropdown').addEventListener('click', (event) => event.stopPropagation());
             document.getElementById('office-context-files').addEventListener('click', toggleOfficeFilesDropdown);
