@@ -12,6 +12,10 @@ const MAX_ROLE_CONTEXT_CHARS = 45000;
 const MAX_TRANSCRIPT_ITEMS = 6;
 const MAX_TRANSCRIPT_ITEM_CHARS = 1600;
 const MAX_TRANSCRIPT_CHARS = 10000;
+const DEFAULT_CONTEXT_WINDOWS = {
+  codex: 1000000,
+  claude: 200000
+};
 const officeWorkspaceInstruction = `This office is an active local workspace session.
 
 You may inspect and modify files in the local workspace when the user's request and the active role's authority allow it. Do not treat filesystem access as permission by itself. Respect role boundaries, approval gates, production/release limits, external communication limits, spending limits, and secrets boundaries. If a requested edit is outside role authority or needs approval, explain the blocker and request the needed approval.`;
@@ -1372,6 +1376,7 @@ function normalizeUsage(provider, usage = {}, extra = {}) {
     cacheCreationInputTokens,
     reasoningOutputTokens,
     totalContextInputTokens: inputTokens + cachedInputTokens + cacheCreationInputTokens,
+    contextWindowTokens: Number(extra.contextWindowTokens || DEFAULT_CONTEXT_WINDOWS[provider] || 0) || null,
     costUsd: typeof extra.costUsd === 'number' ? extra.costUsd : null,
     model: extra.model || null,
     source: extra.source || `${provider}-cli`,

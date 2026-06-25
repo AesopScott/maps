@@ -1165,6 +1165,15 @@ Configuration is loaded from the local MindShare workspace.
             return String(number);
         }
 
+        function formatContextPercent(usage) {
+            const windowTokens = Number(usage?.contextWindowTokens || 0);
+            const inputTokens = Number(usage?.inputTokens || 0);
+            if (!windowTokens || !inputTokens) return 'Ctx est n/a';
+            const percent = (inputTokens / windowTokens) * 100;
+            const formatted = percent >= 10 ? percent.toFixed(0) : percent.toFixed(1);
+            return `Ctx est ${formatted}%`;
+        }
+
         function emptyTokenTotals() {
             return {
                 inputTokens: 0,
@@ -1209,7 +1218,7 @@ Configuration is loaded from the local MindShare workspace.
             const provider = last.provider === 'claude' ? 'Claude' : 'Codex';
             const cache = Number(last.cachedInputTokens || 0) + Number(last.cacheCreationInputTokens || 0);
             const totalCache = Number(totals.cachedInputTokens || 0) + Number(totals.cacheCreationInputTokens || 0);
-            element.textContent = `Last ${provider}: In ${formatTokenCount(last.inputTokens)} · Cache ${formatTokenCount(cache)} · Out ${formatTokenCount(last.outputTokens)} | Total: In ${formatTokenCount(totals.inputTokens)} · Cache ${formatTokenCount(totalCache)} · Out ${formatTokenCount(totals.outputTokens)}`;
+            element.textContent = `Last ${provider}: In ${formatTokenCount(last.inputTokens)} · Cache ${formatTokenCount(cache)} · Out ${formatTokenCount(last.outputTokens)} · ${formatContextPercent(last)} | Total: In ${formatTokenCount(totals.inputTokens)} · Cache ${formatTokenCount(totalCache)} · Out ${formatTokenCount(totals.outputTokens)}`;
         }
 
         function createAutomationRun(roleSession, { level = 'level4', action = 'run', mode = 'manual', label = '' } = {}) {
