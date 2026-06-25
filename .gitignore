@@ -5,6 +5,8 @@ Thumbs.db
 node_modules/
 __pycache__/
 *.pyc
+graphify-out/
+local-client/graphify-out/
 .env
 .env.*
 !.env.example
