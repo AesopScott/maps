@@ -801,6 +801,7 @@ Configuration is loaded from the local MindShare workspace.
             "Data Engineering": "../assets/departments/data-engineering-grid.png",
             "Platform Engineering": "../assets/departments/platform-engineering-cloud.png"
         };
+        let currentChatBackdropImagePath = '';
 
         function findRoleEntry(slug) {
             for (const division of Object.values(divisionDepartments)) {
@@ -1223,15 +1224,11 @@ Configuration is loaded from the local MindShare workspace.
 
         function setChatDepartmentBackdrop(department) {
             const transcript = document.getElementById('chat-transcript');
-            const backdrop = document.getElementById('chat-backdrop');
+            currentChatBackdropImagePath = departmentBackdrops[department] || '';
+            const backdrop = ensureChatBackdrop();
             if (!transcript || !backdrop) return;
-            const imagePath = departmentBackdrops[department] || '';
-            backdrop.classList.toggle('is-visible', Boolean(imagePath));
-            if (imagePath) {
-                backdrop.style.backgroundImage = `url("${imagePath}")`;
-            } else {
-                backdrop.style.backgroundImage = '';
-            }
+            backdrop.classList.toggle('is-visible', Boolean(currentChatBackdropImagePath));
+            backdrop.style.backgroundImage = currentChatBackdropImagePath ? `url("${currentChatBackdropImagePath}")` : '';
         }
 
         function browseDepartment(department) {
@@ -1810,6 +1807,8 @@ Configuration is loaded from the local MindShare workspace.
                 backdrop.setAttribute('aria-hidden', 'true');
                 transcript.prepend(backdrop);
             }
+            backdrop.classList.toggle('is-visible', Boolean(currentChatBackdropImagePath));
+            backdrop.style.backgroundImage = currentChatBackdropImagePath ? `url("${currentChatBackdropImagePath}")` : '';
             return backdrop;
         }
 
