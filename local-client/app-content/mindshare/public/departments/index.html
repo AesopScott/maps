@@ -75,11 +75,9 @@
             isolation: isolate;
             min-height: 0;
         }
-        .chat-canvas::before {
-            content: "";
+        .chat-backdrop {
             position: absolute;
             inset: 0;
-            background-image: var(--chat-department-backdrop);
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -88,10 +86,10 @@
             pointer-events: none;
             z-index: 0;
         }
-        .chat-canvas.has-department-backdrop::before {
+        .chat-backdrop.is-visible {
             opacity: 0.3;
         }
-        .chat-canvas > * {
+        .chat-canvas > *:not(.chat-backdrop) {
             position: relative;
             z-index: 2;
         }
@@ -413,6 +411,7 @@ Configuration is loaded from the local MindShare workspace.
 </div>
 <!-- Chat Canvas -->
 <div class="chat-canvas relative flex-1 overflow-y-auto p-8 custom-scrollbar" id="chat-transcript" aria-live="polite">
+<div class="chat-backdrop" id="chat-backdrop" aria-hidden="true"></div>
 <div class="h-full min-h-[320px] flex items-center justify-center border border-white/5 bg-surface/30" data-chat-placeholder>
 <p class="font-label-sm text-on-surface-variant/50 uppercase tracking-widest">Chat Window</p>
 </div>
@@ -1224,13 +1223,14 @@ Configuration is loaded from the local MindShare workspace.
 
         function setChatDepartmentBackdrop(department) {
             const transcript = document.getElementById('chat-transcript');
-            if (!transcript) return;
+            const backdrop = document.getElementById('chat-backdrop');
+            if (!transcript || !backdrop) return;
             const imagePath = departmentBackdrops[department] || '';
-            transcript.classList.toggle('has-department-backdrop', Boolean(imagePath));
+            backdrop.classList.toggle('is-visible', Boolean(imagePath));
             if (imagePath) {
-                transcript.style.setProperty('--chat-department-backdrop', `url("${imagePath}")`);
+                backdrop.style.backgroundImage = `url("${imagePath}")`;
             } else {
-                transcript.style.removeProperty('--chat-department-backdrop');
+                backdrop.style.backgroundImage = '';
             }
         }
 
@@ -1799,6 +1799,20 @@ Configuration is loaded from the local MindShare workspace.
             }
         }
 
+        function ensureChatBackdrop() {
+            const transcript = document.getElementById('chat-transcript');
+            if (!transcript) return null;
+            let backdrop = document.getElementById('chat-backdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.className = 'chat-backdrop';
+                backdrop.id = 'chat-backdrop';
+                backdrop.setAttribute('aria-hidden', 'true');
+                transcript.prepend(backdrop);
+            }
+            return backdrop;
+        }
+
         function escapeHtml(value) {
             return String(value ?? '')
                 .replaceAll('&', '&amp;')
@@ -1913,6 +1927,7 @@ Configuration is loaded from the local MindShare workspace.
 
         function appendChatMessage(role, text) {
             const transcript = document.getElementById('chat-transcript');
+            ensureChatBackdrop();
             const isUser = role === 'user';
             const row = document.createElement('div');
             row.className = `max-w-4xl mx-auto mb-6 flex gap-4 ${isUser ? 'flex-row-reverse' : ''}`;
@@ -1929,12 +1944,13 @@ Configuration is loaded from the local MindShare workspace.
         function renderTranscript(messages) {
             const transcript = document.getElementById('chat-transcript');
             transcript.innerHTML = '';
+            ensureChatBackdrop();
             if (!messages.length) {
-                transcript.innerHTML = `
+                transcript.insertAdjacentHTML('beforeend', `
                     <div class="h-full min-h-[320px] flex items-center justify-center border border-white/5 bg-surface/30" data-chat-placeholder>
                         <p class="font-label-sm text-on-surface-variant/50 uppercase tracking-widest">Chat Window</p>
                     </div>
-                `;
+                `);
                 return;
             }
             messages.forEach((message) => appendChatMessage(message.role, message.text));
