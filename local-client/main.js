@@ -69,10 +69,38 @@ function createWindow() {
     ? bundledPublicRoot
     : devPublicRoot;
   window.loadFile(path.join(publicRoot, 'index.html'));
+  window.webContents.on('before-input-event', (event, input) => {
+    const key = String(input.key || '').toLowerCase();
+    const isRefresh = key === 'f5' || (key === 'r' && (input.control || input.meta));
+    if (isRefresh) {
+      event.preventDefault();
+      window.webContents.reloadIgnoringCache();
+    }
+  });
 }
 
 function installApplicationMenu() {
   const template = [
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Refresh Interface',
+          accelerator: process.platform === 'darwin' ? 'Cmd+R' : 'Ctrl+R',
+          click: (_menuItem, browserWindow) => {
+            browserWindow?.webContents.reloadIgnoringCache();
+          }
+        },
+        {
+          label: 'Refresh Interface',
+          accelerator: 'F5',
+          visible: false,
+          click: (_menuItem, browserWindow) => {
+            browserWindow?.webContents.reloadIgnoringCache();
+          }
+        }
+      ]
+    },
     {
       label: 'Edit',
       submenu: [
