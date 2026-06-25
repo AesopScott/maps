@@ -61,6 +61,40 @@ const ROLE_CATALOG = {
       'memory.md'
     ]
   },
+  imani: {
+    name: 'Imani',
+    title: 'Data Engineering Director',
+    level: 'Level 3 Staff',
+    office: "Imani's office",
+    rolePath: ['mojo', 'roles', 'data-engineering-director'],
+    files: [
+      'WhoAmI.md',
+      'name.md',
+      'personality.md',
+      'role-agent.md',
+      'workflow.md',
+      'loop.md',
+      'Autonomy.md',
+      'memory.md'
+    ]
+  },
+  reid: {
+    name: 'Reid',
+    title: 'Release Manager',
+    level: 'Level 3 Staff',
+    office: "Reid's office",
+    rolePath: ['mindshare', 'roles', 'release-manager'],
+    files: [
+      'name.md',
+      'personality.md',
+      'role-agent.md',
+      'workflow.md',
+      'loop.md',
+      'Autonomy.md',
+      'automation.md',
+      'memory.md'
+    ]
+  },
   tess: {
     name: 'Tess',
     title: 'Autonomy Engineer',

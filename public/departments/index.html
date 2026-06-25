@@ -422,9 +422,26 @@
                 label: "Technology & Data",
                 departments: ["Engineering", "Platform Engineering", "Data Engineering", "AI Engineering", "Security"],
                 entries: {
+                    "Platform Engineering": [
+                        { slug: "reid", name: "Reid", title: "Release Manager", level: "Level 3 Staff", image: "../assets/team/reid.webp" }
+                    ],
+                    "Data Engineering": [
+                        { slug: "imani", name: "Imani", title: "Data Engineering Director", level: "Level 3 Staff" }
+                    ],
                     "AI Engineering": [
                         { slug: "bea", name: "Bea", title: "Mojo MAPS Engineer", level: "Level 3 Staff", image: "../assets/team/bea.webp" },
-                        { slug: "tess", name: "Tess", title: "Autonomy Engineer", level: "Level 4 Scoped Autonomy", image: "../assets/team/tess.webp" }
+                        {
+                            slug: "tess",
+                            name: "Tess",
+                            title: "Autonomy Engineer",
+                            level: "Level 4 Scoped Autonomy",
+                            image: "../assets/team/tess.webp",
+                            autonomy: {
+                                level4: "Operational inside approved scope: build Level 3 role automation baselines, draft Level 4 promotion packets, define Level 4/5/6 capability reviews, and route Scott review.",
+                                level5: "Defined, not active: policy-backed promotion-readiness loop, recurring automation-baseline discovery, autonomy health observation, and policy/eval/runtime recommendations.",
+                                level6: "Not defined for Tess. Any future Level 6 requires Scott-defined capability, Vik control-plane review, eval proof, observation, audit, rollback, revocation, and human override."
+                            }
+                        }
                     ]
                 }
             },
@@ -443,6 +460,37 @@
         };
 
         const departmentIcons = ["corporate_fare", "account_tree", "groups_2", "person_search", "shield"];
+        function autonomyControlMarkup(entry) {
+            if (!entry.autonomy) return '';
+            const autonomyId = `${entry.slug}-autonomy-details`;
+            return `
+                <div class="relative">
+                    <button class="px-2 py-1 rounded border border-primary/30 bg-primary/10 text-[10px] uppercase tracking-widest text-primary hover:bg-primary/20 transition-colors" type="button" onclick="event.stopPropagation(); toggleAutonomyDetails('${autonomyId}')">Autonomy</button>
+                    <div class="hidden absolute left-0 top-full z-[70] mt-2 w-72 opaque-dropdown silver-edge rounded-lg p-3 text-left" id="${autonomyId}" onclick="event.stopPropagation()">
+                        <div class="font-label-sm text-[10px] uppercase tracking-widest text-primary">Autonomy Settings</div>
+                        <div class="mt-3 space-y-3 text-xs leading-relaxed text-on-surface-variant">
+                            <div><span class="font-semibold text-on-surface">Level 4:</span> ${escapeHtml(entry.autonomy.level4 || 'Not defined.')}</div>
+                            <div><span class="font-semibold text-on-surface">Level 5:</span> ${escapeHtml(entry.autonomy.level5 || 'Not defined.')}</div>
+                            <div><span class="font-semibold text-on-surface">Level 6:</span> ${escapeHtml(entry.autonomy.level6 || 'Not defined.')}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleAutonomyDetails(id) {
+            const panel = document.getElementById(id);
+            if (!panel) return;
+            document.querySelectorAll('[id$="-autonomy-details"]').forEach((candidate) => {
+                if (candidate.id !== id) candidate.classList.add('hidden');
+            });
+            panel.classList.toggle('hidden');
+        }
+
+        function closeAutonomyDetails() {
+            document.querySelectorAll('[id$="-autonomy-details"]').forEach((panel) => panel.classList.add('hidden'));
+        }
+
         const levelDefinitions = {
             "level 0": {
                 name: "Level 0 Candidate",
@@ -525,14 +573,19 @@
                 const icon = departmentIcons[index] || "business_center";
                 const entries = selected.entries?.[department] || [];
                 const entryMarkup = entries.length ? entries.map(entry => `
-                    <button class="w-full text-left flex items-center justify-between gap-3 p-3 rounded-lg border border-white/10 bg-surface-container-lowest hover:border-primary/40 hover:bg-white/5 transition-all" type="button" onclick="selectRole('${entry.slug}', '${entry.name}', '${entry.title}', '${entry.level}', '${department}')">
-                        <span class="min-w-0 flex flex-col gap-1">
-                            <span class="text-sm font-medium text-primary">${entry.name}</span>
-                            <span class="text-xs text-on-surface">${entry.title}</span>
-                            <span class="text-[10px] uppercase tracking-widest text-on-surface-variant">${entry.level}</span>
-                        </span>
-                        ${entry.image ? `<img class="w-12 h-12 rounded-lg border border-primary/30 object-cover shrink-0" src="${entry.image}" alt="${entry.name} portrait">` : ''}
-                    </button>
+                    <div class="relative rounded-lg border border-white/10 bg-surface-container-lowest hover:border-primary/40 hover:bg-white/5 transition-all cursor-pointer" role="button" tabindex="0" onclick="selectRole('${entry.slug}', '${entry.name}', '${entry.title}', '${entry.level}', '${department}')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectRole('${entry.slug}', '${entry.name}', '${entry.title}', '${entry.level}', '${department}'); }">
+                        <div class="w-full text-left flex items-center justify-between gap-3 p-3">
+                            <span class="min-w-0 flex flex-col gap-1">
+                                <span class="text-sm font-medium text-primary">${entry.name}</span>
+                                <span class="flex items-center gap-2 text-xs text-on-surface">
+                                    ${autonomyControlMarkup(entry)}
+                                    <span>${entry.title}</span>
+                                </span>
+                                <span class="text-[10px] uppercase tracking-widest text-on-surface-variant">${entry.level}</span>
+                            </span>
+                            ${entry.image ? `<img class="w-12 h-12 rounded-lg border border-primary/30 object-cover shrink-0" src="${entry.image}" alt="${entry.name} portrait">` : ''}
+                        </div>
+                    </div>
                 `).join('') : `
                     <div class="flex flex-col">
                         <span class="text-sm font-medium text-primary">${department}</span>
@@ -1026,7 +1079,7 @@
         }
 
         function escapeHtml(value) {
-            return value
+            return String(value ?? '')
                 .replaceAll('&', '&amp;')
                 .replaceAll('<', '&lt;')
                 .replaceAll('>', '&gt;')
@@ -1620,6 +1673,7 @@
             document.getElementById('office-files-dropdown').addEventListener('click', (event) => event.stopPropagation());
             document.addEventListener('click', () => {
                 closeContextDropdowns();
+                closeAutonomyDetails();
                 closeNotificationMenu();
             });
             document.getElementById('chat-input').addEventListener('keydown', (event) => {
