@@ -7,6 +7,11 @@ const path = require('node:path');
 const repoRoot = path.resolve(__dirname, '..');
 const sessions = new Map();
 const sessionIndex = new Map();
+const MAX_ROLE_FILE_CHARS = 6000;
+const MAX_ROLE_CONTEXT_CHARS = 45000;
+const MAX_TRANSCRIPT_ITEMS = 6;
+const MAX_TRANSCRIPT_ITEM_CHARS = 1600;
+const MAX_TRANSCRIPT_CHARS = 10000;
 const officeWorkspaceInstruction = `This office is an active local workspace session.
 
 You may inspect and modify files in the local workspace when the user's request and the active role's authority allow it. Do not treat filesystem access as permission by itself. Respect role boundaries, approval gates, production/release limits, external communication limits, spending limits, and secrets boundaries. If a requested edit is outside role authority or needs approval, explain the blocker and request the needed approval.`;
@@ -38,10 +43,70 @@ function publicSessionSnapshot(sessionId, session) {
   };
 }
 
+function truncateText(value, maxChars) {
+  const text = String(value || '');
+  if (text.length <= maxChars) return text;
+  return `${text.slice(0, Math.max(0, maxChars - 140))}\n\n[MindShare truncated ${text.length - maxChars} excess characters from this section before sending to the CLI.]`;
+}
+
+function pushWithinBudget(parts, next, maxChars) {
+  const currentLength = parts.reduce((total, part) => total + part.length, 0);
+  const separatorLength = parts.length ? 6 : 0;
+  if (currentLength + separatorLength + next.length <= maxChars) {
+    parts.push(next);
+    return true;
+  }
+  const remaining = maxChars - currentLength - separatorLength;
+  if (remaining > 240) {
+    parts.push(truncateText(next, remaining));
+  }
+  return false;
+}
+
 function listSessions() {
   return {
     ok: true,
     sessions: [...sessions.entries()].map(([sessionId, session]) => publicSessionSnapshot(sessionId, session))
+  };
+}
+
+function resetProviderSession(payload = {}) {
+  const provider = String(payload.provider || '').trim().toLowerCase();
+  const roleSlug = String(payload.roleSlug || '').trim().toLowerCase();
+  const sessionId = String(payload.sessionId || '').trim();
+  const ids = new Set();
+
+  if (sessionId && sessions.has(sessionId)) {
+    ids.add(sessionId);
+  }
+
+  if (provider && roleSlug) {
+    const indexedKey = providerSessionKey(provider, roleSlug);
+    const indexedId = sessionIndex.get(indexedKey);
+    if (indexedId) ids.add(indexedId);
+    sessionIndex.delete(indexedKey);
+  } else if (roleSlug) {
+    ['codex', 'claude'].forEach((candidateProvider) => {
+      const indexedKey = providerSessionKey(candidateProvider, roleSlug);
+      const indexedId = sessionIndex.get(indexedKey);
+      if (indexedId) ids.add(indexedId);
+      sessionIndex.delete(indexedKey);
+    });
+  }
+
+  ids.forEach((candidateId) => {
+    const session = sessions.get(candidateId);
+    if (session) {
+      sessionIndex.delete(providerSessionKey(session.provider, session.roleSlug));
+    }
+    sessions.delete(candidateId);
+  });
+
+  return {
+    ok: true,
+    reset: ids.size,
+    roleSlug,
+    provider: provider || 'all'
   };
 }
 
@@ -1164,10 +1229,17 @@ function buildRolePromptContext(roleContext) {
     return 'No role context is currently selected.';
   }
 
-  const fileSections = roleContext.files
-    .filter((file) => file.exists)
-    .map((file) => `## ${file.fileName}\nPath: ${file.path}\n\n${file.content}`)
+  const fileSections = [];
+  for (const file of roleContext.files.filter((candidate) => candidate.exists)) {
+    const section = `## ${file.fileName}\nPath: ${file.path}\n\n${truncateText(file.content, MAX_ROLE_FILE_CHARS)}`;
+    if (!pushWithinBudget(fileSections, section, MAX_ROLE_CONTEXT_CHARS)) break;
+  }
+  const renderedFileSections = fileSections
     .join('\n\n---\n\n');
+
+  const omittedCount = roleContext.files
+    .filter((file) => file.exists)
+    .length - fileSections.length;
 
   const missing = roleContext.files
     .filter((file) => !file.exists)
@@ -1188,11 +1260,29 @@ ${roleContext.whoAmI}
 
 ## Loaded Canonical Files
 
-${fileSections || '(No canonical role files loaded.)'}
+${renderedFileSections || '(No canonical role files loaded.)'}
+
+${omittedCount > 0 ? `MindShare note: ${omittedCount} loaded file section(s) were omitted from this turn because the CLI context budget was reached. Ask for a specific file if needed.` : ''}
 
 ## Missing Expected Files
 
 ${missing || '(None)'}`;
+}
+
+function compactTranscript(transcriptItems) {
+  const items = (Array.isArray(transcriptItems) ? transcriptItems : [])
+    .slice(-MAX_TRANSCRIPT_ITEMS)
+    .map((item) => {
+      const role = String(item.role || 'message').toUpperCase();
+      const text = truncateText(item.content || item.text || '', MAX_TRANSCRIPT_ITEM_CHARS);
+      return `${role}: ${text}`;
+    })
+    .filter((text) => text.trim().length > 0);
+  const parts = [];
+  for (const item of items) {
+    if (!pushWithinBudget(parts, item, MAX_TRANSCRIPT_CHARS)) break;
+  }
+  return parts.join('\n');
 }
 
 function formatAttachments(attachments) {
@@ -1554,10 +1644,8 @@ async function sendCodexMessage(payload) {
     session.roleContext = payload.roleContext;
   }
   session.provider = session.provider || 'codex';
-  const transcriptItems = Array.isArray(payload?.transcript) ? payload.transcript : session.messages.slice(-12);
-  const transcript = transcriptItems
-    .map((item) => `${String(item.role || 'message').toUpperCase()}: ${item.content || item.text || ''}`)
-    .join('\n');
+  const transcriptItems = Array.isArray(payload?.transcript) ? payload.transcript : session.messages.slice(-MAX_TRANSCRIPT_ITEMS);
+  const transcript = compactTranscript(transcriptItems);
   const attachmentText = formatAttachments(payload?.attachments);
   const prompt = `You are connected to the MindShare local office chat.
 
@@ -1567,7 +1655,7 @@ ${officeWorkspaceInstruction}
 
 ${buildRolePromptContext(session.roleContext)}
 
-Conversation so far:
+Recent conversation only. Older turns stay visible in MindShare but are not resent to keep CLI token use bounded:
 ${transcript || '(new session)'}
 
 Attached files for this turn:
@@ -1646,10 +1734,8 @@ async function sendClaudeMessage(payload) {
     session.roleContext = payload.roleContext;
   }
   session.provider = session.provider || 'claude';
-  const transcriptItems = Array.isArray(payload?.transcript) ? payload.transcript : session.messages.slice(-12);
-  const transcript = transcriptItems
-    .map((item) => `${String(item.role || 'message').toUpperCase()}: ${item.content || item.text || ''}`)
-    .join('\n');
+  const transcriptItems = Array.isArray(payload?.transcript) ? payload.transcript : session.messages.slice(-MAX_TRANSCRIPT_ITEMS);
+  const transcript = compactTranscript(transcriptItems);
   const attachmentText = formatAttachments(payload?.attachments);
   const prompt = `You are connected to the MindShare local office chat.
 
@@ -1659,7 +1745,7 @@ ${officeWorkspaceInstruction}
 
 ${buildRolePromptContext(session.roleContext)}
 
-Conversation so far:
+Recent conversation only. Older turns stay visible in MindShare but are not resent to keep CLI token use bounded:
 ${transcript || '(new session)'}
 
 Attached files for this turn:
@@ -1721,6 +1807,7 @@ module.exports = {
   connectCodex,
   connectClaude,
   listSessions,
+  resetProviderSession,
   loadRoleContext,
   listConfigurationFiles,
   openConfigurationFile,

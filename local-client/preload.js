@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('MindShareLocalClient', {
   connectCodex: (payload) => ipcRenderer.invoke('mindshare:codex-connect', payload),
   connectClaude: (payload) => ipcRenderer.invoke('mindshare:claude-connect', payload),
   listSessions: () => ipcRenderer.invoke('mindshare:sessions'),
+  resetSession: (payload) => ipcRenderer.invoke('mindshare:session-reset', payload),
   loadRoleContext: (payload) => ipcRenderer.invoke('mindshare:role-context', payload),
   runTessLevel4Automation: (payload) => ipcRenderer.invoke('mindshare:tess-level4-automation', payload),
   runVikAutomation: (payload) => ipcRenderer.invoke('mindshare:vik-automation', payload),

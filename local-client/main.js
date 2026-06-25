@@ -5,6 +5,7 @@ const {
   connectCodex,
   connectClaude,
   listSessions,
+  resetProviderSession,
   loadRoleContext,
   runTessLevel4Automation,
   runVikAutomation,
@@ -251,6 +252,7 @@ function installApplicationMenu() {
 ipcMain.handle('mindshare:codex-connect', async (_event, payload) => connectCodex(payload));
 ipcMain.handle('mindshare:claude-connect', async (_event, payload) => connectClaude(payload));
 ipcMain.handle('mindshare:sessions', async () => listSessions());
+ipcMain.handle('mindshare:session-reset', async (_event, payload) => resetProviderSession(payload));
 ipcMain.handle('mindshare:role-context', async (_event, payload) => loadRoleContext(payload));
 ipcMain.handle('mindshare:tess-level4-automation', async (_event, payload) => runTessLevel4Automation(payload));
 ipcMain.handle('mindshare:vik-automation', async (_event, payload) => runVikAutomation(payload));

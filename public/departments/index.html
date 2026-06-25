@@ -465,6 +465,8 @@ Configuration is loaded from the local MindShare workspace.
 <div class="hidden pt-3 flex flex-wrap gap-2" id="attachment-tray"></div>
 <div class="pt-3 flex flex-wrap items-center gap-2" aria-label="Prompt quick actions">
 <button class="prompt-action-button rounded-md px-3 py-1.5 font-label-sm text-[10px] uppercase tracking-widest transition-all" id="clear-screen-button" type="button">Clear</button>
+<button class="prompt-action-button rounded-md px-3 py-1.5 font-label-sm text-[10px] uppercase tracking-widest transition-all" id="trim-session-button" type="button">Trim</button>
+<button class="prompt-action-button rounded-md px-3 py-1.5 font-label-sm text-[10px] uppercase tracking-widest transition-all" id="new-session-button" type="button">New Session</button>
 <button class="prompt-action-button rounded-md px-3 py-1.5 font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-quick-prompt="Yes">Yes</button>
 <button class="prompt-action-button rounded-md px-3 py-1.5 font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-quick-prompt="No">No</button>
 <button class="prompt-action-button rounded-md px-3 py-1.5 font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-quick-prompt="Confirm">Confirm</button>
@@ -2713,6 +2715,43 @@ Configuration is loaded from the local MindShare workspace.
             setChatStatus(`${roleSession.name}'s visible chat screen cleared.`);
         }
 
+        async function resetActiveOfficeSession({ keepRecent = false } = {}) {
+            if (!activeRoleSlug || !roleSessions[activeRoleSlug]) {
+                setChatStatus('Select a role before resetting a session.');
+                return;
+            }
+            const roleSession = roleSessions[activeRoleSlug];
+            if (roleSession.processing) {
+                setChatStatus(`${roleSession.name} is working. Wait for the current turn to finish before resetting.`);
+                return;
+            }
+            const client = mindShareLocalClient();
+            if (client?.resetSession) {
+                await client.resetSession({ roleSlug: roleSession.slug });
+            }
+            roleSession.codexSessionId = null;
+            roleSession.claudeSessionId = null;
+            roleSession.promptQueue = [];
+            roleSession.processing = false;
+            roleSession.processingEngine = null;
+            roleSession.connectionIssue = false;
+            roleSession.tokenUsage = null;
+            roleSession.officeInjected = false;
+            roleSession.messages = keepRecent
+                ? conversationMessages(roleSession.messages).slice(-4)
+                : [];
+            persistOfficeState();
+            renderTranscript(roleSession.messages);
+            injectOfficeEntry(roleSession, null, { forceVisible: true });
+            renderOfficeConnectionStatus(roleSession);
+            renderTokenUsage(roleSession);
+            renderActiveSessions();
+            renderOfficeWorkingState(roleSession);
+            const createdSessions = await provisionAvailableProviderSessions(roleSession);
+            const actionText = keepRecent ? 'trimmed to the last four visible turns' : 'started fresh';
+            setChatStatus(`${roleSession.name}'s office session ${actionText}${createdSessions.length ? ` and reconnected ${createdSessions.join(' and ')}` : ''}.`);
+        }
+
         function sendQuickPrompt(word) {
             const input = document.getElementById('chat-input');
             if (input) input.value = word;
@@ -2752,7 +2791,7 @@ Configuration is loaded from the local MindShare workspace.
 
             const messageIndex = roleSession.messages.indexOf(queuedPrompt.messageRecord);
             const transcriptEnd = messageIndex >= 0 ? messageIndex : roleSession.messages.length;
-            const transcript = roleSession.messages.slice(Math.max(0, transcriptEnd - 12), transcriptEnd);
+            const transcript = roleSession.messages.slice(Math.max(0, transcriptEnd - 6), transcriptEnd);
             roleSession.processing = true;
             roleSession.processingEngine = engine;
             persistOfficeState();
@@ -2874,6 +2913,8 @@ Configuration is loaded from the local MindShare workspace.
             document.getElementById('global-search-results').addEventListener('click', (event) => event.stopPropagation());
             document.getElementById('send-message-button').addEventListener('click', sendCodexMessage);
             document.getElementById('clear-screen-button').addEventListener('click', clearActiveOfficeScreen);
+            document.getElementById('trim-session-button').addEventListener('click', () => resetActiveOfficeSession({ keepRecent: true }));
+            document.getElementById('new-session-button').addEventListener('click', () => resetActiveOfficeSession({ keepRecent: false }));
             document.querySelectorAll('[data-quick-prompt]').forEach((button) => {
                 button.addEventListener('click', () => sendQuickPrompt(button.dataset.quickPrompt));
             });
