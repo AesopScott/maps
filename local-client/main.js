@@ -17,6 +17,11 @@ const {
 
 const bundledPublicRoot = path.join(__dirname, 'app-content', 'mindshare', 'public');
 const devPublicRoot = path.join(__dirname, '..', 'public');
+const appIconPath = path.join(
+  __dirname,
+  'assets',
+  process.platform === 'win32' ? 'mindshare-central-icon.ico' : 'mindshare-central-icon.png'
+);
 const TESS_LEVEL4_INTERVAL_MS = 30 * 60 * 1000;
 const VIK_AUTOMATION_INTERVAL_MS = 30 * 60 * 1000;
 let tessLevel4Timer = null;
@@ -178,6 +183,7 @@ function createWindow() {
   const window = new BrowserWindow({
     width: 1440,
     height: 960,
+    icon: appIconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -329,6 +335,10 @@ ipcMain.handle('mindshare:show-file', async (_event, payload = {}) => {
 });
 
 app.whenReady().then(() => {
+  app.setName('MindShare Central');
+  if (process.platform === 'win32') {
+    app.setAppUserModelId('com.mindshare.central');
+  }
   app.on('child-process-gone', (_event, details) => {
     console.error('MindShare child process exited.', details);
   });

@@ -1,5 +1,6 @@
 {
   "name": "mindshare-local-client",
+  "productName": "MindShare Central",
   "version": "0.1.0",
   "private": true,
   "description": "Local MindShare client shell for Codex/Claude CLI access.",
@@ -7,6 +8,19 @@
   "scripts": {
     "sync-content": "powershell -ExecutionPolicy Bypass -File scripts/sync-app-content.ps1",
     "start": "electron ."
+  },
+  "build": {
+    "appId": "com.mindshare.central",
+    "productName": "MindShare Central",
+    "win": {
+      "icon": "assets/mindshare-central-icon.ico"
+    },
+    "mac": {
+      "icon": "assets/mindshare-central-icon.png"
+    },
+    "linux": {
+      "icon": "assets/mindshare-central-icon.png"
+    }
   },
   "devDependencies": {
     "electron": "^37.0.0"
