@@ -140,6 +140,18 @@ function toolWebview() {
   return document.getElementById('tool-webview');
 }
 
+function unloadToolWebview() {
+  const webview = toolWebview();
+  const iframe = document.getElementById('tool-iframe');
+  if (webview && 'src' in webview) {
+    try {
+      if (typeof webview.stop === 'function') webview.stop();
+    } catch {}
+    webview.src = 'about:blank';
+  }
+  if (iframe) iframe.src = 'about:blank';
+}
+
 function renderTool(toolId) {
   const tool = tools[toolId] || tools['openai-images'];
   activeTool = toolId;
@@ -174,6 +186,9 @@ document.getElementById('reload-tool').addEventListener('click', () => {
   }
   renderTool(activeTool);
 });
+
+window.addEventListener('pagehide', unloadToolWebview);
+window.addEventListener('beforeunload', unloadToolWebview);
 
 renderTool(activeTool);
 </script>

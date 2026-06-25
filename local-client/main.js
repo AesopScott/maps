@@ -141,6 +141,15 @@ function createWindow() {
     ? bundledPublicRoot
     : devPublicRoot;
   window.loadFile(path.join(publicRoot, 'index.html'));
+  window.webContents.on('render-process-gone', (_event, details) => {
+    console.error('MindShare renderer process exited.', details);
+  });
+  window.webContents.on('unresponsive', () => {
+    console.error('MindShare renderer became unresponsive.');
+  });
+  window.webContents.on('responsive', () => {
+    console.warn('MindShare renderer became responsive again.');
+  });
   window.webContents.on('before-input-event', (event, input) => {
     const key = String(input.key || '').toLowerCase();
     const isRefresh = key === 'f5' || (key === 'r' && (input.control || input.meta));
@@ -269,6 +278,9 @@ ipcMain.handle('mindshare:show-file', async (_event, payload = {}) => {
 });
 
 app.whenReady().then(() => {
+  app.on('child-process-gone', (_event, details) => {
+    console.error('MindShare child process exited.', details);
+  });
   installApplicationMenu();
   refreshConfigurationFileCache();
   createWindow();
