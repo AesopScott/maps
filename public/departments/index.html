@@ -2362,6 +2362,19 @@ Configuration is loaded from the local MindShare workspace.
                 };
             }
             if (roleSession[sessionKey]) {
+                if (client?.listSessions) {
+                    const livePayload = await client.listSessions().catch(() => null);
+                    const stillLive = Boolean(livePayload?.ok && (livePayload.sessions || []).some((session) =>
+                        session.sessionId === roleSession[sessionKey] && session.provider === engine
+                    ));
+                    if (!stillLive) {
+                        roleSession[sessionKey] = null;
+                        roleSession.connectionIssue = false;
+                        persistOfficeState();
+                    }
+                }
+            }
+            if (roleSession[sessionKey]) {
                 setProviderReady(engine, true);
                 if (isClaude) {
                     claudeAvailable = true;
