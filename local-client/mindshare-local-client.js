@@ -162,7 +162,7 @@ const ROLE_CATALOG = {
   },
   vik: {
     name: 'Vik',
-    title: 'MAPS ASPA',
+    title: 'ASPA',
     level: 'Level 5 Policy Autonomy',
     office: "Vik's office",
     rolePath: ['mojo', 'roles', 'maps-agentic-systems-program-architect'],
@@ -837,3 +837,4 @@ module.exports = {
   sendCodexMessage,
   sendClaudeMessage
 };
+

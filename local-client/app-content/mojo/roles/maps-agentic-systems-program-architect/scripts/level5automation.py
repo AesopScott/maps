@@ -118,7 +118,7 @@ def build_state(mode: str) -> dict:
         result = "source_conflict_level5_reports_exist_but_contract_inactive"
     return {
         "schema_version": 1,
-        "role": "Vik / MAPS ASPA",
+        "role": "Vik / ASPA",
         "automation_id": "vik-visible-backlog-research",
         "logic_owner": str(Path(__file__).resolve()),
         "mode": mode,
@@ -203,3 +203,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

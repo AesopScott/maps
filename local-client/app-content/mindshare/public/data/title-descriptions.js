@@ -73,7 +73,7 @@ window.MindShareTitleDescriptions = {
       "Does not approve autonomy, release, or production gates."
     ]
   },
-  "MAPS ASPA": {
+  "ASPA": {
     summary: "Agentic Systems Program Architect for MAPS architecture, role/agent boundaries, and control-plane fit.",
     responsibilities: [
       "Review agentic operating architecture and autonomy design.",
@@ -170,3 +170,4 @@ window.MindShareTitleDescriptions = {
     ]
   }
 };
+
