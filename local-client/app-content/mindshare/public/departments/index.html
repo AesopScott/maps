@@ -64,13 +64,16 @@
         .section-collapse {
             transition: max-height 0.3s ease-out, opacity 0.2s ease;
         }
-        #division-select {
-            background-color: #0c1324;
-            color: #dce1fb;
+        .division-button {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(190, 198, 224, 0.14);
+            color: rgba(220, 225, 251, 0.72);
         }
-        #division-select option {
-            background-color: #ffffff;
-            color: #111827;
+        .division-button:hover,
+        .division-button.is-active {
+            background: linear-gradient(135deg, #bec6e0 0%, #798098 100%);
+            border-color: rgba(218, 226, 253, 0.55);
+            color: #131b2e;
         }
     </style>
 <script id="tailwind-config">
@@ -196,18 +199,15 @@
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">insights</span>
 </div>
 <div class="flex-1">
-<div class="w-full flex flex-col items-start gap-2 group/nav">
-<label class="font-display-lg text-headline-md text-primary leading-none group-hover/nav:text-primary-fixed transition-colors" for="division-select">Division</label>
-<div class="relative w-full">
-<select id="division-select" class="w-full appearance-none border border-white/10 rounded-lg py-2 pl-3 pr-10 font-label-sm focus:border-primary focus:ring-primary">
-<option value="strategy-and-operations">Strategy &amp; Operations</option>
-<option value="product-and-design">Product &amp; Design</option>
-<option value="technology-and-data">Technology &amp; Data</option>
-<option value="revenue-and-market">Revenue &amp; Market</option>
-<option value="finance">Finance</option>
-<option value="administration">Administration</option>
-</select>
-<span class="material-symbols-outlined text-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">expand_more</span>
+<div class="w-full flex flex-col items-start gap-3 group/nav">
+<h2 class="font-display-lg text-headline-md text-primary leading-none group-hover/nav:text-primary-fixed transition-colors">Division</h2>
+<div class="grid w-full grid-cols-2 gap-2" id="division-buttons" aria-label="Division navigation">
+<button class="division-button rounded-md px-3 py-2 text-left font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-division-button="strategy-and-operations">Strategy</button>
+<button class="division-button rounded-md px-3 py-2 text-left font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-division-button="product-and-design">Product</button>
+<button class="division-button rounded-md px-3 py-2 text-left font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-division-button="technology-and-data">Tech</button>
+<button class="division-button rounded-md px-3 py-2 text-left font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-division-button="revenue-and-market">Revenue</button>
+<button class="division-button rounded-md px-3 py-2 text-left font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-division-button="finance">Finance</button>
+<button class="division-button rounded-md px-3 py-2 text-left font-label-sm text-[10px] uppercase tracking-widest transition-all" type="button" data-division-button="administration">Admin</button>
 </div>
 </div>
 </div></div>
@@ -483,6 +483,19 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function setActiveDivision(divisionSlug) {
+            const selectedSlug = divisionDepartments[divisionSlug] ? divisionSlug : 'strategy-and-operations';
+            document.querySelectorAll('[data-division-button]').forEach((button) => {
+                const isActive = button.dataset.divisionButton === selectedSlug;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            renderDepartmentSections(selectedSlug);
+            const url = new URL(window.location.href);
+            url.searchParams.set('division', selectedSlug);
+            history.replaceState(null, '', url.toString());
         }
 
         let activeRoleSlug = null;
@@ -1264,18 +1277,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const divisionSelect = document.getElementById('division-select');
             const requestedDivision = new URLSearchParams(window.location.search).get('division') || 'strategy-and-operations';
             const selectedSlug = divisionDepartments[requestedDivision] ? requestedDivision : 'strategy-and-operations';
-            divisionSelect.value = selectedSlug;
-            renderDepartmentSections(selectedSlug);
+            setActiveDivision(selectedSlug);
 
-            divisionSelect.addEventListener('change', () => {
-                const slug = divisionSelect.value;
-                renderDepartmentSections(slug);
-                const url = new URL(window.location.href);
-                url.searchParams.set('division', slug);
-                history.replaceState(null, '', url.toString());
+            document.querySelectorAll('[data-division-button]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    setActiveDivision(button.dataset.divisionButton);
+                });
             });
 
             document.getElementById('connect-codex-button').addEventListener('click', connectCodex);
