@@ -22,6 +22,8 @@ Proper names, display names, aliases, and invocation names belong inside `name.m
 
 ## Current Required Files For New Mindshare Roles
 
+Ana owns hiring and internal lifecycle movement through Level 2 Trainee. Cole owns the welcome/readiness lane after Ana places a Level 2 Trainee in the correct office: he verifies the required files and context surfaces, welcomes the person to the office, records proof, and may promote the person to Level 3 Staff when the readiness gates pass.
+
 For every new role draft:
 
 - `name.md`
@@ -103,12 +105,14 @@ When Mindshare is the memory root, each role should have:
 - Missing source pointer.
 - Missing or stale WhoAmI Autonomy Context.
 - Missing WhoAmI injection evidence in an active role-home session.
+- Missing Level 2 to Level 3 readiness proof after Ana office placement.
 - Unapproved authority implied by file text.
 - New structure not rolled into templates or backup expectations.
 
 ## Correction Routing
 
 - Cole may create missing stage-required structural files and mirrors when the requirement is clear, file content is template-derived, and the action does not change role authority, lifecycle, autonomy, Git/release, production, external communication, spending, secrets, or another owner's substantive content.
+- Cole may promote an Ana-hired Level 2 Trainee to Level 3 Staff only after welcome, file-readiness, WhoAmI/Autonomy Context, owner-route, and proof gates pass. This promotion does not grant autonomy, production, external communication, Git/release, spending, secrets, or authority beyond Level 3 Staff.
 - Cole may send an internal role-home context-repair prompt when an active office lacks current WhoAmI/Autonomy Context evidence. The prompt may only ask the role to load its WhoAmI card and confirm identity, autonomy level, active boundaries, and canonical autonomy source in first person; it must not grant authority, activate runtime, approve promotion, or change role status.
 - Role lifecycle, roster, or `/role` output: Ana.
 - Organization notice or channel guidance: Mae.

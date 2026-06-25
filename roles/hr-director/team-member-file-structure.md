@@ -7,7 +7,22 @@ Status: active standard for Cole's approved HR file-structure scope.
 
 Define the expected file structure for Mindshare team members so every role can be found, loaded, audited, backed up, and updated consistently.
 
+## Canonical Directory Naming
+
+Canonical role-root directories use the stable role or function slug, not the person's proper name.
+
+Examples:
+
+- `roles/hr-director`, not `roles/cole`
+- `roles/recruiter`, not `roles/ana-recruiter`
+- `roles/agentic-systems-program-architect`, not `roles/vik-aspa`
+- `roles/mojo-maps-engineer`, not `roles/bea`
+
+Proper names, display names, aliases, and invocation names belong inside `name.md`, `WhoAmI.md`, `role-agent.md`, `state.json`, memory, and room cards. A directory rename does not change authority, lifecycle status, autonomy level, runtime, reporting line, or communication permissions.
+
 ## Current Required Files For New Mindshare Roles
+
+Ana owns hiring and internal lifecycle movement through Level 2 Trainee. Cole owns the welcome/readiness lane after Ana places a Level 2 Trainee in the correct office: he verifies the required files and context surfaces, welcomes the person to the office, records proof, and may promote the person to Level 3 Staff when the readiness gates pass.
 
 For every new role draft:
 
@@ -18,6 +33,26 @@ For every new role draft:
 - `role-agent.md`
 - `memory.md`
 - `state.json`
+
+For every current role, Cole validates the required file set for the role's current stage. Level 4+, autonomy, runtime, FileWatch, heartbeat, or Role+ records must also have a canonical `Autonomy.md` source unless Scott and Tess explicitly record a different autonomy source.
+
+Each `WhoAmI.md` must include an `Autonomy Context` section with:
+
+- current autonomy level and operating stage
+- active autonomy capability summary, or "none active"
+- lower-level context the role must keep in mind
+- Level 4, Level 5, and Level 6 capabilities only as defined/inactive unless promoted
+- canonical `Autonomy.md` source path, or a clear missing-source note
+- reminder that the card gives awareness, not authority
+
+Cole validates all current Who Am I surfaces, not only the local source file:
+
+- local role-root `WhoAmI.md`
+- `G:\My Drive\Mindshare\role\<role-slug>\WhoAmI.md` when Mindshare is the mirror root
+- `G:\My Drive\Mindshare\role\who-am-i-cards\<proper-name>.md`
+- role-slug room-card aliases when present
+
+The local role-root `WhoAmI.md` is the primary source. G Drive role mirrors and room cards must stay current enough to carry the same Autonomy Context, even when their surrounding compiled text differs.
 
 When the role owns a workflow:
 
@@ -34,6 +69,7 @@ When the role has a proposed loop, hook, script, skill, FileWatch, or Automation
 When the role is activated:
 
 - role-home session record or session id in memory/roster
+- Who Am I card injected or confirmed in the role-home session
 - FileWatch configuration only when approved
 - assigned handoff files in memory and contract
 - Communications announcement when activation is approved
@@ -67,12 +103,17 @@ When Mindshare is the memory root, each role should have:
 - Role-stage mismatch.
 - Missing role-artifacts inventory entry.
 - Missing source pointer.
+- Missing or stale WhoAmI Autonomy Context.
+- Missing WhoAmI injection evidence in an active role-home session.
+- Missing Level 2 to Level 3 readiness proof after Ana office placement.
 - Unapproved authority implied by file text.
 - New structure not rolled into templates or backup expectations.
 
 ## Correction Routing
 
 - Cole may create missing stage-required structural files and mirrors when the requirement is clear, file content is template-derived, and the action does not change role authority, lifecycle, autonomy, Git/release, production, external communication, spending, secrets, or another owner's substantive content.
+- Cole may promote an Ana-hired Level 2 Trainee to Level 3 Staff only after welcome, file-readiness, WhoAmI/Autonomy Context, owner-route, and proof gates pass. This promotion does not grant autonomy, production, external communication, Git/release, spending, secrets, or authority beyond Level 3 Staff.
+- Cole may send an internal role-home context-repair prompt when an active office lacks current WhoAmI/Autonomy Context evidence. The prompt may only ask the role to load its WhoAmI card and confirm identity, autonomy level, active boundaries, and canonical autonomy source in first person; it must not grant authority, activate runtime, approve promotion, or change role status.
 - Role lifecycle, roster, or `/role` output: Ana.
 - Organization notice or channel guidance: Mae.
 - Autonomy, gate, FileWatch, Automation, hook, loop, runtime, or authority implication: Tess and Vik.
