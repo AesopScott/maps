@@ -1228,6 +1228,37 @@ function parseJsonLines(text) {
     .filter(Boolean);
 }
 
+function extractCodexReply(stdout) {
+  const events = parseJsonLines(stdout);
+  const textFromItem = (item = {}) => {
+    if (typeof item.text === 'string') return item.text.trim();
+    if (typeof item.content === 'string') return item.content.trim();
+    if (Array.isArray(item.content)) {
+      return item.content
+        .map((part) => typeof part === 'string' ? part : (part?.text || part?.content || ''))
+        .join('')
+        .trim();
+    }
+    return '';
+  };
+
+  const completed = [...events].reverse().find((event) =>
+    event.type === 'item.completed' && event.item?.type === 'agent_message' && textFromItem(event.item)
+  );
+  if (completed) {
+    return { events, reply: textFromItem(completed.item), complete: true };
+  }
+
+  const partial = [...events].reverse().map((event) => {
+    if (event.item?.type === 'agent_message') return textFromItem(event.item);
+    if (typeof event.delta === 'string') return event.delta.trim();
+    if (typeof event.text === 'string') return event.text.trim();
+    return '';
+  }).find(Boolean) || '';
+
+  return { events, reply: partial, complete: false };
+}
+
 function normalizeUsage(provider, usage = {}, extra = {}) {
   const inputTokens = Number(usage.input_tokens ?? usage.inputTokens ?? 0) || 0;
   const outputTokens = Number(usage.output_tokens ?? usage.outputTokens ?? 0) || 0;
@@ -1562,17 +1593,24 @@ USER: ${message}
     '-C',
     repoRoot,
     '-'
-  ], { timeout: 300000, input: prompt });
+  ], { timeout: 900000, input: prompt });
 
   if (!result.ok) {
+    const recovered = extractCodexReply(result.stdout);
+    if (recovered.reply) {
+      const reply = `${recovered.reply}\n\n[MindShare note: Codex stopped before a clean completion event (${result.code || 'error'}). This is the partial response recovered from the session output.]`;
+      session.messages.push({ role: 'user', content: message });
+      session.messages.push({ role: 'assistant', content: reply });
+      session.updatedAt = new Date().toISOString();
+      return { ok: true, reply, tokenUsage: null, partial: true };
+    }
     return {
       ok: false,
       error: (result.stderr || result.stdout || 'Codex exec failed.').trim()
     };
   }
 
-  const events = parseJsonLines(result.stdout);
-  const reply = [...events].reverse().find((event) => event.type === 'item.completed' && event.item?.type === 'agent_message')?.item?.text?.trim() || '';
+  const { events, reply } = extractCodexReply(result.stdout);
   const usageEvent = [...events].reverse().find((event) => event.type === 'turn.completed' && event.usage);
   const tokenUsage = usageEvent?.usage ? normalizeUsage('codex', usageEvent.usage) : null;
   session.messages.push({ role: 'user', content: message });
@@ -1649,7 +1687,7 @@ USER: ${message}
     '--dangerously-skip-permissions',
     '--model',
     'sonnet'
-  ], { timeout: 300000, input: prompt });
+  ], { timeout: 900000, input: prompt });
 
   if (!result.ok) {
     return {
