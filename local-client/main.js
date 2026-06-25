@@ -19,6 +19,44 @@ const TESS_LEVEL4_INTERVAL_MS = 30 * 60 * 1000;
 const VIK_AUTOMATION_INTERVAL_MS = 30 * 60 * 1000;
 let tessLevel4Timer = null;
 let vikAutomationTimer = null;
+let configurationFileCache = null;
+let configurationFileCachePromise = null;
+
+async function refreshConfigurationFileCache() {
+  configurationFileCachePromise = listConfigurationFiles()
+    .then((payload) => {
+      configurationFileCache = {
+        ...payload,
+        cachedAt: new Date().toISOString()
+      };
+      return configurationFileCache;
+    })
+    .catch((error) => {
+      configurationFileCache = {
+        ok: false,
+        error: error.message || String(error),
+        groups: [],
+        totals: { groups: 0, files: 0 },
+        cachedAt: new Date().toISOString()
+      };
+      return configurationFileCache;
+    })
+    .finally(() => {
+      configurationFileCachePromise = null;
+    });
+  return configurationFileCachePromise;
+}
+
+async function getConfigurationFiles() {
+  if (configurationFileCache) {
+    refreshConfigurationFileCache();
+    return configurationFileCache;
+  }
+  if (configurationFileCachePromise) {
+    return configurationFileCachePromise;
+  }
+  return refreshConfigurationFileCache();
+}
 
 function clearAutomationTimer(role) {
   if (role === 'tess' && tessLevel4Timer) {
@@ -176,7 +214,7 @@ ipcMain.handle('mindshare:automation-control', async (_event, payload = {}) => {
 });
 ipcMain.handle('mindshare:codex-message', async (_event, payload) => sendCodexMessage(payload));
 ipcMain.handle('mindshare:claude-message', async (_event, payload) => sendClaudeMessage(payload));
-ipcMain.handle('mindshare:configuration-files', async () => listConfigurationFiles());
+ipcMain.handle('mindshare:configuration-files', async () => getConfigurationFiles());
 ipcMain.handle('mindshare:open-configuration-file', async (_event, payload) => openConfigurationFile(payload));
 ipcMain.handle('mindshare:microphone-shortcut', async () => triggerWindowsVoiceShortcut());
 ipcMain.handle('mindshare:choose-files', async () => {
@@ -198,6 +236,7 @@ ipcMain.handle('mindshare:choose-files', async () => {
 
 app.whenReady().then(() => {
   installApplicationMenu();
+  refreshConfigurationFileCache();
   createWindow();
   runTessLevel4Automation({ mode: 'scheduled' }).catch((error) => {
     console.warn('Tess Level 4 automation startup run failed.', error);

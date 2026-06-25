@@ -654,20 +654,13 @@ async function runVikAutomation(payload = {}) {
 async function collectFiles(rootPath) {
   const ignoredNames = new Set(['.git', '.claude', '.codex', '.obsidian', 'node_modules', '__pycache__', '.pytest_cache']);
   const files = [];
-  async function walk(currentPath) {
-    const entries = await safeReadDir(currentPath, { withFileTypes: true });
-    for (const entry of entries) {
-      if (ignoredNames.has(entry.name)) continue;
-      const entryPath = path.join(currentPath, entry.name);
-      if (entry.isDirectory()) {
-        await walk(entryPath);
-      } else if (entry.isFile()) {
-        files.push({ name: entry.name, path: entryPath });
-      }
+  const entries = await safeReadDir(rootPath, { withFileTypes: true });
+  for (const entry of entries) {
+    if (ignoredNames.has(entry.name)) continue;
+    const entryPath = path.join(rootPath, entry.name);
+    if (entry.isFile()) {
+      files.push({ name: entry.name, path: entryPath });
     }
-  }
-  if (await pathExists(rootPath)) {
-    await walk(rootPath);
   }
   return files.sort((a, b) => a.path.localeCompare(b.path));
 }
