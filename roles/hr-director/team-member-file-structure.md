@@ -34,9 +34,11 @@ For every new role draft:
 - `gate-blocks.md`
 - `role-agent.md`
 - `memory.md`
+- `workflow.md`
+- `Autonomy.md`
 - `state.json`
 
-For every current role, Cole validates the required file set for the role's current stage. Level 4+, autonomy, runtime, FileWatch, heartbeat, or Role+ records must also have a canonical `Autonomy.md` source unless Scott and Tess explicitly record a different autonomy source.
+For every current role, Cole validates the required file set for the role's current stage. Every Level 3 Staff role must have a baseline `Autonomy.md` source even when no autonomy is active; the file should explicitly state that Level 3 is non-autonomous and that Level 4, Level 5, and Level 6 are undefined until Tess builds and Scott reviews them. Level 4+, autonomy, runtime, FileWatch, heartbeat, or Role+ records must also have a canonical `Autonomy.md` source unless Scott and Tess explicitly record a different autonomy source.
 
 Each `WhoAmI.md` must include an `Autonomy Context` section with:
 
@@ -108,6 +110,7 @@ When Mindshare is the memory root, each role should have:
 - Missing or stale WhoAmI Autonomy Context.
 - Missing WhoAmI injection evidence in an active role-home session.
 - Missing Level 2 to Level 3 readiness proof after Ana office placement.
+- Missing Level 3 completeness checklist or required Level 3 baseline file.
 - Missing or unassigned team-member image in the local app asset/display metadata.
 - Unapproved authority implied by file text.
 - New structure not rolled into templates or backup expectations.
@@ -115,6 +118,7 @@ When Mindshare is the memory root, each role should have:
 ## Correction Routing
 
 - Cole may create missing stage-required structural files and mirrors when the requirement is clear, file content is template-derived, and the action does not change role authority, lifecycle, autonomy, Git/release, production, external communication, spending, secrets, or another owner's substantive content.
+- Cole owns Level 3 completeness and may create missing `name.md`, `personality.md`, `WhoAmI.md`, `gate-blocks.md`, `role-agent.md`, `memory.md`, `workflow.md`, `Autonomy.md`, and `state.json` files for Level 3 Staff roles when the files are template-derived and do not grant authority.
 - Cole may assign or update local app team-member images and corresponding display metadata when doing onboarding/readiness work, as long as the image assignment does not imply authority, autonomy, external publication, production release, or identity verification beyond the approved role record.
 - Cole may promote an Ana-hired Level 2 Trainee to Level 3 Staff only after welcome, file-readiness, WhoAmI/Autonomy Context, owner-route, and proof gates pass. This promotion does not grant autonomy, production, external communication, Git/release, spending, secrets, or authority beyond Level 3 Staff.
 - Cole may send an internal role-home context-repair prompt when an active office lacks current WhoAmI/Autonomy Context evidence. The prompt may only ask the role to load its WhoAmI card and confirm identity, autonomy level, active boundaries, and canonical autonomy source in first person; it must not grant authority, activate runtime, approve promotion, or change role status.

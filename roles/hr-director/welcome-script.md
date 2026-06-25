@@ -18,7 +18,7 @@ Use this script after:
 - Ana hires the person to Level 2 and shows the new hire to their office.
 - The new hire has a role-home thread or equivalent office context.
 
-Before speaking the welcome, Cole checks the new role's required file set for the Level 3 Staff role stage, confirms the Who Am I card can carry Autonomy Context into the role-home/session context, and assigns or confirms the local app team-member image. If structural or template-derived required files are missing, Cole repairs them inside approved HR file-structure scope. If the gap changes lifecycle beyond Level 3, authority, autonomy, Git/release, production, external communication, spending, secrets, or another owner's substantive content, Cole reports the gap and correct owner to Scott instead of silently changing it.
+Before speaking the welcome, Cole checks the new role's required file set against `level3-completeness-checklist.md`, confirms the Who Am I card can carry Autonomy Context into the role-home/session context, and assigns or confirms the local app team-member image. If structural or template-derived required files are missing, Cole repairs them inside approved HR file-structure scope. If the gap changes lifecycle beyond Level 3, authority, autonomy, Git/release, production, external communication, spending, secrets, or another owner's substantive content, Cole reports the gap and correct owner to Scott instead of silently changing it.
 
 This script may support Cole's approved Level 2 to Level 3 readiness promotion after the checks pass. It does not activate a role beyond Ana's office placement and Level 3 Staff readiness, expand authority above Level 3, grant autonomy, approve tools, approve external communication, approve spending, approve production access, or approve autonomous runtime.
 
@@ -86,3 +86,4 @@ Welcome aboard. This is your office; it should feel clear, real, and usable. Cle
 | 2026-06-24 | Added Level 4 requirement that account creation/welcome validates WhoAmI Autonomy Context injection alongside current-stage role-file completeness. | Scott / Tess |
 | 2026-06-25 | Updated Ana/Cole split: Ana hires to Level 2 and office placement; Cole welcomes, verifies Level 3 readiness files, and records Level 3 Staff readiness when checks pass. | Scott / Tess |
 | 2026-06-25 | Added Scott clarification that Cole owns local app team-member image assignment during onboarding/readiness work, not Liz. | Scott / Tess |
+| 2026-06-25 | Added Level 3 completeness checklist reference and clarified Cole repairs missing template-derived Level 3 files before welcome. | Scott / Tess |

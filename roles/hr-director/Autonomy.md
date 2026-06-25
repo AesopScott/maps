@@ -2,7 +2,7 @@
 
 Status: Level 4 Senior Staff approved/runtime-installed; scheduler proof pending
 
-Version: 1.6
+Version: 1.7
 
 Owner: Cole / HR Director
 
@@ -26,7 +26,7 @@ Operating stage: Operator
 
 Current autonomy level: Level 4 - Senior Staff (Scoped Autonomy), runtime-installed-scheduler-proof-pending.
 
-Current mode: activated Role+ Operator with Level 4 scoped autonomy for role-file existence validation, WhoAmI Autonomy Context currency validation, live office/session WhoAmI injection checks, welcome/onboarding, role image assignment, and Level 2 to Level 3 readiness promotion after Ana office placement.
+Current mode: activated Role+ Operator with Level 4 scoped autonomy for role-file existence validation, Level 3 completeness repair, WhoAmI Autonomy Context currency validation, live office/session WhoAmI injection checks, welcome/onboarding, role image assignment, and Level 2 to Level 3 readiness promotion after Ana office placement.
 
 Current automation:
 
@@ -51,6 +51,7 @@ Allowed Level 4 work:
 - Validate during account creation/onboarding that the welcome process checks required role files and WhoAmI Autonomy Context before or during welcome.
 - Assign or update the role/person image for onboarded team members inside the approved local app/content asset paths and roster metadata. Cole owns the image assignment decision for team-member records; Liz no longer owns this now that the working surface is the local app rather than the public website.
 - For Ana-hired Level 2 Trainees placed into an office, verify required Level 3 role files, create template-derived structural files inside Cole's approved scope, use the Cole welcome script, record proof, and update the recruiting pipeline item to Level 3 Staff when readiness gates pass.
+- Maintain `level3-completeness-checklist.md` as the Level 3 completeness standard. Cole must confirm or create `name.md`, `personality.md`, `WhoAmI.md`, `gate-blocks.md`, `role-agent.md`, `memory.md`, `workflow.md`, `Autonomy.md`, and `state.json` for each Level 3 Staff role when the files are missing and can be safely template-derived.
 - Create missing stage-required structural files only when template-derived, clearly required, and not authority-changing.
 - Draft owner-routed correction packets for Ana, Mae, Tess, Reid, Vik, Bea, Rae, Scott, or the role owner.
 - Record proof and stop reasons.
@@ -119,6 +120,7 @@ Cole must stop when source records conflict, approval is missing, correction cha
 - Live office/session injection check and bounded context-repair prompt behavior.
 - Account-creation/welcome validation path.
 - Level 2 to Level 3 readiness promotion path.
+- Level 3 completeness checklist and structural-file creation path.
 - Hourly scheduler-triggered proof.
 - No status or authority change by implication.
 - Quiet no-work behavior.
@@ -128,6 +130,7 @@ Cole must stop when source records conflict, approval is missing, correction cha
 
 | Date | Version | Change | Owner |
 | --- | --- | --- | --- |
+| 2026-06-25 | 1.7 | Added Level 3 completeness checklist ownership and made Cole responsible for creating missing template-derived Level 3 files, including `WhoAmI.md` and baseline `Autonomy.md`. | Tess |
 | 2026-06-25 | 1.5 | Scott updated the Ana/Cole split: Ana hires and places people through Level 2; Cole owns welcome, required-file checks, and Level 2 to Level 3 readiness promotion. | Tess |
 | 2026-06-25 | 1.6 | Scott clarified that Cole, not Liz, owns assigning team-member images for local app role records now that the operating surface is no longer the public website. | Tess |
 | 2026-06-24 | 1.4 | Standardized Cole's Level 4 script path to the role-local `scripts\level4automation.py` convention and updated the hourly heartbeat to call that path. Scheduled proof now writes the standardized logic owner while existing validation findings remain open. | Tess |

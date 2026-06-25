@@ -4,9 +4,22 @@
   "logic_owner": "C:\\Users\\scott\\Code\\mindshare\\roles\\hr-director\\scripts\\level4automation.py",
   "current_level": "Level 4 Senior Staff (Scoped Autonomy)",
   "status": "runtime-installed-scheduler-proof-pending",
-  "last_run": "2026-06-25T11:14:37-06:00",
+  "last_run": "2026-06-25T11:22:50-06:00",
   "last_run_mode": "manual",
   "checked_roles": 17,
+  "checked_level3_pipeline_roles": 24,
+  "level3_required_files": [
+    "name.md",
+    "personality.md",
+    "WhoAmI.md",
+    "gate-blocks.md",
+    "role-agent.md",
+    "memory.md",
+    "workflow.md",
+    "Autonomy.md",
+    "state.json"
+  ],
+  "level3_completeness_checklist": "C:\\Users\\scott\\Code\\mindshare\\roles\\hr-director\\level3-completeness-checklist.md",
   "whoami_surfaces_checked": 33,
   "whoami_surfaces_missing_autonomy_context": [
     "G:\\My Drive\\Mindshare\\role\\who-am-i-cards\\rae.md",
@@ -98,10 +111,11 @@
     "roles_md": "83a535294115d234b1cf16390652e5c585973af437b56585e695d6e3dbb3948e",
     "conference_room": "689c76421f27fa1f9a3519ad349f5981a3314e481156220a58fa7fd81d7f69f4",
     "conference_room_prompt_protocol": "e402e438ed582ef3b94a57b7a1db273468ebbb76f3681da0ecbb2713bfb6c28c",
-    "welcome_script": "5e9b3a75e19679cf96e70bddf582aa07e840f9425660296d1d72420a34022362",
+    "welcome_script": "9ed778b95cf0056e7586bfcaafcf79b9f216df716587e17a673b8ce579ecdf2d",
+    "level3_completeness_checklist": "1556439cf219f80b110ab069b74c29ff9003dde4a5b871b9c53155b72650945c",
     "recruiting_pipeline": "d767f11cdef78d5fd415926991c2ec58d55efd16c6ef0a0aa1b37662710d59d0"
   },
-  "result": "promotion_completed_with_validation_findings",
+  "result": "level3_completeness_completed_with_validation_findings",
   "finding_counts_by_severity": {
     "medium": 56
   },
@@ -564,198 +578,415 @@
     "No external communication",
     "No spending or secrets"
   ],
-  "level_2_to_level_3_promotions": [
+  "level_2_to_level_3_promotions": [],
+  "level3_completeness_repairs": [
     {
       "id": "REC-001",
       "display_name": "Morgan Vale / Operations Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-001-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\operations-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-002",
       "display_name": "Priya Sen / Product Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-002-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-003",
       "display_name": "Owen Kline / Technology Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-003-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\technology-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-004",
       "display_name": "Nia Calder / Engineering Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-004-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\engineering-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-005",
       "display_name": "Mateo Ruiz / Platform Engineering Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-005-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\platform-engineering-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-007",
       "display_name": "Theo Nakamura / AI Systems Engineering Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-007-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\ai-systems-engineering-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-008",
       "display_name": "Harper Quinn / Security Engineering Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-008-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\security-engineering-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-009",
       "display_name": "Sloane Mercer / Revenue Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-009-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\revenue-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-011",
       "display_name": "June Park / Staff Operations Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-011-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\staff-operations-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-012",
       "display_name": "Leon Archer / Executive Operations Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-012-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\executive-operations-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-013",
       "display_name": "Mira Patel / PMO Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-013-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\pmo-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-014",
       "display_name": "Gabe Rowan / Product Management Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-014-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-management-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-015",
       "display_name": "Elise Hart / Product Operations Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-015-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\product-operations-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-016",
       "display_name": "Nora Voss / Service Design Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-016-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\service-design-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-017",
       "display_name": "Kai Bennett / Experience Design Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-017-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\experience-design-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-018",
       "display_name": "Amara Hayes / User Research Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-018-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\user-research-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-019",
       "display_name": "Drew Collins / Sales Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-019-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\sales-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-020",
       "display_name": "Celia Grant / Partnerships Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-020-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\partnerships-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-021",
       "display_name": "Jordan Hale / Customer Success Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-021-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\customer-success-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-022",
       "display_name": "Samira Knox / Support Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-022-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\support-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-023",
       "display_name": "Mila Chen / People Operations Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-023-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\people-operations-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-024",
       "display_name": "Adrian Moss / Legal Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-024-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-025",
       "display_name": "Isla Monroe / Compliance Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-025-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\compliance-director\\state.json"
+      ],
+      "existing_files": []
     },
     {
       "id": "REC-026",
       "display_name": "Victor Lane / Vendor Management Director",
-      "previous_stage": "level_2_trainee",
-      "current_stage": "level_3_staff",
-      "level_3_packet": "C:\\Users\\scott\\Code\\mindshare\\roles\\recruiter\\level-4-work\\REC-026-level3.md",
-      "promoted_at": "2026-06-25T11:14:37-06:00"
+      "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director",
+      "created_files": [
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\name.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\personality.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\WhoAmI.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\gate-blocks.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\role-agent.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\memory.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\workflow.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\Autonomy.md",
+        "C:\\Users\\scott\\Code\\mindshare\\roles\\vendor-management-director\\state.json"
+      ],
+      "existing_files": []
     }
   ]
 }

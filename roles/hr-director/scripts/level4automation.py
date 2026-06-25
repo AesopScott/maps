@@ -65,8 +65,21 @@ PROOF_PATH = MIND_ROOT / "roles" / "hr-director" / "level4-proof.md"
 ROOM_CONTRACT = MIND_ROOT / "rooms" / "conference-room.md"
 ROOM_PROTOCOL = MIND_ROOT / "rooms" / "conference-room-prompt-protocol.md"
 WELCOME_SCRIPT = MIND_ROOT / "roles" / "hr-director" / "welcome-script.md"
+LEVEL3_COMPLETENESS_CHECKLIST = MIND_ROOT / "roles" / "hr-director" / "level3-completeness-checklist.md"
 RECRUITING_PIPELINE = MIND_ROOT / "roles" / "recruiter" / "recruiting.pipeline.json"
 RECRUITING_WORK_DIR = MIND_ROOT / "roles" / "recruiter" / "level-4-work"
+
+LEVEL3_REQUIRED_FILES = [
+    "name.md",
+    "personality.md",
+    "WhoAmI.md",
+    "gate-blocks.md",
+    "role-agent.md",
+    "memory.md",
+    "workflow.md",
+    "Autonomy.md",
+    "state.json",
+]
 
 
 # The current roster is a Markdown table. This parser is intentionally narrow:
@@ -136,6 +149,267 @@ def iso_now() -> str:
 
 def level3_packet_path(item: dict) -> Path:
     return RECRUITING_WORK_DIR / f"{item.get('id', 'unknown')}-level3.md"
+
+
+def slugify(value: str) -> str:
+    """Create a boring role directory slug from a title."""
+
+    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    return slug or "unknown-role"
+
+
+def canonical_local_role_folder(item: dict) -> Path:
+    """Resolve the local role folder from the recruiting packet or title."""
+
+    work_packet = RECRUITING_WORK_DIR / f"{item.get('id', 'unknown')}.md"
+    text = read_text(work_packet)
+    match = re.search(r"Local role folder:\s*([A-Z]:\\[^\r\n]+)", text)
+    if match:
+        return Path(match.group(1).rstrip("\\/"))
+    return MIND_ROOT / "roles" / slugify(item.get("role_title") or item.get("display_name") or item.get("id") or "unknown-role")
+
+
+def role_display_name(item: dict) -> str:
+    return item.get("display_name") or f"{item.get('person_name', '').strip()} / {item.get('role_title', '').strip()}".strip(" /")
+
+
+def autonomy_level_label(item: dict) -> str:
+    stage = item.get("current_stage") or "level_3_staff"
+    if stage == "activated_operator":
+        return "Level 3 Staff / Activated Operator"
+    return "Level 3 Staff"
+
+
+def template_name_md(item: dict) -> str:
+    return "\n".join([
+        f"# {item.get('person_name') or 'Unassigned'}",
+        "",
+        f"Title: {item.get('role_title') or 'Unassigned role'}",
+        "Organization: Mindshare",
+        f"Current level: {autonomy_level_label(item)}",
+        "Owner: Cole / HR Director for file completeness; Ana / Recruiter for role lifecycle history.",
+        "",
+    ])
+
+
+def template_personality_md(item: dict) -> str:
+    return "\n".join([
+        f"# {item.get('person_name') or item.get('role_title') or 'Role'} Personality",
+        "",
+        "I communicate in first person, with a grounded, human working voice.",
+        "I keep my role clear, practical, source-aware, and bounded.",
+        "When I am uncertain, I name what is missing and route the decision to the correct owner.",
+        "I do not imply authority I have not been granted.",
+        "",
+    ])
+
+
+def template_whoami_md(item: dict, role_root: Path) -> str:
+    title = item.get("role_title") or "Unassigned role"
+    person = item.get("person_name") or "Unassigned"
+    return "\n".join([
+        f"# {person} / {title}",
+        "",
+        f"I am {person}, the {title} for Mindshare.",
+        "",
+        "I work from my role files, keep my boundaries visible, and route decisions outside my authority to the correct owner.",
+        "",
+        "## Autonomy Context",
+        "",
+        f"Current autonomy level: {autonomy_level_label(item)}.",
+        "",
+        "Active autonomy capability: none active. Level 3 Staff is not autonomous.",
+        "",
+        "Lower-level context I keep in mind: Candidate, New Hire, and Trainee stages are identity, source-safety, and readiness stages. I should stay source-grounded and fail closed when required files or authority are missing.",
+        "",
+        "Level 4 capability: undefined until Tess builds and Scott reviews this role's scoped-autonomy capability.",
+        "",
+        "Level 5 capability: undefined until Tess builds and Scott reviews this role's policy-autonomy capability.",
+        "",
+        "Level 6 capability: undefined until Tess builds and Scott reviews this role's native-autonomy capability.",
+        "",
+        f"Canonical autonomy source: `{role_root / 'Autonomy.md'}`.",
+        "",
+        "This card gives awareness, not authority. It does not grant autonomy, production access, Git/release authority, external communication, spending authority, secrets access, or permission expansion.",
+        "",
+    ])
+
+
+def template_gate_blocks_md(item: dict) -> str:
+    return "\n".join([
+        f"# {item.get('person_name') or item.get('role_title') or 'Role'} Gate Blocks",
+        "",
+        "Owner: Cole / HR Director for file-completeness tracking.",
+        "",
+        "## Active Blocks",
+        "",
+        "- No Level 4+ autonomy approved.",
+        "- No Git/release, production, external communication, spending, secrets, or authority expansion.",
+        "- Any missing substantive role definition must route to Ana and Scott rather than being invented by Cole.",
+        "",
+    ])
+
+
+def template_role_agent_md(item: dict) -> str:
+    title = item.get("role_title") or "Unassigned role"
+    person = item.get("person_name") or "Unassigned"
+    return "\n".join([
+        f"# {person} / {title} Role Contract",
+        "",
+        "Status: Level 3 Staff baseline created by Cole for file completeness.",
+        "Final authority: Scott.",
+        "",
+        "## Purpose",
+        "",
+        f"I serve as Mindshare's {title}. My detailed operating scope remains bounded by Scott-approved assignments, role lifecycle records, and future owner review.",
+        "",
+        "## Authority",
+        "",
+        "At Level 3, I may operate as an internal role when directly engaged with loaded role context. I do not have autonomous runtime or authority beyond my approved role work.",
+        "",
+        "Denied: autonomy, production, Git/release, external communication, spending, secrets, hiring/firing, gate edits, or authority expansion.",
+        "",
+        "## Learning Loop",
+        "",
+        "When my source files are incomplete, stale, or contradictory, I name the gap and route it to Cole for file structure, Ana for role lifecycle, Tess/Vik for autonomy/control-plane issues, Reid for release issues, and Scott/Rae for final authority.",
+        "",
+    ])
+
+
+def template_memory_md(item: dict) -> str:
+    return "\n".join([
+        f"# {item.get('person_name') or item.get('role_title') or 'Role'} Memory",
+        "",
+        f"- Current role: {role_display_name(item)}.",
+        f"- Current autonomy level: {autonomy_level_label(item)}.",
+        "- I should load my Who Am I card before answering from this role.",
+        "- I should not claim autonomy, tools, channels, production, Git/release, spending, secrets, or external communication unless a later approved source explicitly grants it.",
+        "- Cole created this baseline memory for Level 3 completeness; substantive role memory should be expanded by the role owner through approved work.",
+        "",
+    ])
+
+
+def template_workflow_md(item: dict) -> str:
+    return "\n".join([
+        f"# {item.get('person_name') or item.get('role_title') or 'Role'} Workflow",
+        "",
+        "## Level 3 Operating Loop",
+        "",
+        "1. Load my Who Am I card and role files.",
+        "2. Confirm the request is inside my current role and authority.",
+        "3. Use approved sources and name uncertainty quickly.",
+        "4. Produce bounded internal work or route to the correct owner.",
+        "5. Stop when the request requires autonomy, production, Git/release, external communication, spending, secrets, or authority expansion.",
+        "",
+    ])
+
+
+def template_autonomy_md(item: dict, role_root: Path) -> str:
+    title = item.get("role_title") or "Unassigned role"
+    person = item.get("person_name") or "Unassigned"
+    return "\n".join([
+        f"# {person} / {title} Autonomy Contract",
+        "",
+        "Status: Level 3 Staff baseline; no active autonomy.",
+        "Version: 0.1",
+        "Owner: Tess / Autonomy Engineer for autonomy contract structure; Cole / HR Director for Level 3 file completeness.",
+        "Final approval authority: Scott.",
+        f"Canonical source: `{role_root / 'Autonomy.md'}`",
+        "",
+        "## Current Status",
+        "",
+        f"Current autonomy level: {autonomy_level_label(item)}.",
+        "",
+        "Level 3 Staff is the last non-autonomous operating stage. This role may work only when engaged through approved context and does not own an autonomous loop.",
+        "",
+        "## Level 4 - Senior Staff (Scoped Autonomy)",
+        "",
+        "Undefined. Tess must build a role-specific scoped-autonomy proposal and Scott must review it before this role can be promoted to Level 4.",
+        "",
+        "## Level 5 - Principal (Policy Autonomy)",
+        "",
+        "Undefined. Tess must build a role-specific policy-autonomy proposal and Scott must review it before this role can be promoted to Level 5.",
+        "",
+        "## Level 6 - Partner (Native Autonomy)",
+        "",
+        "Undefined. Native autonomy is not proposed for this role.",
+        "",
+        "## Denied Actions",
+        "",
+        "No autonomous runtime, production access, Git/release authority, external communication, spending authority, secrets access, gate edits, role activation, or authority expansion.",
+        "",
+        "## Changelog",
+        "",
+        "| Date | Version | Change | Owner |",
+        "| --- | --- | --- | --- |",
+        f"| {iso_now()[:10]} | 0.1 | Created Level 3 baseline autonomy contract for file completeness. | Cole / Tess |",
+        "",
+    ])
+
+
+def template_state_json(item: dict, role_root: Path) -> str:
+    state = {
+        "name": item.get("person_name"),
+        "title": item.get("role_title"),
+        "organization": "Mindshare",
+        "current_stage": item.get("current_stage"),
+        "current_autonomy_level": autonomy_level_label(item),
+        "role_root": str(role_root),
+        "created_by": "Cole / HR Director",
+        "created_for": "Level 3 completeness",
+        "updated_at": iso_now(),
+        "authority_boundary": "No autonomy, production, Git/release, external communication, spending, secrets, or authority expansion.",
+    }
+    return json.dumps(state, indent=2) + "\n"
+
+
+def level3_file_template(file_name: str, item: dict, role_root: Path) -> str:
+    templates = {
+        "name.md": template_name_md,
+        "personality.md": template_personality_md,
+        "WhoAmI.md": lambda current: template_whoami_md(current, role_root),
+        "gate-blocks.md": template_gate_blocks_md,
+        "role-agent.md": template_role_agent_md,
+        "memory.md": template_memory_md,
+        "workflow.md": template_workflow_md,
+        "Autonomy.md": lambda current: template_autonomy_md(current, role_root),
+        "state.json": lambda current: template_state_json(current, role_root),
+    }
+    return templates[file_name](item)
+
+
+def ensure_level3_completeness_files(pipeline: dict) -> list[dict]:
+    """Create missing Level 3 baseline files for pipeline roles.
+
+    Cole only creates structural, template-derived files. Existing files are
+    never overwritten here because they may contain substantive role-owner work.
+    """
+
+    repairs: list[dict] = []
+    eligible_stages = {"level_3_staff", "activated_operator"}
+    for item in pipeline.get("items", []):
+        if item.get("status") != "active" or item.get("current_stage") not in eligible_stages:
+            continue
+        role_root = canonical_local_role_folder(item)
+        role_root.mkdir(parents=True, exist_ok=True)
+        created: list[str] = []
+        existing: list[str] = []
+        for file_name in LEVEL3_REQUIRED_FILES:
+            path = role_root / file_name
+            if path.exists():
+                existing.append(str(path))
+                continue
+            path.write_text(level3_file_template(file_name, item, role_root), encoding="utf-8")
+            created.append(str(path))
+        if created:
+            repairs.append({
+                "id": item.get("id"),
+                "display_name": role_display_name(item),
+                "role_root": str(role_root),
+                "created_files": created,
+                "existing_files": existing,
+            })
+    return repairs
 
 
 def build_level3_packet(item: dict, promoted_at: str) -> str:
@@ -419,6 +693,31 @@ def validate_role_files(roles: Iterable[dict]) -> tuple[list[Finding], int]:
     return findings, checked
 
 
+def validate_level3_pipeline_completeness(pipeline: dict) -> tuple[list[Finding], int]:
+    """Validate Level 3 baseline files for Ana/Cole pipeline roles."""
+
+    findings: list[Finding] = []
+    checked = 0
+    eligible_stages = {"level_3_staff", "activated_operator"}
+    for item in pipeline.get("items", []):
+        if item.get("status") != "active" or item.get("current_stage") not in eligible_stages:
+            continue
+        checked += 1
+        role_root = canonical_local_role_folder(item)
+        for file_name in LEVEL3_REQUIRED_FILES:
+            path = role_root / file_name
+            if not path.exists():
+                findings.append(Finding(
+                    "high" if file_name in {"name.md", "role-agent.md", "WhoAmI.md", "Autonomy.md"} else "medium",
+                    role_display_name(item),
+                    f"level3-required-file:{file_name}",
+                    "missing",
+                    str(path),
+                    "Cole",
+                ))
+    return findings, checked
+
+
 def validate_whoami_surfaces(roles: Iterable[dict]) -> tuple[list[Finding], int, list[str]]:
     """Validate every current local/mirror/room-card WhoAmI surface."""
 
@@ -516,6 +815,8 @@ def build_state(write_mode: str) -> dict:
     roles = parse_current_roles(roles_text)
     level2_readiness_items = analyze_level2_readiness_items(pipeline)
     findings, checked_roles = validate_role_files(roles)
+    level3_findings, checked_level3_pipeline_roles = validate_level3_pipeline_completeness(pipeline)
+    findings.extend(level3_findings)
     whoami_findings, checked_whoami_surfaces, missing_whoami_context = validate_whoami_surfaces(roles)
     findings.extend(whoami_findings)
     findings.extend(validate_injection_sources())
@@ -533,6 +834,9 @@ def build_state(write_mode: str) -> dict:
         "last_run": iso_now(),
         "last_run_mode": write_mode,
         "checked_roles": checked_roles,
+        "checked_level3_pipeline_roles": checked_level3_pipeline_roles,
+        "level3_required_files": LEVEL3_REQUIRED_FILES,
+        "level3_completeness_checklist": str(LEVEL3_COMPLETENESS_CHECKLIST),
         "whoami_surfaces_checked": checked_whoami_surfaces,
         "whoami_surfaces_missing_autonomy_context": missing_whoami_context,
         "level_2_readiness_items": [asdict(item) for item in level2_readiness_items],
@@ -553,6 +857,7 @@ def build_state(write_mode: str) -> dict:
             "conference_room": sha256_text(read_text(ROOM_CONTRACT)),
             "conference_room_prompt_protocol": sha256_text(read_text(ROOM_PROTOCOL)),
             "welcome_script": sha256_text(read_text(WELCOME_SCRIPT)),
+            "level3_completeness_checklist": sha256_text(read_text(LEVEL3_COMPLETENESS_CHECKLIST)),
             "recruiting_pipeline": sha256_text(read_text(RECRUITING_PIPELINE)),
         },
         "result": result,
@@ -581,6 +886,7 @@ def proof_entry(state: dict) -> str:
         "",
         f"Logic owner: `{state['logic_owner']}`",
         f"Roles checked: {state['checked_roles']}",
+        f"Level 3 pipeline roles checked: {state.get('checked_level3_pipeline_roles', 0)}",
         f"WhoAmI surfaces checked: {state['whoami_surfaces_checked']}",
         f"Level 2 readiness items waiting for Cole: {state['level_2_readiness_counts']['waiting_for_cole']}",
         f"Session injection targets: {len(state['session_injection_targets'])}",
@@ -594,6 +900,13 @@ def proof_entry(state: dict) -> str:
             lines.append(f"- {finding['severity']} / {finding['role']} / {finding['check']}: {finding['status']} - {finding['evidence']} -> {finding['owner_route']}")
         if len(state["findings"]) > len(findings):
             lines.append(f"- ... {len(state['findings']) - len(findings)} additional findings in state JSON.")
+        lines.append("")
+    repairs = state.get("level3_completeness_repairs") or []
+    if repairs:
+        lines.append("Level 3 completeness repairs:")
+        lines.append("")
+        for repair in repairs:
+            lines.append(f"- {repair['id']} / {repair['display_name']}: created {len(repair['created_files'])} files under `{repair['role_root']}`")
         lines.append("")
     promotions = state.get("level_2_to_level_3_promotions") or []
     if promotions:
@@ -620,12 +933,16 @@ def main() -> int:
         pipeline = load_json(RECRUITING_PIPELINE)
         readiness_items = [Level2ReadinessItem(**item) for item in state["level_2_readiness_items"]]
         promotions = promote_ready_level2_items(pipeline, readiness_items)
-        if promotions:
-            state = build_state(args.mode)
-            state["level_2_to_level_3_promotions"] = promotions
-            state["result"] = "promotion_completed_with_validation_findings" if state["findings"] else "promotion_completed"
-        else:
-            state["level_2_to_level_3_promotions"] = []
+        pipeline = load_json(RECRUITING_PIPELINE)
+        repairs = ensure_level3_completeness_files(pipeline)
+        state = build_state(args.mode)
+        state["level_2_to_level_3_promotions"] = promotions
+        state["level3_completeness_repairs"] = repairs
+        if promotions or repairs:
+            completed = "level3_completeness_completed"
+            if promotions:
+                completed = "promotion_and_level3_completeness_completed"
+            state["result"] = f"{completed}_with_validation_findings" if state["findings"] else completed
         STATE_PATH.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
         existing = read_text(PROOF_PATH)
         PROOF_PATH.write_text(existing.rstrip() + "\n\n" + proof_entry(state), encoding="utf-8")

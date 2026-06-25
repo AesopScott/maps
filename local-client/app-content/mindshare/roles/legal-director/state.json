@@ -1,0 +1,12 @@
+{
+  "name": "Adrian Moss",
+  "title": "Legal Director",
+  "organization": "Mindshare",
+  "current_stage": "level_3_staff",
+  "current_autonomy_level": "Level 3 Staff",
+  "role_root": "C:\\Users\\scott\\Code\\mindshare\\roles\\legal-director",
+  "created_by": "Cole / HR Director",
+  "created_for": "Level 3 completeness",
+  "updated_at": "2026-06-25T11:22:50-06:00",
+  "authority_boundary": "No autonomy, production, Git/release, external communication, spending, secrets, or authority expansion."
+}
