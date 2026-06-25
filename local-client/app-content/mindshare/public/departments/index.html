@@ -72,24 +72,13 @@
         }
         .chat-canvas {
             background: #020204;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
             isolation: isolate;
             min-height: 0;
         }
-        .chat-backdrop {
-            position: absolute;
-            inset: 0;
-            background-position: center;
-            background-size: cover;
-            background-repeat: no-repeat;
-            opacity: 0;
-            transition: opacity 300ms ease;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .chat-backdrop.is-visible {
-            opacity: 0.3;
-        }
-        .chat-canvas > *:not(.chat-backdrop) {
+        .chat-canvas > * {
             position: relative;
             z-index: 2;
         }
@@ -411,7 +400,6 @@ Configuration is loaded from the local MindShare workspace.
 </div>
 <!-- Chat Canvas -->
 <div class="chat-canvas relative flex-1 overflow-y-auto p-8 custom-scrollbar" id="chat-transcript" aria-live="polite">
-<div class="chat-backdrop" id="chat-backdrop" aria-hidden="true"></div>
 <div class="h-full min-h-[320px] flex items-center justify-center border border-white/5 bg-surface/30" data-chat-placeholder>
 <p class="font-label-sm text-on-surface-variant/50 uppercase tracking-widest">Chat Window</p>
 </div>
@@ -1225,10 +1213,10 @@ Configuration is loaded from the local MindShare workspace.
         function setChatDepartmentBackdrop(department) {
             const transcript = document.getElementById('chat-transcript');
             currentChatBackdropImagePath = departmentBackdrops[department] || '';
-            const backdrop = ensureChatBackdrop();
-            if (!transcript || !backdrop) return;
-            backdrop.classList.toggle('is-visible', Boolean(currentChatBackdropImagePath));
-            backdrop.style.backgroundImage = currentChatBackdropImagePath ? `url("${currentChatBackdropImagePath}")` : '';
+            if (!transcript) return;
+            transcript.style.backgroundImage = currentChatBackdropImagePath
+                ? `linear-gradient(rgba(2, 2, 4, 0.7), rgba(2, 2, 4, 0.7)), url("${currentChatBackdropImagePath}")`
+                : '';
         }
 
         function browseDepartment(department) {
@@ -1796,22 +1784,6 @@ Configuration is loaded from the local MindShare workspace.
             }
         }
 
-        function ensureChatBackdrop() {
-            const transcript = document.getElementById('chat-transcript');
-            if (!transcript) return null;
-            let backdrop = document.getElementById('chat-backdrop');
-            if (!backdrop) {
-                backdrop = document.createElement('div');
-                backdrop.className = 'chat-backdrop';
-                backdrop.id = 'chat-backdrop';
-                backdrop.setAttribute('aria-hidden', 'true');
-                transcript.prepend(backdrop);
-            }
-            backdrop.classList.toggle('is-visible', Boolean(currentChatBackdropImagePath));
-            backdrop.style.backgroundImage = currentChatBackdropImagePath ? `url("${currentChatBackdropImagePath}")` : '';
-            return backdrop;
-        }
-
         function escapeHtml(value) {
             return String(value ?? '')
                 .replaceAll('&', '&amp;')
@@ -1926,7 +1898,6 @@ Configuration is loaded from the local MindShare workspace.
 
         function appendChatMessage(role, text) {
             const transcript = document.getElementById('chat-transcript');
-            ensureChatBackdrop();
             const isUser = role === 'user';
             const row = document.createElement('div');
             row.className = `max-w-4xl mx-auto mb-6 flex gap-4 ${isUser ? 'flex-row-reverse' : ''}`;
@@ -1943,7 +1914,9 @@ Configuration is loaded from the local MindShare workspace.
         function renderTranscript(messages) {
             const transcript = document.getElementById('chat-transcript');
             transcript.innerHTML = '';
-            ensureChatBackdrop();
+            transcript.style.backgroundImage = currentChatBackdropImagePath
+                ? `linear-gradient(rgba(2, 2, 4, 0.7), rgba(2, 2, 4, 0.7)), url("${currentChatBackdropImagePath}")`
+                : '';
             if (!messages.length) {
                 transcript.insertAdjacentHTML('beforeend', `
                     <div class="h-full min-h-[320px] flex items-center justify-center border border-white/5 bg-surface/30" data-chat-placeholder>
