@@ -753,7 +753,8 @@ Configuration is loaded from the local MindShare workspace.
                 const listId = `${divisionSlug}-dept-${index}-list`;
                 const iconId = `${divisionSlug}-dept-${index}-icon`;
                 const icon = departmentIcons[index] || "business_center";
-                const entries = selected.entries?.[department] || [];
+                const entries = [...(selected.entries?.[department] || [])]
+                    .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
                 const entryMarkup = entries.length ? entries.map(entry => `
                     <div class="relative rounded-lg border border-white/10 bg-surface-container-lowest hover:border-primary/40 hover:bg-white/5 transition-all cursor-pointer" role="button" tabindex="0" data-role-selector data-role-slug="${escapeHtml(entry.slug)}" data-role-name="${escapeHtml(entry.name)}" data-role-title="${escapeHtml(entry.title)}" data-role-level="${escapeHtml(entry.level)}" data-role-department="${escapeHtml(department)}">
                         <div class="w-full text-left flex items-center justify-between gap-3 p-3">
