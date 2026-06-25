@@ -24,6 +24,20 @@
             backdrop-filter: blur(40px);
             border: 1px solid rgba(190, 198, 224, 0.15);
         }
+        .opaque-dropdown {
+            background: #10182a;
+            backdrop-filter: none;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+        }
+        .provider-ready-dot {
+            background: rgba(121, 128, 152, 0.28);
+            border: 1px solid rgba(190, 198, 224, 0.24);
+        }
+        .provider-ready-dot.is-ready {
+            background: #34d399;
+            border-color: rgba(52, 211, 153, 0.85);
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.62);
+        }
         .metallic-silver {
             background: linear-gradient(135deg, #bec6e0 0%, #798098 100%);
         }
@@ -229,10 +243,11 @@
 </div>
 <div class="flex items-center gap-6">
 <button class="flex items-center gap-2 glass-panel px-3 py-2 rounded-md border border-white/10 hover:border-primary/50 hover:bg-white/5 transition-all cursor-pointer" id="connect-codex-button" type="button">
-<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Connect Codex
+<span class="provider-ready-dot w-2 h-2 rounded-full transition-all" id="codex-ready-dot" aria-hidden="true"></span>
+<span class="font-label-sm text-primary">Connect Codex</span>
                         </button>
 <button class="flex items-center gap-2 glass-panel px-3 py-2 rounded-md border border-white/10 hover:border-primary/50 hover:bg-white/5 transition-all cursor-pointer" id="connect-claude-button" type="button">
-<span class="material-symbols-outlined text-[16px] text-primary">memory</span>
+<span class="provider-ready-dot w-2 h-2 rounded-full transition-all" id="claude-ready-dot" aria-hidden="true"></span>
 <span class="font-label-sm text-primary">Connect Claude</span>
 </button>
 </div>
@@ -246,15 +261,15 @@
 <div class="flex flex-wrap gap-2 text-[10px] uppercase tracking-widest font-label-sm shrink-0">
 <div class="relative">
 <button class="glass-panel px-3 py-2 rounded-md text-on-surface-variant silver-edge hover:border-primary/50 hover:text-primary transition-colors cursor-pointer" id="office-context-title" type="button">Title</button>
-<div class="hidden absolute right-0 top-full mt-2 w-[500px] max-w-[calc(100vw-2rem)] glass-panel-heavy silver-edge rounded-lg p-4 z-40 normal-case tracking-normal text-left" id="office-title-dropdown"></div>
+<div class="hidden absolute right-0 top-full mt-2 w-[500px] max-w-[calc(100vw-2rem)] opaque-dropdown silver-edge rounded-lg p-4 z-40 normal-case tracking-normal text-left" id="office-title-dropdown"></div>
 </div>
 <div class="relative">
 <button class="glass-panel px-3 py-2 rounded-md text-on-surface-variant silver-edge hover:border-primary/50 hover:text-primary transition-colors cursor-pointer" id="office-context-level" type="button">Level</button>
-<div class="hidden absolute right-0 top-full mt-2 w-[460px] max-w-[calc(100vw-2rem)] glass-panel-heavy silver-edge rounded-lg p-4 z-40 normal-case tracking-normal text-left" id="office-level-dropdown"></div>
+<div class="hidden absolute right-0 top-full mt-2 w-[460px] max-w-[calc(100vw-2rem)] opaque-dropdown silver-edge rounded-lg p-4 z-40 normal-case tracking-normal text-left" id="office-level-dropdown"></div>
 </div>
 <div class="relative">
 <button class="glass-panel px-3 py-2 rounded-md text-on-surface-variant silver-edge hover:border-primary/50 hover:text-primary transition-colors cursor-pointer" id="office-context-files" type="button">Context pending</button>
-<div class="hidden absolute right-0 top-full mt-2 w-[520px] max-w-[calc(100vw-2rem)] max-h-80 overflow-y-auto custom-scrollbar glass-panel-heavy silver-edge rounded-lg p-3 z-40 normal-case tracking-normal text-left" id="office-files-dropdown"></div>
+<div class="hidden absolute right-0 top-full mt-2 w-[520px] max-w-[calc(100vw-2rem)] max-h-80 overflow-y-auto custom-scrollbar opaque-dropdown silver-edge rounded-lg p-3 z-40 normal-case tracking-normal text-left" id="office-files-dropdown"></div>
 </div>
 </div>
 </div>
@@ -951,6 +966,13 @@
             setChatStatus('');
         }
 
+        function setProviderReady(engine, ready) {
+            const dot = document.getElementById(engine === 'claude' ? 'claude-ready-dot' : 'codex-ready-dot');
+            if (!dot) return;
+            dot.classList.toggle('is-ready', Boolean(ready));
+            dot.classList.toggle('animate-pulse', Boolean(ready));
+        }
+
         function hasConnectedOfficeSession(roleSession) {
             return Boolean(roleSession?.codexSessionId || roleSession?.claudeSessionId);
         }
@@ -1086,6 +1108,8 @@
                     payload = await client.connectCodex({ checkOnly: true });
                 }
                 if (!payload.ok) {
+                    codexAvailable = false;
+                    setProviderReady('codex', false);
                     if (payload.action === 'install') {
                         addChatError('Codex CLI was not found on this machine. Install Codex locally, restart the MindShare Local Client, then reconnect.');
                     } else if (payload.action === 'login') {
@@ -1096,14 +1120,16 @@
                     return;
                 }
                 codexAvailable = true;
+                setProviderReady('codex', true);
                 activeEngine = 'codex';
                 button.classList.remove('text-on-surface-variant');
                 button.classList.add('text-primary');
-                document.getElementById('connect-claude-button').classList.remove('text-primary');
                 setChatStatus(activeRoleSlug
                     ? `${roleSessions[activeRoleSlug].name}'s Codex office session ${payload.reused ? 'is already connected' : 'connected'}.`
                     : (payload.message || 'Codex CLI is ready. Select a role to create that office session.'));
             } catch (error) {
+                codexAvailable = false;
+                setProviderReady('codex', false);
                 addChatError(`Codex connection failed: ${error.message || error}`);
                 clearChatStatus();
             } finally {
@@ -1135,6 +1161,8 @@
                     payload = await client.connectClaude({ checkOnly: true });
                 }
                 if (!payload.ok) {
+                    claudeAvailable = false;
+                    setProviderReady('claude', false);
                     if (payload.action === 'install') {
                         addChatError('Claude CLI was not found on this machine. Install Claude locally, restart the MindShare Local Client, then reconnect.');
                     } else if (payload.action === 'login') {
@@ -1145,13 +1173,15 @@
                     return;
                 }
                 claudeAvailable = true;
+                setProviderReady('claude', true);
                 activeEngine = 'claude';
                 button.classList.add('text-primary');
-                document.getElementById('connect-codex-button').classList.remove('text-primary');
                 setChatStatus(activeRoleSlug
                     ? `${roleSessions[activeRoleSlug].name}'s Claude office session ${payload.reused ? 'is already connected' : 'connected'}.`
                     : (payload.message || 'Claude CLI is ready. Select a role to create that office session.'));
             } catch (error) {
+                claudeAvailable = false;
+                setProviderReady('claude', false);
                 addChatError(`Claude connection failed: ${error.message || error}`);
                 clearChatStatus();
             } finally {
