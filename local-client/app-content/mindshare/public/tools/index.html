@@ -98,12 +98,17 @@ webview, iframe {
 <span class="block text-sm font-semibold text-primary-fixed">OpenAI Images</span>
 <span class="mt-1 block text-xs leading-relaxed text-on-surface-variant">Generate employee portraits and other image assets in the OpenAI Playground.</span>
 </button>
+<button class="tool-button w-full rounded-lg border border-white/10 px-4 py-4 text-left transition-colors hover:border-primary/50" type="button" data-tool-id="purelymail-inbox">
+<span class="block text-sm font-semibold text-primary-fixed">Purelymail Inbox</span>
+<span class="mt-1 block text-xs leading-relaxed text-on-surface-variant">Open Purelymail webmail for approved assistant email workflows.</span>
+</button>
 </div>
 <div class="mt-8">
 <label class="font-label-sm text-[10px] uppercase tracking-[0.24em] text-on-surface-variant" for="tool-operator">Operator</label>
 <select class="mt-3 w-full rounded-lg border border-white/10 bg-black/45 px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-0" id="tool-operator">
 <option value="cole">Cole · HR Director</option>
 <option value="liz">Liz · Website Manager</option>
+<option value="paige">Paige · Executive Assistant</option>
 </select>
 <p class="mt-3 text-xs leading-relaxed text-on-surface-variant" id="operator-scope">Cole may prepare employee image prompts and source-image uploads for approved roster/file-completeness work.</p>
 </div>
@@ -129,10 +134,11 @@ External tools keep their own login and billing. MindShare only provides the loc
 </div>
 <aside class="workflow-panel flex min-h-0 flex-col p-5">
 <div>
-<p class="font-label-sm text-[10px] uppercase tracking-[0.24em] text-on-surface-variant">Image Workflow</p>
-<h3 class="mt-2 text-lg font-semibold text-primary-fixed">Source + Prompt</h3>
-<p class="mt-2 text-xs leading-relaxed text-on-surface-variant">Use this panel to prepare image references and prompt text, then upload the selected files into the OpenAI Images Playground.</p>
+<p class="font-label-sm text-[10px] uppercase tracking-[0.24em] text-on-surface-variant" id="workflow-kicker">Image Workflow</p>
+<h3 class="mt-2 text-lg font-semibold text-primary-fixed" id="workflow-title">Source + Prompt</h3>
+<p class="mt-2 text-xs leading-relaxed text-on-surface-variant" id="workflow-description">Use this panel to prepare image references and prompt text, then upload the selected files into the OpenAI Images Playground.</p>
 </div>
+<div id="image-workflow-controls">
 <div class="mt-5 flex gap-2">
 <button class="rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-primary transition hover:bg-primary/20" id="choose-source-images" type="button">Choose Images</button>
 <button class="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-on-surface-variant transition hover:border-primary/50 hover:text-primary" id="clear-source-images" type="button">Clear</button>
@@ -146,8 +152,9 @@ External tools keep their own login and billing. MindShare only provides the loc
 <button class="rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-primary transition hover:bg-primary/20" id="copy-image-prompt" type="button">Copy Prompt</button>
 <button class="rounded-md border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-on-surface-variant transition hover:border-primary/50 hover:text-primary" id="open-source-folder" type="button">Show Files</button>
 </div>
+</div>
 <div class="mt-4 rounded-lg border border-white/10 bg-black/35 p-3 text-xs leading-relaxed text-on-surface-variant" id="image-workflow-status">Ready. Choose source images from C:\Users\scott\Pictures, write the prompt, copy it, then upload the selected files in OpenAI Images.</div>
-<div class="mt-auto rounded-lg border border-white/10 bg-black/35 p-3 text-xs leading-relaxed text-on-surface-variant">
+<div class="mt-auto rounded-lg border border-white/10 bg-black/35 p-3 text-xs leading-relaxed text-on-surface-variant" id="workflow-boundary">
 This grants Cole and Liz use of the visible tool workflow only. It does not grant API keys, spending authority, external publishing, or autonomous browser control.
 </div>
 </aside>
@@ -159,7 +166,14 @@ const tools = {
   'openai-images': {
     title: 'OpenAI Images Playground',
     eyebrow: 'Image Generation',
-    url: 'https://platform.openai.com/playground/images'
+    url: 'https://platform.openai.com/playground/images',
+    workflow: 'image'
+  },
+  'purelymail-inbox': {
+    title: 'Purelymail Inbox',
+    eyebrow: 'Email',
+    url: 'https://inbox.purelymail.com/',
+    workflow: 'email'
   }
 };
 
@@ -168,7 +182,8 @@ let sourceImages = [];
 
 const operatorScopes = {
   cole: 'Cole may prepare employee image prompts and source-image uploads for approved roster/file-completeness work.',
-  liz: 'Liz may prepare website/team image prompts and source-image uploads for approved MindShare interface work.'
+  liz: 'Liz may prepare website/team image prompts and source-image uploads for approved MindShare interface work.',
+  paige: 'Paige may use the visible Purelymail Inbox surface for Scott-approved assistant email work.'
 };
 
 function toolWebview() {
@@ -194,6 +209,23 @@ function renderTool(toolId) {
     iframe.src = tool.url;
     iframe.classList.remove('hidden');
   }
+  renderWorkflow(tool);
+}
+
+function renderWorkflow(tool) {
+  const isEmail = tool.workflow === 'email';
+  document.getElementById('workflow-kicker').textContent = isEmail ? 'Email Workflow' : 'Image Workflow';
+  document.getElementById('workflow-title').textContent = isEmail ? 'Inbox Access' : 'Source + Prompt';
+  document.getElementById('workflow-description').textContent = isEmail
+    ? 'Use this surface to open Purelymail webmail for Paige assistant workflows. Email actions still require explicit Scott approval for the task being performed.'
+    : 'Use this panel to prepare image references and prompt text, then upload the selected files into the OpenAI Images Playground.';
+  document.getElementById('image-workflow-controls').classList.toggle('hidden', isEmail);
+  document.getElementById('workflow-boundary').textContent = isEmail
+    ? 'This grants Paige a visible inbox tool surface only. It does not grant silent email authority, autonomous sending, deleting, forwarding, archiving, spending, secrets access, or external communication without explicit Scott approval.'
+    : 'This grants Cole and Liz use of the visible tool workflow only. It does not grant API keys, spending authority, external publishing, or autonomous browser control.';
+  setWorkflowStatus(isEmail
+    ? 'Purelymail is loaded in the tool frame. Sign in with the existing Purelymail session or credentials, then keep email actions inside the approved Paige task.'
+    : 'Ready. Choose source images from C:\\Users\\scott\\Pictures, write the prompt, copy it, then upload the selected files in OpenAI Images.');
 }
 
 function localClient() {
@@ -224,7 +256,24 @@ function setWorkflowStatus(text) {
 
 function buildPreparedPrompt() {
   const operator = document.getElementById('tool-operator').value;
-  const roleLabel = operator === 'liz' ? 'Liz / Website Manager' : 'Cole / HR Director';
+  const roleLabels = {
+    cole: 'Cole / HR Director',
+    liz: 'Liz / Website Manager',
+    paige: 'Paige / Executive Assistant'
+  };
+  const roleLabel = roleLabels[operator] || roleLabels.cole;
+  if (tools[activeTool]?.workflow === 'email') {
+    const prompt = document.getElementById('image-prompt').value.trim();
+    return [
+      `Operator: ${roleLabel}`,
+      '',
+      'Purelymail email task:',
+      prompt || '(Write the approved email task here.)',
+      '',
+      'Boundary:',
+      'Do not send, delete, forward, archive, or externally communicate unless Scott explicitly approved that action for this task.'
+    ].join('\n');
+  }
   const prompt = document.getElementById('image-prompt').value.trim();
   const sources = sourceImages.map((file) => `- ${file.name}: ${file.path}`).join('\n') || '- No source images selected.';
   return [
