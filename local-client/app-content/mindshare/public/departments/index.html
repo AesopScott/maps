@@ -1261,6 +1261,7 @@ Configuration is loaded from the local MindShare workspace.
             persistOfficeState();
             setChatDepartmentBackdrop(roleSession.department);
             renderTranscript(roleSession.messages);
+            injectOfficeEntry(roleSession);
             renderOfficeConnectionStatus(roleSession);
             renderOfficeFilesDropdown(activeRoleContext);
             renderOfficeTitleDropdown(title);
