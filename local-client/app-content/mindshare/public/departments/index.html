@@ -612,7 +612,7 @@ Configuration is loaded from the local MindShare workspace.
                 `;
                 return `
                     <div class="group">
-                        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-all silver-edge" onclick="setChatDepartmentBackdrop('${department}'); toggleSection('${listId}', '${iconId}')">
+                        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-all silver-edge" onclick="browseDepartment('${department}'); toggleSection('${listId}', '${iconId}')">
                             <div class="flex items-center gap-3">
                                 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">${icon}</span>
                                 <span class="font-body-md font-semibold text-on-surface">${department}</span>
@@ -884,6 +884,33 @@ Configuration is loaded from the local MindShare workspace.
             } else {
                 transcript.style.removeProperty('--chat-department-backdrop');
             }
+        }
+
+        function browseDepartment(department) {
+            const activeSession = activeRoleSlug ? roleSessions[activeRoleSlug] : null;
+            setChatDepartmentBackdrop(department);
+            if (activeSession?.department === department) {
+                return;
+            }
+
+            activeRoleSlug = null;
+            activeRoleContext = null;
+            document.getElementById('main-window-title').textContent = `${department} · Select an office`;
+            renderTranscript([]);
+            renderOfficeConnectionStatus(null);
+            renderOfficeFilesDropdown(null);
+            renderOfficeTitleDropdown('');
+            renderOfficeLevelDropdown('');
+            renderOfficeAutonomyControl(null);
+            showOfficeContext({
+                name: 'Agent Name',
+                title: department,
+                level: 'Select an office',
+                filesText: 'Choose a person in this department to load their office.'
+            });
+            setChatStatus(`Browsing ${department}. Select a person to enter an office.`);
+            closeContextDropdowns();
+            persistOfficeState();
         }
 
         async function selectRole(slug, name, title, level, department = '') {
