@@ -2246,6 +2246,25 @@ Configuration is loaded from the local MindShare workspace.
             }
         }
 
+        async function resolvePromptEngineForSend() {
+            let available = activeEngine === 'claude' ? claudeAvailable : codexAvailable;
+            if (available) return activeEngine;
+
+            setChatStatus(`Checking ${activeEngine === 'claude' ? 'Claude' : 'Codex'} connection...`);
+            await refreshProviderReadiness();
+            available = activeEngine === 'claude' ? claudeAvailable : codexAvailable;
+            if (available) return activeEngine;
+
+            const fallback = codexAvailable ? 'codex' : (claudeAvailable ? 'claude' : null);
+            if (!fallback) return null;
+
+            activeEngine = fallback;
+            renderPromptEngineSelector();
+            persistOfficeState();
+            setChatStatus(`Switched to available ${fallback === 'claude' ? 'Claude' : 'Codex'} connection.`);
+            return fallback;
+        }
+
         function hasConnectedOfficeSession(roleSession) {
             return Boolean(roleSession?.codexSessionId || roleSession?.claudeSessionId);
         }
@@ -2522,7 +2541,7 @@ Configuration is loaded from the local MindShare workspace.
             }
         }
 
-        function enqueuePromptFromInput() {
+        async function enqueuePromptFromInput() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
             const attachments = pendingAttachments.map((file) => ({ ...file }));
@@ -2532,9 +2551,9 @@ Configuration is loaded from the local MindShare workspace.
                 return;
             }
             const roleSession = roleSessions[activeRoleSlug];
-            const available = activeEngine === 'claude' ? claudeAvailable : codexAvailable;
-            if (!available) {
-                addChatError(`Connect ${activeEngine === 'claude' ? 'Claude' : 'Codex'} once before sending a message.`);
+            const engine = await resolvePromptEngineForSend();
+            if (!engine) {
+                addChatError('Connect Codex or Claude once before sending a message.');
                 return;
             }
 
@@ -2545,7 +2564,7 @@ Configuration is loaded from the local MindShare workspace.
             roleSession.promptQueue.push({
                 message,
                 attachments,
-                engine: activeEngine,
+                engine,
                 messageRecord
             });
             persistOfficeState();
@@ -2564,7 +2583,11 @@ Configuration is loaded from the local MindShare workspace.
 
             const queuedPrompt = roleSession.promptQueue.shift();
             const engine = queuedPrompt.engine || 'codex';
-            const available = engine === 'claude' ? claudeAvailable : codexAvailable;
+            let available = engine === 'claude' ? claudeAvailable : codexAvailable;
+            if (!available) {
+                await refreshProviderReadiness();
+                available = engine === 'claude' ? claudeAvailable : codexAvailable;
+            }
             if (!available) {
                 addChatMessageToRole(roleSession, 'system', `Connect ${engine === 'claude' ? 'Claude' : 'Codex'} before this queued prompt can run.`);
                 renderActiveSessions();
