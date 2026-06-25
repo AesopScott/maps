@@ -706,10 +706,12 @@ Configuration is loaded from the local MindShare workspace.
                 .map((agent) => {
                     const name = agent.name.toLowerCase();
                     const title = agent.title.toLowerCase();
-                    const haystack = `${name} ${title} ${agent.department.toLowerCase()} ${agent.divisionLabel.toLowerCase()}`;
+                    const department = agent.department.toLowerCase();
                     const score = name.startsWith(normalized) ? 0
                         : title.startsWith(normalized) ? 1
-                        : haystack.includes(normalized) ? 2
+                        : name.includes(normalized) ? 2
+                        : title.includes(normalized) ? 3
+                        : (normalized.length >= 3 && department.includes(normalized)) ? 4
                         : 99;
                     return { ...agent, score };
                 })
@@ -760,9 +762,6 @@ Configuration is loaded from the local MindShare workspace.
             const query = event.target.value;
             const matches = matchingAgents(query);
             renderGlobalSearchResults(matches, query);
-            if (query.trim().length >= 2 && matches.length === 1) {
-                loadAgentFromSearch(matches[0]);
-            }
         }
 
         function handleGlobalSearchKeydown(event) {
