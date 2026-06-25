@@ -142,6 +142,23 @@ const ROLE_CATALOG = {
       'Autonomy.md',
       'memory.md'
     ]
+  },
+  vik: {
+    name: 'Vik',
+    title: 'MAPS ASPA',
+    level: 'Level 5 Policy Autonomy',
+    office: "Vik's office",
+    rolePath: ['mojo', 'roles', 'maps-agentic-systems-program-architect'],
+    files: [
+      'WhoAmI.md',
+      'name.md',
+      'personality.md',
+      'role-agent.md',
+      'workflow.md',
+      'loop.md',
+      'Autonomy.md',
+      'memory.md'
+    ]
   }
 };
 
@@ -545,6 +562,59 @@ async function runTessLevel4Automation(payload = {}) {
   };
 }
 
+async function runPythonAutomation(scriptPath, mode, env) {
+  const python = await pythonLaunch();
+  if (!python) {
+    return { ok: false, error: 'Python is not installed or not on PATH.' };
+  }
+  if (!await pathExists(scriptPath)) {
+    return { ok: false, error: `Automation script was not found at ${scriptPath}.` };
+  }
+
+  const args = python.toLowerCase().endsWith('py.exe')
+    ? ['-3', scriptPath, '--write', '--mode', mode]
+    : [scriptPath, '--write', '--mode', mode];
+  const result = await run(python, args, { timeout: 120000, env });
+  const output = (result.stdout || result.stderr || '').trim();
+  let state = null;
+  try {
+    state = output ? JSON.parse(output) : null;
+  } catch {
+    state = null;
+  }
+  return {
+    ok: Boolean(state) && result.code !== 'TIMEOUT',
+    code: result.code,
+    state,
+    output,
+    error: result.code === 'TIMEOUT' ? (result.stderr || 'Automation timed out.').trim() : null
+  };
+}
+
+async function runVikAutomation(payload = {}) {
+  const appContentRoot = await resolveAppContentRoot();
+  const mojoRoot = path.join(appContentRoot, 'mojo');
+  const roleRoot = path.join(mojoRoot, 'roles', 'maps-agentic-systems-program-architect');
+  const automationRoot = path.join(mojoRoot, 'automations', 'vik-handoff-check');
+  const env = {
+    VIK_ROLE_ROOT: roleRoot,
+    VIK_ARCHITECTURE_BACKLOG: path.join(mojoRoot, 'agents', 'vik-aspa', 'architecture-backlog.md'),
+    VIK_AUTOMATION_ROOT: automationRoot
+  };
+  const mode = payload.mode === 'scheduled' ? 'scheduled' : 'manual';
+  const level4 = await runPythonAutomation(path.join(roleRoot, 'scripts', 'level4automation.py'), mode, env);
+  const level5 = await runPythonAutomation(path.join(roleRoot, 'scripts', 'level5automation.py'), mode, env);
+  return {
+    ok: level4.ok && level5.ok,
+    level4,
+    level5,
+    result: {
+      level4: level4.state?.result || 'unavailable',
+      level5: level5.state?.result || 'unavailable'
+    }
+  };
+}
+
 async function loadRoleContext(payload = {}) {
   const roleSlug = String(payload?.roleSlug || payload?.name || '').trim().toLowerCase();
   const role = ROLE_CATALOG[roleSlug];
@@ -746,6 +816,7 @@ module.exports = {
   connectClaude,
   loadRoleContext,
   runTessLevel4Automation,
+  runVikAutomation,
   sendCodexMessage,
   sendClaudeMessage
 };

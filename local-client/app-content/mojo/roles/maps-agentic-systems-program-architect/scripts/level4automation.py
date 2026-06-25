@@ -34,17 +34,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 
-ROLE_ROOT = Path(r"C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-architect")
+ROLE_ROOT = Path(os.environ.get("VIK_ROLE_ROOT", r"C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-architect"))
 AUTONOMY_PATH = ROLE_ROOT / "Autonomy.md"
 STATE_PATH = ROLE_ROOT / "level4-research-state.json"
 PROOF_PATH = ROLE_ROOT / "level4-research-proof.md"
-BACKLOG_PATH = Path(r"C:\Users\scott\Code\mojo\agents\vik-aspa\architecture-backlog.md")
-AUTOMATION_ROOT = Path(r"C:\Users\scott\.codex\automations\vik-handoff-check")
+BACKLOG_PATH = Path(os.environ.get("VIK_ARCHITECTURE_BACKLOG", r"C:\Users\scott\Code\mojo\agents\vik-aspa\architecture-backlog.md"))
+AUTOMATION_ROOT = Path(os.environ.get("VIK_AUTOMATION_ROOT", r"C:\Users\scott\.codex\automations\vik-handoff-check"))
 QUEUE_STATE_PATH = AUTOMATION_ROOT / "channel_queue_guard_state.json"
 REPORTS_DIR = AUTOMATION_ROOT / "reports"
 

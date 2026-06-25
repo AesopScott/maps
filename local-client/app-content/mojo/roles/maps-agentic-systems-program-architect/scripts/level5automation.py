@@ -33,17 +33,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 
-ROLE_ROOT = Path(r"C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-architect")
+ROLE_ROOT = Path(os.environ.get("VIK_ROLE_ROOT", r"C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-architect"))
 AUTONOMY_PATH = ROLE_ROOT / "Autonomy.md"
 POLICY_PATH = ROLE_ROOT / "level5-product-recommendation-policy.md"
 STATE_PATH = ROLE_ROOT / "level5-product-recommendation-state.json"
 PROOF_PATH = ROLE_ROOT / "level5-product-recommendation-proof.md"
-AUTOMATION_ROOT = Path(r"C:\Users\scott\.codex\automations\vik-handoff-check")
+AUTOMATION_ROOT = Path(os.environ.get("VIK_AUTOMATION_ROOT", r"C:\Users\scott\.codex\automations\vik-handoff-check"))
 REPORTS_DIR = AUTOMATION_ROOT / "reports"
 LEVEL5_REPORTS_DIR = AUTOMATION_ROOT / "level5-reports"
 

@@ -1,5 +1,5 @@
 ﻿{
-    "generatedAt":  "2026-06-25T15:30:23.9147255Z",
+    "generatedAt":  "2026-06-25T15:36:58.9767816Z",
     "contentRoot":  ".",
     "copiedSources":  [
                           {
@@ -90,6 +90,26 @@
                           {
                               "source":  "mojo/roles",
                               "destination":  "mojo/roles",
+                              "type":  "directory"
+                          },
+                          {
+                              "source":  "queue.toml",
+                              "destination":  "mojo/automations/vik-handoff-check/queue.toml",
+                              "type":  "file"
+                          },
+                          {
+                              "source":  "channel_queue_guard_state.json",
+                              "destination":  "mojo/automations/vik-handoff-check/channel_queue_guard_state.json",
+                              "type":  "file"
+                          },
+                          {
+                              "source":  "reports",
+                              "destination":  "mojo/automations/vik-handoff-check/reports",
+                              "type":  "directory"
+                          },
+                          {
+                              "source":  "level5-reports",
+                              "destination":  "mojo/automations/vik-handoff-check/level5-reports",
                               "type":  "directory"
                           },
                           {

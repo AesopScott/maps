@@ -1,0 +1,27 @@
+version = 1
+kind = "queue"
+automation_id = "vik-handoff-check"
+name = "Vik architecture backlog queue"
+status = "ACTIVE"
+role = "Vik / MAPS ASPA"
+cadence = "FREQ=MINUTELY;INTERVAL=30"
+backlog_path = "C:\Users\scott\Code\mojo\agents\vik-aspa\architecture-backlog.md"
+state_path = "channel_queue_guard_state.json"
+completion_report_dir = "reports"
+max_items_per_packet = 1
+eligible_statuses = ["backlog"]
+priority_order = ["P0", "P1", "P2"]
+mode = "queue_occupancy_not_hash_change"
+loop_semantics = "drain-until-empty"
+allowed_output = "research_recommendation_only"
+
+[boundaries]
+implementation = "blocked_without_approval"
+git_or_release = "blocked_without_reid_or_waiver"
+production = "blocked"
+external_communication = "blocked"
+spending = "blocked"
+secrets = "blocked"
+authority_expansion = "blocked"
+runtime_activation = "blocked"
+promotion = "blocked"

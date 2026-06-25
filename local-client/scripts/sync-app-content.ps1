@@ -7,6 +7,7 @@ $codeRoot = Split-Path -Parent $mindshareRoot
 $mojoRoot = Join-Path $codeRoot "mojo"
 $watchRoot = Join-Path $codeRoot "watch"
 $mindshareDriveRoot = "G:\My Drive\Mindshare"
+$codexAutomationsRoot = Join-Path $env:USERPROFILE ".codex\automations"
 $contentRoot = Join-Path $localClientRoot "app-content"
 
 function Clear-AppContent {
@@ -155,6 +156,10 @@ Copy-DirectoryIfPresent -Source (Join-Path $mojoRoot "agents") -Destination (Joi
 Copy-DirectoryIfPresent -Source (Join-Path $mojoRoot "assets\maps") -Destination (Join-Path $contentRoot "mojo\assets\maps") -CopiedSources $copiedSources -MissingSources $missingSources
 Copy-DirectoryIfPresent -Source (Join-Path $mojoRoot "maps") -Destination (Join-Path $contentRoot "mojo\maps") -CopiedSources $copiedSources -MissingSources $missingSources
 Copy-DirectoryIfPresent -Source (Join-Path $mojoRoot "roles") -Destination (Join-Path $contentRoot "mojo\roles") -CopiedSources $copiedSources -MissingSources $missingSources
+Copy-FileIfPresent -Source (Join-Path $codexAutomationsRoot "vik-handoff-check\queue.toml") -Destination (Join-Path $contentRoot "mojo\automations\vik-handoff-check\queue.toml") -CopiedSources $copiedSources -MissingSources $missingSources
+Copy-FileIfPresent -Source (Join-Path $codexAutomationsRoot "vik-handoff-check\channel_queue_guard_state.json") -Destination (Join-Path $contentRoot "mojo\automations\vik-handoff-check\channel_queue_guard_state.json") -CopiedSources $copiedSources -MissingSources $missingSources
+Copy-DirectoryIfPresent -Source (Join-Path $codexAutomationsRoot "vik-handoff-check\reports") -Destination (Join-Path $contentRoot "mojo\automations\vik-handoff-check\reports") -CopiedSources $copiedSources -MissingSources $missingSources
+Copy-DirectoryIfPresent -Source (Join-Path $codexAutomationsRoot "vik-handoff-check\level5-reports") -Destination (Join-Path $contentRoot "mojo\automations\vik-handoff-check\level5-reports") -CopiedSources $copiedSources -MissingSources $missingSources
 
 Copy-DirectoryIfPresent -Source (Join-Path $watchRoot "agents") -Destination (Join-Path $contentRoot "watch\agents") -CopiedSources $copiedSources -MissingSources $missingSources
 Copy-DirectoryIfPresent -Source (Join-Path $watchRoot "roles") -Destination (Join-Path $contentRoot "watch\roles") -CopiedSources $copiedSources -MissingSources $missingSources

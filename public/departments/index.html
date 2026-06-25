@@ -449,6 +449,18 @@
                                 level5: "Defined, not active: policy-backed promotion-readiness loop, recurring automation-baseline discovery, autonomy health observation, and policy/eval/runtime recommendations.",
                                 level6: "Not defined for Tess. Any future Level 6 requires Scott-defined capability, Vik control-plane review, eval proof, observation, audit, rollback, revocation, and human override."
                             }
+                        },
+                        {
+                            slug: "vik",
+                            name: "Vik",
+                            title: "MAPS ASPA",
+                            level: "Level 5 Policy Autonomy",
+                            image: "../assets/team/vik.webp",
+                            autonomy: {
+                                level4: "Active scoped autonomy: process the approved research backlog, keep queue/state/proof aligned, produce research output, and route implementation or authority decisions to the right owner.",
+                                level5: "Active policy autonomy: review completed research against product-development policy and recommend make, implement, adopt, integrate, further review, no recommendation, or blocked.",
+                                level6: "Defined, not active: discover AI/security topics from the internet, add new items to the research backlog, complete deep analysis, and apply Level 5 policy criteria in a full loop."
+                            }
                         }
                     ]
                 }
@@ -644,7 +656,9 @@
         const NOTIFICATION_TTL_MS = 120000;
         const OFFICE_STATE_STORAGE_KEY = 'mindshare.officeSessions.v1';
         const TESS_AUTOMATION_LAST_RUN_KEY = 'mindshare.tessLevel4Automation.lastRun.v1';
+        const VIK_AUTOMATION_LAST_RUN_KEY = 'mindshare.vikAutomation.lastRun.v1';
         const TESS_AUTOMATION_MIN_INTERVAL_MS = 5 * 60 * 1000;
+        const VIK_AUTOMATION_MIN_INTERVAL_MS = 5 * 60 * 1000;
         const pendingAttachments = [];
         const departmentBackdrops = {
             "AI Engineering": "../assets/departments/ai-engineering-wiring.png"
@@ -800,6 +814,7 @@
                 });
                 const createdSessions = await provisionAvailableProviderSessions(roleSession);
                 await runTessAutomationIfNeeded(roleSession);
+                await runVikAutomationIfNeeded(roleSession);
                 if (createdSessions.length) {
                     setChatStatus(`${name}'s ${createdSessions.join(' and ')} office session${createdSessions.length === 1 ? '' : 's'} connected.`);
                 } else {
@@ -832,6 +847,29 @@
                 addChatMessageToRole(roleSession, result.ok ? 'system' : 'system', summary);
             } catch (error) {
                 addChatMessageToRole(roleSession, 'system', `Tess Level 4 automation failed in Electron: ${error.message || error}`);
+            } finally {
+                if (activeRoleSlug === roleSession.slug) clearChatStatus();
+            }
+        }
+
+        async function runVikAutomationIfNeeded(roleSession) {
+            if (!roleSession || roleSession.slug !== 'vik') return;
+            const client = mindShareLocalClient();
+            if (!client?.runVikAutomation) return;
+            const lastRun = Number(localStorage.getItem(VIK_AUTOMATION_LAST_RUN_KEY) || 0);
+            if (Date.now() - lastRun < VIK_AUTOMATION_MIN_INTERVAL_MS) return;
+            localStorage.setItem(VIK_AUTOMATION_LAST_RUN_KEY, String(Date.now()));
+            setChatStatus('Running Vik automation from bundled Electron files...');
+            try {
+                const result = await client.runVikAutomation({ mode: 'scheduled' });
+                const level4 = result.level4?.state;
+                const level5 = result.level5?.state;
+                const summary = level4 || level5
+                    ? `Vik automation ran from Electron bundle: Level 4=${level4?.result || 'unknown'}; eligible=${level4?.counts?.eligible_items ?? 'unknown'}; Level 5=${level5?.result || 'unknown'}; unreviewed=${level5?.counts?.unreviewed_completed_reports ?? 'unknown'}.`
+                    : `Vik automation ${result.ok ? 'ran' : 'failed'} from Electron bundle.`;
+                addChatMessageToRole(roleSession, result.ok ? 'system' : 'system', summary);
+            } catch (error) {
+                addChatMessageToRole(roleSession, 'system', `Vik automation failed in Electron: ${error.message || error}`);
             } finally {
                 if (activeRoleSlug === roleSession.slug) clearChatStatus();
             }

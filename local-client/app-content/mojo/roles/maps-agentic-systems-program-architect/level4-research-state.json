@@ -2,9 +2,9 @@
   "schema_version": 1,
   "role": "Vik / MAPS ASPA",
   "automation_id": "vik-visible-backlog-research",
-  "logic_owner": "C:\\Users\\scott\\Code\\mojo\\roles\\maps-agentic-systems-program-architect\\scripts\\level4automation.py",
+  "logic_owner": "C:\\Users\\scott\\Code\\mindshare\\local-client\\app-content\\mojo\\roles\\maps-agentic-systems-program-architect\\scripts\\level4automation.py",
   "mode": "scheduled",
-  "checked_at": "2026-06-25T08:26:17-06:00",
+  "checked_at": "2026-06-25T09:37:22-06:00",
   "current_policy": "Level 4 scoped backlog research",
   "result": "source_conflict",
   "counts": {
@@ -17,10 +17,10 @@
     "source_conflicts": 1
   },
   "sources": {
-    "autonomy": "C:\\Users\\scott\\Code\\mojo\\roles\\maps-agentic-systems-program-architect\\Autonomy.md",
-    "backlog": "C:\\Users\\scott\\Code\\mojo\\agents\\vik-aspa\\architecture-backlog.md",
-    "queue_state": "C:\\Users\\scott\\.codex\\automations\\vik-handoff-check\\channel_queue_guard_state.json",
-    "reports_dir": "C:\\Users\\scott\\.codex\\automations\\vik-handoff-check\\reports"
+    "autonomy": "C:\\Users\\scott\\Code\\mindshare\\local-client\\app-content\\mojo\\roles\\maps-agentic-systems-program-architect\\Autonomy.md",
+    "backlog": "C:\\Users\\scott\\Code\\mindshare\\local-client\\app-content\\mojo\\agents\\vik-aspa\\architecture-backlog.md",
+    "queue_state": "C:\\Users\\scott\\Code\\mindshare\\local-client\\app-content\\mojo\\automations\\vik-handoff-check\\channel_queue_guard_state.json",
+    "reports_dir": "C:\\Users\\scott\\Code\\mindshare\\local-client\\app-content\\mojo\\automations\\vik-handoff-check\\reports"
   },
   "next_eligible_item": null,
   "eligible_items": [],

@@ -1,11 +1,13 @@
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const path = require('node:path');
-const { connectCodex, connectClaude, loadRoleContext, runTessLevel4Automation, sendCodexMessage, sendClaudeMessage } = require('./mindshare-local-client');
+const { connectCodex, connectClaude, loadRoleContext, runTessLevel4Automation, runVikAutomation, sendCodexMessage, sendClaudeMessage } = require('./mindshare-local-client');
 
 const bundledPublicRoot = path.join(__dirname, 'app-content', 'mindshare', 'public');
 const devPublicRoot = path.join(__dirname, '..', 'public');
 const TESS_LEVEL4_INTERVAL_MS = 30 * 60 * 1000;
+const VIK_AUTOMATION_INTERVAL_MS = 30 * 60 * 1000;
 let tessLevel4Timer = null;
+let vikAutomationTimer = null;
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -48,6 +50,7 @@ ipcMain.handle('mindshare:codex-connect', async (_event, payload) => connectCode
 ipcMain.handle('mindshare:claude-connect', async (_event, payload) => connectClaude(payload));
 ipcMain.handle('mindshare:role-context', async (_event, payload) => loadRoleContext(payload));
 ipcMain.handle('mindshare:tess-level4-automation', async (_event, payload) => runTessLevel4Automation(payload));
+ipcMain.handle('mindshare:vik-automation', async (_event, payload) => runVikAutomation(payload));
 ipcMain.handle('mindshare:codex-message', async (_event, payload) => sendCodexMessage(payload));
 ipcMain.handle('mindshare:claude-message', async (_event, payload) => sendClaudeMessage(payload));
 ipcMain.handle('mindshare:choose-files', async () => {
@@ -78,12 +81,23 @@ app.whenReady().then(() => {
       console.warn('Tess Level 4 automation scheduled run failed.', error);
     });
   }, TESS_LEVEL4_INTERVAL_MS);
+  runVikAutomation({ mode: 'scheduled' }).catch((error) => {
+    console.warn('Vik automation startup run failed.', error);
+  });
+  vikAutomationTimer = setInterval(() => {
+    runVikAutomation({ mode: 'scheduled' }).catch((error) => {
+      console.warn('Vik automation scheduled run failed.', error);
+    });
+  }, VIK_AUTOMATION_INTERVAL_MS);
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     if (tessLevel4Timer) {
       clearInterval(tessLevel4Timer);
+    }
+    if (vikAutomationTimer) {
+      clearInterval(vikAutomationTimer);
     }
     app.quit();
   }
