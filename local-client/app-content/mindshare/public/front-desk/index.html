@@ -196,10 +196,13 @@
 </form>
 <div class="flex justify-between items-center mt-4">
 <div class="flex gap-3">
-<button class="flex items-center gap-1.5 font-label-sm text-[10px] text-on-surface-variant hover:text-primary transition-colors">
+<button class="flex items-center gap-1.5 font-label-sm text-[10px] text-on-surface-variant hover:text-primary transition-colors" id="clear-chat-button" type="button">
+<span class="material-symbols-outlined text-[14px]">backspace</span> CLEAR
+                        </button>
+<button class="flex items-center gap-1.5 font-label-sm text-[10px] text-on-surface-variant hover:text-primary transition-colors" type="button">
 <span class="material-symbols-outlined text-[14px]">attach_file</span> ATTACH
                         </button>
-<button class="flex items-center gap-1.5 font-label-sm text-[10px] text-on-surface-variant hover:text-primary transition-colors">
+<button class="flex items-center gap-1.5 font-label-sm text-[10px] text-on-surface-variant hover:text-primary transition-colors" type="button">
 <span class="material-symbols-outlined text-[14px]">mic</span> VOICE
                         </button>
 </div>
@@ -282,6 +285,12 @@
                 persistMaraState();
             }
         }
+        function clearMaraWindow() {
+            maraState.messages = [];
+            persistMaraState();
+            renderMessages();
+            input.focus();
+        }
         async function loadMaraOffice() {
             restoreMaraState();
             renderMessages();
@@ -323,6 +332,7 @@
             } catch (error) { appendMessage('Lost connection to Claude: ' + (error.message || error), 'system'); }
             finally { setProcessing(false); }
         }
+        document.getElementById('clear-chat-button')?.addEventListener('click', clearMaraWindow);
         chatForm.addEventListener('submit', (e) => { e.preventDefault(); sendToMara(); });
         loadMaraOffice();
     </script>
