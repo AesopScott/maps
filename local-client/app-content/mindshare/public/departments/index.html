@@ -310,7 +310,7 @@
 <span class="material-symbols-outlined text-[20px]">construction</span>
 <span class="hidden xl:inline font-label-sm text-[10px] uppercase tracking-widest">Tools</span>
 </a>
-<img class="w-10 h-10 rounded-full border border-primary/30 object-cover" data-alt="A professional headshot of a senior executive in a high-end corporate office setting. The individual is wearing a charcoal grey tailored suit, standing against a backdrop of a blurred metropolitan skyline through floor-to-ceiling glass windows at twilight. The lighting is cold, architectural, and sophisticated, emphasizing sharp features and a confident expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD_cxPZsVB4O7i12grMj-WbNmCB5vVqdElOUuV6-KBqr1VI1NZH78c05urWijL-JGSFxtzXShk-YyXR0VGi5byrI-N2S1i28FdHMfyIixIInxAtx33T8-8BCH7ciuBhJfdMsMSUVw0zcgHBd2PBBCgxCwRSlfy-DSueDCUq8THa_j3I0Bc5I7Kp0-5LJ3vFj-nAqjGjnuua_3E4VPRUOBgWD1A4XCe6lE_jeJegxeTFvi1T5N74Ovw0f5qNhh25TNBmHDvJioa8z57">
+<img class="w-10 h-10 rounded-full border border-primary/30 object-cover" id="active-office-avatar" data-alt="Selected office portrait" src="../assets/team/scott.webp">
 </div>
 </div>
 </div>
@@ -400,7 +400,6 @@ Configuration is loaded from the local MindShare workspace.
 <div class="flex flex-col space-y-2" id="department-sections">
 <!-- Department sections are populated from the selected division. -->
 </div>
-
 <!-- Footer CTA -->
 
 </aside>
@@ -441,9 +440,12 @@ Configuration is loaded from the local MindShare workspace.
 </div>
 <div class="hidden border-b border-white/10 bg-surface-container-low/70 px-8 py-3" id="office-context-panel">
 <div class="flex flex-wrap items-center justify-between gap-3">
+<div class="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
+<img class="hidden h-11 w-11 rounded-lg border border-primary/30 object-cover shrink-0" id="office-context-image" alt="">
 <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
 <span class="font-label-sm text-[10px] uppercase tracking-[0.24em] text-on-surface-variant">Current Office</span>
 <span class="font-display-lg text-body-lg text-primary font-bold leading-tight" id="office-context-name">Agent Name</span>
+</div>
 </div>
 <div class="flex flex-wrap gap-2 text-[10px] uppercase tracking-widest font-label-sm shrink-0">
 <div class="relative hidden" id="office-autonomy-control">
@@ -552,15 +554,15 @@ Configuration is loaded from the local MindShare workspace.
                         { slug: "scott", name: "Scott", title: "Human Owner / Final Authority", level: "Human Authority", image: "../assets/team/scott.webp" },
                         { slug: "rae", name: "Rae", title: "Chief Executive Officer", level: "Level 3 Staff", image: "../assets/team/rae.png" },
                         { slug: "paige", name: "Paige", title: "Executive Assistant", level: "Level 3 Staff", image: "../assets/team/paige.webp" },
-                        { slug: "mara", name: "Mara", title: "Front Desk Administrator", level: "Level 3 Staff" },
-                        { slug: "morgan-vale", name: "Morgan Vale", title: "Operations Director", level: "Level 3 Staff" },
-                        { slug: "june-park", name: "June Park", title: "Staff Operations Director", level: "Level 3 Staff" },
-                        { slug: "leon-archer", name: "Leon Archer", title: "Executive Operations Director", level: "Level 3 Staff" }
+                        { slug: "mara", name: "Mara", title: "Front Desk Administrator", level: "Level 3 Staff", image: "../assets/team/mara.webp" },
+                        { slug: "morgan-vale", name: "Morgan Vale", title: "Operations Director", level: "Level 3 Staff", image: "../assets/team/operations-director.webp" },
+                        { slug: "june-park", name: "June Park", title: "Staff Operations Director", level: "Level 3 Staff", image: "../assets/team/staff-operations-director.webp" },
+                        { slug: "leon-archer", name: "Leon Archer", title: "Executive Operations Director", level: "Level 3 Staff", image: "../assets/team/executive-operations-director.webp" }
                     ],
                     "PMO": [
                         { slug: "cal", name: "Cal", title: "MAPS ASPM", level: "Level 3 Staff", image: "../assets/team/cal.webp" },
                         { slug: "matt", name: "Matt", title: "Released MAPS ASPM", level: "Released", image: "../assets/team/matt.webp" },
-                        { slug: "mira-patel", name: "Mira Patel", title: "PMO Director", level: "Level 3 Staff" }
+                        { slug: "mira-patel", name: "Mira Patel", title: "PMO Director", level: "Level 3 Staff", image: "../assets/team/pmo-director.webp" }
                     ],
                     "Human Resources": [
                         { slug: "cole", name: "Cole", title: "HR Director", level: "Level 4 Scoped Autonomy", image: "../assets/team/cole.webp", autonomy: {"level4":"Approved scoped autonomy: validate required role files for each current automation/autonomy level and confirm WhoAmI Autonomy Context injection on welcome/account creation and hourly checks.","level5":"Not active. Would require a written HR policy packet, gate enforcement, eval proof, audit, rollback, and revocation path.","level6":"Not defined for Cole."} }
@@ -577,18 +579,18 @@ Configuration is loaded from the local MindShare workspace.
                 departments: ["Product Management","Service Design","Experience Design","User Research"],
                 entries: {
                     "Product Management": [
-                        { slug: "priya-sen", name: "Priya Sen", title: "Product Director", level: "Level 3 Staff" },
-                        { slug: "gabe-rowan", name: "Gabe Rowan", title: "Product Management Director", level: "Level 3 Staff" },
-                        { slug: "elise-hart", name: "Elise Hart", title: "Product Operations Director", level: "Level 3 Staff" }
+                        { slug: "priya-sen", name: "Priya Sen", title: "Product Director", level: "Level 3 Staff", image: "../assets/team/product-director.webp" },
+                        { slug: "gabe-rowan", name: "Gabe Rowan", title: "Product Management Director", level: "Level 3 Staff", image: "../assets/team/product-management-director.webp" },
+                        { slug: "elise-hart", name: "Elise Hart", title: "Product Operations Director", level: "Level 3 Staff", image: "../assets/team/product-operations-director.webp" }
                     ],
                     "Service Design": [
-                        { slug: "nora-voss", name: "Nora Voss", title: "Service Design Director", level: "Level 3 Staff" }
+                        { slug: "nora-voss", name: "Nora Voss", title: "Service Design Director", level: "Level 3 Staff", image: "../assets/team/service-design-director.webp" }
                     ],
                     "Experience Design": [
-                        { slug: "kai-bennett", name: "Kai Bennett", title: "Experience Design Director", level: "Level 3 Staff" }
+                        { slug: "kai-bennett", name: "Kai Bennett", title: "Experience Design Director", level: "Level 3 Staff", image: "../assets/team/experience-design-director.webp" }
                     ],
                     "User Research": [
-                        { slug: "amara-hayes", name: "Amara Hayes", title: "User Research Director", level: "Level 3 Staff" }
+                        { slug: "amara-hayes", name: "Amara Hayes", title: "User Research Director", level: "Level 3 Staff", image: "../assets/team/user-research-director.webp" }
                     ]
                 }
             },
@@ -597,25 +599,25 @@ Configuration is loaded from the local MindShare workspace.
                 departments: ["Engineering","Platform Engineering","Data Engineering","AI Engineering","Security"],
                 entries: {
                     "Engineering": [
-                        { slug: "owen-kline", name: "Owen Kline", title: "Technology Director", level: "Level 3 Staff" },
-                        { slug: "nia-calder", name: "Nia Calder", title: "Engineering Director", level: "Level 3 Staff" },
+                        { slug: "owen-kline", name: "Owen Kline", title: "Technology Director", level: "Level 3 Staff", image: "../assets/team/technology-director.webp" },
+                        { slug: "nia-calder", name: "Nia Calder", title: "Engineering Director", level: "Level 3 Staff", image: "../assets/team/engineering-director.webp" },
                         { slug: "lane", name: "Lane", title: "Mojo Lab Operator", level: "Level 3 Staff", image: "../assets/team/lab-operator.webp" }
                     ],
                     "Platform Engineering": [
-                        { slug: "mateo-ruiz", name: "Mateo Ruiz", title: "Platform Engineering Director", level: "Level 3 Staff" },
+                        { slug: "mateo-ruiz", name: "Mateo Ruiz", title: "Platform Engineering Director", level: "Level 3 Staff", image: "../assets/team/platform-engineering-director.webp" },
                         { slug: "reid", name: "Reid", title: "Release Manager", level: "Level 3 Staff", image: "../assets/team/reid.webp" }
                     ],
                     "Data Engineering": [
                         { slug: "imani", name: "Imani", title: "Data Engineering Director", level: "Level 3 Staff", image: "../assets/team/imani.webp" }
                     ],
                     "AI Engineering": [
-                        { slug: "theo-nakamura", name: "Theo Nakamura", title: "AI Systems Engineering Director", level: "Level 3 Staff" },
+                        { slug: "theo-nakamura", name: "Theo Nakamura", title: "AI Systems Engineering Director", level: "Level 3 Staff", image: "../assets/team/ai-systems-engineering-director.webp" },
                         { slug: "bea", name: "Bea", title: "Mojo MAPS Engineer", level: "Level 3 Staff", image: "../assets/team/bea.webp" },
                         { slug: "tess", name: "Tess", title: "Autonomy Engineer", level: "Level 4 Scoped Autonomy", image: "../assets/team/tess.webp", autonomy: {"level4":"Operational inside approved scope: build Level 3 role automation baselines, draft Level 4 promotion packets, define Level 4/5/6 capability reviews, monitor standing drift, validate Level 4+ roles, and route Scott/Reid review.","level5":"Defined, not active: policy-backed promotion-readiness and autonomy-development loop after Level 4 structure and packet workflow are proven and approved.","level6":"Not defined for Tess. Any future Level 6 requires Scott-defined capability, Vik control-plane review, eval proof, observation, audit, rollback, revocation, and human override."} },
                         { slug: "vik", name: "Vik", title: "ASPA", level: "Level 5 Policy Autonomy", image: "../assets/team/vik.webp", autonomy: {"level4":"Active lower-level scoped autonomy: process the approved research backlog, keep queue/state/proof aligned, produce research output, and route implementation or authority decisions to the right owner.","level5":"Active policy autonomy: review completed research against product-development policy and recommend make, implement, adopt, integrate, further review, no recommendation, or blocked.","level6":"Defined, not active: discover AI/security topics from the internet, add new items to the research backlog, complete deep analysis, and apply Level 5 policy criteria in a full loop."} }
                     ],
                     "Security": [
-                        { slug: "harper-quinn", name: "Harper Quinn", title: "Security Engineering Director", level: "Level 3 Staff" }
+                        { slug: "harper-quinn", name: "Harper Quinn", title: "Security Engineering Director", level: "Level 3 Staff", image: "../assets/team/security-engineering-director.webp" }
                     ]
                 }
             },
@@ -624,8 +626,8 @@ Configuration is loaded from the local MindShare workspace.
                 departments: ["Sales","Marketing","Partnerships","Customer Success","Support"],
                 entries: {
                     "Sales": [
-                        { slug: "sloane-mercer", name: "Sloane Mercer", title: "Revenue Director", level: "Level 3 Staff" },
-                        { slug: "drew-collins", name: "Drew Collins", title: "Sales Director", level: "Level 3 Staff" }
+                        { slug: "sloane-mercer", name: "Sloane Mercer", title: "Revenue Director", level: "Level 3 Staff", image: "../assets/team/revenue-director.webp" },
+                        { slug: "drew-collins", name: "Drew Collins", title: "Sales Director", level: "Level 3 Staff", image: "../assets/team/sales-director.webp" }
                     ],
                     "Marketing": [
                         { slug: "liz", name: "Liz", title: "Mojo Website Manager", level: "Level 3 Staff", image: "../assets/team/liz.webp" },
@@ -633,14 +635,14 @@ Configuration is loaded from the local MindShare workspace.
                         { slug: "june", name: "June", title: "Staff Writer", level: "Level 3 Staff", image: "../assets/team/june.webp" }
                     ],
                     "Partnerships": [
-                        { slug: "celia-grant", name: "Celia Grant", title: "Partnerships Director", level: "Level 3 Staff" }
+                        { slug: "celia-grant", name: "Celia Grant", title: "Partnerships Director", level: "Level 3 Staff", image: "../assets/team/partnerships-director.webp" }
                     ],
                     "Customer Success": [
-                        { slug: "jordan-hale", name: "Jordan Hale", title: "Customer Success Director", level: "Level 3 Staff" },
+                        { slug: "jordan-hale", name: "Jordan Hale", title: "Customer Success Director", level: "Level 3 Staff", image: "../assets/team/customer-success-director.webp" },
                         { slug: "jay", name: "Jay", title: "Meetup Coordinator / Operator", level: "Level 3 Staff", image: "../assets/team/jay.png" }
                     ],
                     "Support": [
-                        { slug: "samira-knox", name: "Samira Knox", title: "Support Director", level: "Level 3 Staff" }
+                        { slug: "samira-knox", name: "Samira Knox", title: "Support Director", level: "Level 3 Staff", image: "../assets/team/support-director.webp" }
                     ]
                 }
             },
@@ -649,7 +651,7 @@ Configuration is loaded from the local MindShare workspace.
                 departments: ["Accounting","Accounts Payable","Accounts Receivable","Purchasing","Tax"],
                 entries: {
                     "Accounting": [
-                        { slug: "finn", name: "Finn", title: "Finance Director", level: "Level 3 Staff" }
+                        { slug: "finn", name: "Finn", title: "Finance Director", level: "Level 3 Staff", image: "../assets/team/finn.webp" }
                     ],
                     "Accounts Payable": [
                     ],
@@ -666,16 +668,16 @@ Configuration is loaded from the local MindShare workspace.
                 departments: ["People Operations","Legal","Compliance","Vendor Management"],
                 entries: {
                     "People Operations": [
-                        { slug: "mila-chen", name: "Mila Chen", title: "People Operations Director", level: "Level 3 Staff" }
+                        { slug: "mila-chen", name: "Mila Chen", title: "People Operations Director", level: "Level 3 Staff", image: "../assets/team/people-operations-director.webp" }
                     ],
                     "Legal": [
-                        { slug: "adrian-moss", name: "Adrian Moss", title: "Legal Director", level: "Level 3 Staff" }
+                        { slug: "adrian-moss", name: "Adrian Moss", title: "Legal Director", level: "Level 3 Staff", image: "../assets/team/legal-director.webp" }
                     ],
                     "Compliance": [
-                        { slug: "isla-monroe", name: "Isla Monroe", title: "Compliance Director", level: "Level 3 Staff" }
+                        { slug: "isla-monroe", name: "Isla Monroe", title: "Compliance Director", level: "Level 3 Staff", image: "../assets/team/compliance-director.webp" }
                     ],
                     "Vendor Management": [
-                        { slug: "victor-lane", name: "Victor Lane", title: "Vendor Management Director", level: "Level 3 Staff" }
+                        { slug: "victor-lane", name: "Victor Lane", title: "Vendor Management Director", level: "Level 3 Staff", image: "../assets/team/vendor-management-director.webp" }
                     ]
                 }
             }
@@ -998,6 +1000,7 @@ Configuration is loaded from the local MindShare workspace.
                         codexSessionId: session.codexSessionId,
                         claudeSessionId: session.claudeSessionId,
                         roleContext: session.roleContext,
+                        image: session.image || '',
                         messages: conversationMessages(session.messages),
                         draftText: session.draftText || '',
                         tokenUsage: session.tokenUsage || null,
@@ -1035,6 +1038,7 @@ Configuration is loaded from the local MindShare workspace.
                         codexSessionId: session.codexSessionId || null,
                         claudeSessionId: session.claudeSessionId || null,
                         roleContext: session.roleContext || null,
+                        image: session.image || findRoleEntry(slug)?.image || '',
                         messages: conversationMessages(session.messages),
                         draftText: session.draftText || '',
                         tokenUsage: session.tokenUsage || null,
@@ -1153,6 +1157,8 @@ Configuration is loaded from the local MindShare workspace.
         }
 
         function ensureRoleSession(slug, name, title, level, department = '') {
+            const entry = findRoleEntry(slug);
+            const image = entry?.image || '';
             if (!roleSessions[slug]) {
                 roleSessions[slug] = {
                     slug,
@@ -1160,6 +1166,7 @@ Configuration is loaded from the local MindShare workspace.
                     title,
                     level,
                     department,
+                    image,
                     codexSessionId: null,
                     claudeSessionId: null,
                     roleContext: null,
@@ -1173,7 +1180,7 @@ Configuration is loaded from the local MindShare workspace.
                     processingEngine: null
                 };
             } else {
-                Object.assign(roleSessions[slug], { name, title, level, department: department || roleSessions[slug].department });
+                Object.assign(roleSessions[slug], { name, title, level, department: department || roleSessions[slug].department, image: image || roleSessions[slug].image || '' });
             }
             return roleSessions[slug];
         }
@@ -1351,6 +1358,7 @@ Configuration is loaded from the local MindShare workspace.
                 name: 'Agent Name',
                 title: department,
                 level: 'Select an office',
+                image: '',
                 filesText: 'Choose a person in this department to load their office.'
             });
             setChatStatus(`Browsing ${department}. Select a person to enter an office.`);
@@ -1384,6 +1392,7 @@ Configuration is loaded from the local MindShare workspace.
                 name,
                 title,
                 level,
+                image: roleSession.image || findRoleEntry(slug)?.image || '',
                 filesText: activeRoleContext ? contextFilesText(activeRoleContext) : 'Loading context...'
             });
             setChatStatus(`Loading ${name}'s office context...`);
@@ -1413,6 +1422,7 @@ Configuration is loaded from the local MindShare workspace.
                     name,
                     title,
                     level,
+                    image: roleSession.image || findRoleEntry(slug)?.image || '',
                     filesText: contextFilesText(payload.roleContext)
                 });
                 await refreshProviderReadiness();
@@ -2137,13 +2147,26 @@ Configuration is loaded from the local MindShare workspace.
             }
         }
 
-        function showOfficeContext({ name, title, level, filesText }) {
+        function showOfficeContext({ name, title, level, image, filesText }) {
             const panel = document.getElementById('office-context-panel');
             panel?.classList.remove('hidden');
             document.getElementById('office-context-name').textContent = name || 'Agent Name';
             document.getElementById('office-context-title').textContent = title || 'Title';
             document.getElementById('office-context-level').textContent = level || 'Level';
             document.getElementById('office-context-files').textContent = filesText || 'Context loaded';
+            const avatar = document.getElementById('office-context-image');
+            const navAvatar = document.getElementById('active-office-avatar');
+            if (avatar) {
+                avatar.classList.toggle('hidden', !image);
+                if (image) {
+                    avatar.src = image;
+                    avatar.alt = `${name || 'Selected office'} portrait`;
+                }
+            }
+            if (navAvatar && image) {
+                navAvatar.src = image;
+                navAvatar.alt = `${name || 'Selected office'} portrait`;
+            }
         }
 
         function renderActiveSessions() {
@@ -3072,3 +3095,4 @@ Configuration is loaded from the local MindShare workspace.
 
 
 </body></html>
+

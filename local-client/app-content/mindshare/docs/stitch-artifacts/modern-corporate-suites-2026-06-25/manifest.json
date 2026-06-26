@@ -3,9 +3,21 @@
   "projectId": "13447083140142831533",
   "projectName": "projects/13447083140142831533",
   "projectTitle": "Modern Corporate Suites",
-  "downloadedAt": "2026-06-25T04:16:59.6451701Z",
+  "downloadedAt": "2026-06-25T15:04:20.173Z",
   "note": "Original Stitch artifacts. Lumina-branded screens are layout/object references and require Mindshare rebranding before use.",
   "screens": [
+    {
+      "title": "Contact - Mind Share Media",
+      "screenId": "a3bc41d7ed51476f958dfc1155dfdf7f",
+      "name": "projects/13447083140142831533/screens/a3bc41d7ed51476f958dfc1155dfdf7f",
+      "width": "2560",
+      "height": null,
+      "deviceType": "DESKTOP",
+      "needsMindshareRebrand": false,
+      "htmlFile": "contact-mind-share-media.html",
+      "screenshotFile": "contact-mind-share-media.jpg",
+      "publicPath": "public/contact/index.html"
+    },
     {
       "title": "Strategy & Operations - Mind Share Media Hub",
       "screenId": "aad3b2d9d85f49538ff4111a14c5653a",

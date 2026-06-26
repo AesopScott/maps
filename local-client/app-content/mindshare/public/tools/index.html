@@ -94,6 +94,10 @@ webview, iframe {
 <span class="block text-sm font-semibold text-primary-fixed">Purelymail Inbox</span>
 <span class="mt-1 block text-xs leading-relaxed text-on-surface-variant">Open Purelymail webmail for approved assistant email workflows.</span>
 </button>
+<button class="tool-button w-full rounded-lg border border-white/10 px-4 py-4 text-left transition-colors hover:border-primary/50" type="button" data-tool-id="maps-skills">
+<span class="block text-sm font-semibold text-primary-fixed">MAPS Skills</span>
+<span class="mt-1 block text-xs leading-relaxed text-on-surface-variant">Browse the Multi-Agent Pipeline Skills catalog: M0&ndash;M11 base and augmented skills.</span>
+</button>
 </div>
 <div class="mt-auto rounded-lg border border-white/10 bg-black/35 p-4 text-xs leading-relaxed text-on-surface-variant">
 External tools keep their own login, billing, and action controls. MindShare only provides the local frame; role intent comes from the office session that sends you here.
@@ -114,6 +118,7 @@ External tools keep their own login, billing, and action controls. MindShare onl
 <div class="tool-frame relative h-full min-h-0">
 <webview id="tool-webview" src="https://platform.openai.com/playground/images" partition="persist:mindshare-tools" allowpopups></webview>
 <iframe class="hidden" id="tool-iframe" src="https://platform.openai.com/playground/images" title="OpenAI Images Playground"></iframe>
+<div class="hidden h-full overflow-y-auto p-6 md:p-8" id="tool-catalog"></div>
 </div>
 </div>
 </section>
@@ -131,8 +136,187 @@ const tools = {
     eyebrow: 'Email',
     url: 'https://inbox.purelymail.com/',
     workflow: 'email'
+  },
+  'maps-skills': {
+    title: 'MAPS Skills Catalog',
+    eyebrow: 'Multi-Agent Pipeline Skills',
+    kind: 'panel'
   }
 };
+
+// MAPS lifecycle phases. Each base skill + optional augmented variants.
+// M5 nests the APS child pipeline (A1-A8), each with its own base + augmented skills.
+const MAPS_PHASES = [
+  { id: 'M0', name: 'Foundation', base: { cmd: '/foundation', desc: 'Start Project Foundation: project intent, notes scaffold, source inventory, evidence index, assumptions, decisions, RAG-readiness, and persistent memory contract.' }, augmented: [] },
+  { id: 'M1', name: 'Shape', base: { cmd: '/shape', desc: 'Scope the workflow and choose Unknown / Scope First, Single-Agent / APS, or Multi-Agent / MAPS before roster or implementation work.' }, augmented: [] },
+  { id: 'M2', name: 'Roster', base: { cmd: '/multi-agent-roster', desc: 'Define the participant roster: humans, roles, Role+ operators, candidate agents, tools, services, responsibilities, authority, and memory scope.' }, augmented: [] },
+  { id: 'M3', name: 'Contracts', base: { cmd: '/multi-agent-contracts', desc: 'Define participant contracts: inputs, outputs, authority, memory, tools, handoffs, escalation, stop conditions, retries, rollback, and acceptance evidence.' }, augmented: [] },
+  { id: 'M4', name: 'Coordination', base: { cmd: '/multi-agent-coordination', desc: 'Define workflow coordination: lanes, handoff routes, supervisor/router or peer patterns, queues, approvals, exception paths, and retries.' }, augmented: [] },
+  { id: 'M5', name: 'Buildout', base: { cmd: '/multi-agent-buildout', desc: 'Plan child APS buildout: which participants become built agents, APS phase sequence, dependency order, stubs, test gates, and no-build decisions.' }, augmented: [], aps: [
+    { id: 'A1', name: 'Define', base: { cmd: '/define-agent', desc: 'Create the agent brief and profile from an existing role using source-first Research and Recommend.' }, augmented: [] },
+    { id: 'A2', name: 'Design', base: { cmd: '/design-agent', desc: 'Create the agent design through source-first Research and Recommend, select the voice profile, then turn it into a prioritized backlog.' }, augmented: [
+      { cmd: '/design-experience', desc: 'Experience-design option: journeys, surfaces, IA, interaction states, accessibility requirements, and APS handoffs.' },
+      { cmd: '/design-experience++', desc: 'Wrap experience design with website/product UI references, component patterns, responsive layout, and service-design reasoning.' }
+    ] },
+    { id: 'A3', name: 'Build', base: { cmd: '/build-agent', desc: 'Base Build skill: turn design into a runnable agent loop, prompts, state, routing, project files, and basic tests.' }, augmented: [
+      { cmd: '/build-agent++', desc: 'Build with incremental implementation and TDD.' }
+    ] },
+    { id: 'A4', name: 'Equip', base: { cmd: '/equip-agent', desc: 'Create the capability map: tools, permissions, memory, connectors, runtime settings, limits, and fallbacks.' }, augmented: [] },
+    { id: 'A5', name: 'Evaluate', base: { cmd: '/evaluate-agent', desc: 'Base Evaluate skill: eval suites, execution modes, evidence, release gates, and Deploy/Observe handoff.' }, augmented: [
+      { cmd: '/evaluate-agent++', desc: 'Wrap base Evaluate with LangSmith, Inspect AI, and Phoenix.' }
+    ] },
+    { id: 'A6', name: 'Deploy', base: { cmd: '/deploy-agent', desc: 'Base Deploy skill: target runtime, package artifact, deploy commands, secrets/config handoff, preflight, smoke test, release evidence, and rollback.' }, augmented: [
+      { cmd: '/deploy-agent++', desc: 'Wrap Deploy with GitHub Actions environments and Cloudflare deployment automation.' }
+    ] },
+    { id: 'A7', name: 'Observe', base: { cmd: '/observe-agent', desc: 'Create the observation plan, review runtime evidence, record findings, define incident triggers, and hand off improvements.' }, augmented: [
+      { cmd: '/observe-agent+smith', desc: 'Wrap Observe with LangSmith traces, runs, datasets, feedback, annotations, and experiments.' },
+      { cmd: '/observe-agent+fuse', desc: 'Wrap Observe with Langfuse traces, sessions, scores, prompt versions, metrics, and self-hostable observability.' },
+      { cmd: '/observe-agent+phoenix', desc: 'Wrap Observe with Phoenix traces, OpenInference/OpenTelemetry instrumentation, datasets, and LLM/RAG eval analysis.' }
+    ] },
+    { id: 'A8', name: 'Improve', base: { cmd: '/improve-agent', desc: 'Review evidence, classify and route improvements, prioritize and split the backlog, define proof, and hand off the next iteration.' }, augmented: [] }
+  ] },
+  { id: 'M6', name: 'Capabilities', base: { cmd: '/multi-agent-capabilities', desc: 'Map shared capabilities: tools, MCP servers, APIs, data sources, memory stores, credentials, permissions, limits, fallbacks, and revocation paths.' }, augmented: [] },
+  { id: 'M7', name: 'Orchestration', base: { cmd: '/multi-agent-orchestration', desc: 'Define runtime orchestration: topology, routing, handoff protocol, task/message/artifact schema, state, queues, schedules, observability, and human override.' }, augmented: [] },
+  { id: 'M8', name: 'Experience Design', base: { cmd: '/design-experience', desc: 'Create the product experience design: journeys, surfaces, IA, interaction states, accessibility requirements, and APS handoffs.' }, augmented: [
+    { cmd: '/design-experience++', desc: 'Wrap Experience Design with website/product UI references, component patterns, responsive layout, accessibility primitives, and service-design reasoning.' }
+  ] },
+  { id: 'M9', name: 'Evaluate', base: { cmd: '/multi-agent-evaluate', desc: 'Prove system-level behavior across contracts, coordination, orchestration, shared capabilities, journeys, approvals, guardrails, and release gates.' }, augmented: [] },
+  { id: 'M10', name: 'Deploy / Observe', base: { cmd: '/multi-agent-deploy-observe', desc: 'Define runtime readiness: release authority, configuration, secrets, child APS deployment evidence, smoke checks, hold conditions, and rollback.' }, augmented: [] },
+  { id: 'M11', name: 'Improve', base: { cmd: '/multi-agent-improve', desc: 'Observe live signals, classify evidence, incidents, traces, eval failures, and operator findings, then route improvements across M2-M10 and child APS phases.' }, augmented: [] }
+];
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+}
+
+// Catalog command -> installable skill folder name (matches app bundle dirs).
+function cmdToSlug(cmd) {
+  return cmd.replace(/^\//, '').replace(/\+\+$/, '-plus-plus').replace(/\+(smith|fuse|phoenix)$/, '-$1');
+}
+
+function skillRow(skill, kind) {
+  const tag = kind === 'augmented'
+    ? '<span class="shrink-0 rounded bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-primary">Augmented</span>'
+    : '<span class="shrink-0 rounded bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant">Base</span>';
+  const slug = cmdToSlug(skill.cmd);
+  const install = `<button type="button" class="js-install-skill ml-auto inline-flex shrink-0 items-center gap-1 rounded border border-primary/40 bg-primary/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-widest text-primary transition hover:bg-primary/20" data-skill="${escapeHtml(slug)}"><span class="material-symbols-outlined text-sm">download</span>Install</button>`;
+  return `<div class="flex flex-col gap-1 border-t border-white/5 py-3 first:border-t-0">
+    <div class="flex flex-wrap items-center gap-3">
+      <code class="text-sm text-primary-fixed">${escapeHtml(skill.cmd)}</code>${tag}${install}
+    </div>
+    <p class="text-xs leading-relaxed text-on-surface-variant">${escapeHtml(skill.desc)}</p>
+  </div>`;
+}
+
+function apsCard(phase) {
+  const rows = skillRow(phase.base, 'base') + phase.augmented.map((s) => skillRow(s, 'augmented')).join('');
+  return `<div class="glass-panel rounded-lg p-4">
+    <div class="mb-2 flex items-baseline gap-3">
+      <span class="font-display-lg text-base font-bold text-primary">${phase.id}</span>
+      <span class="font-display-lg text-sm text-on-surface">${escapeHtml(phase.name)}</span>
+    </div>${rows}</div>`;
+}
+
+function phaseCard(phase) {
+  const rows = skillRow(phase.base, 'base') + phase.augmented.map((s) => skillRow(s, 'augmented')).join('');
+  let aps = '';
+  if (phase.aps) {
+    aps = `<div class="mt-5 border-t border-primary/20 pt-5">
+      <p class="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">APS Child Pipeline &middot; A1&ndash;A8</p>
+      <div class="grid grid-cols-1 gap-4">${phase.aps.map(apsCard).join('')}</div>
+    </div>`;
+  }
+  const span = phase.aps ? 'lg:col-span-2' : '';
+  return `<div class="glass-panel rounded-xl p-6 ${span}">
+    <div class="mb-3 flex items-baseline gap-4">
+      <span class="font-display-lg text-xl font-bold text-primary-fixed">${phase.id}</span>
+      <span class="font-display-lg text-base text-on-surface">${escapeHtml(phase.name)}</span>
+    </div>${rows}${aps}</div>`;
+}
+
+function allSkillSlugs() {
+  const slugs = new Set();
+  const add = (skill) => slugs.add(cmdToSlug(skill.cmd));
+  MAPS_PHASES.forEach((phase) => {
+    add(phase.base);
+    phase.augmented.forEach(add);
+    (phase.aps || []).forEach((aps) => {
+      add(aps.base);
+      aps.augmented.forEach(add);
+    });
+  });
+  return Array.from(slugs);
+}
+
+function skillsApi() {
+  return (window.MindShareLocalClient && typeof window.MindShareLocalClient.installSkills === 'function')
+    ? window.MindShareLocalClient
+    : null;
+}
+
+function setInstallStatus(message, tone) {
+  const el = document.getElementById('install-status');
+  if (!el) return;
+  const color = tone === 'error' ? 'text-error' : tone === 'ok' ? 'text-primary' : 'text-on-surface-variant';
+  el.textContent = message || '';
+  el.className = `text-xs ${color}`;
+}
+
+async function installSkillsBySlug(slugs, label) {
+  const api = skillsApi();
+  if (!api) {
+    setInstallStatus('Install is only available inside the MindShare app.', 'error');
+    return;
+  }
+  setInstallStatus(`Installing ${label}…`);
+  try {
+    const result = await api.installSkills({ names: slugs });
+    if (result && result.ok) {
+      const tpl = result.templates ? ` (+${result.templates} template${result.templates === 1 ? '' : 's'})` : '';
+      const where = (result.roots || (result.root ? [result.root] : [])).join(' and ');
+      setInstallStatus(`Installed ${result.installed.length} skill(s)${tpl} to ${where}.`, 'ok');
+    } else {
+      const failed = (result && result.failed) || [];
+      const okCount = (result && result.installed && result.installed.length) || 0;
+      setInstallStatus(`Installed ${okCount}, ${failed.length} failed: ${failed.map((f) => f.name).join(', ')}`, 'error');
+    }
+  } catch (error) {
+    setInstallStatus(`Install failed: ${error.message || error}`, 'error');
+  }
+}
+
+function buildCatalog() {
+  const catalog = document.getElementById('tool-catalog');
+  if (!catalog || catalog.dataset.built) return;
+  const installable = !!skillsApi();
+  const toolbar = `<div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <p class="max-w-md text-xs text-on-surface-variant">${installable
+      ? 'Install copies the full skill folder to <code class="text-primary-fixed">~/.claude/skills/</code> and <code class="text-primary-fixed">~/.codex/skills/</code> (overwrites existing).'
+      : 'Open this page inside the MindShare app to install skills.'}</p>
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-on-surface-variant" id="install-status"></span>
+      <button type="button" id="install-all-skills" class="inline-flex items-center gap-2 rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-primary transition hover:bg-primary/20${installable ? '' : ' cursor-not-allowed opacity-50'}"${installable ? '' : ' disabled'}><span class="material-symbols-outlined text-base">download</span>Install all skills</button>
+    </div>
+  </div>`;
+  catalog.innerHTML = toolbar + `<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">${MAPS_PHASES.map(phaseCard).join('')}</div>`;
+  catalog.dataset.built = '1';
+
+  if (!installable) {
+    catalog.querySelectorAll('.js-install-skill').forEach((btn) => {
+      btn.disabled = true;
+      btn.classList.add('cursor-not-allowed', 'opacity-50');
+    });
+    return;
+  }
+  document.getElementById('install-all-skills').addEventListener('click', () => {
+    installSkillsBySlug(allSkillSlugs(), 'all skills');
+  });
+  catalog.addEventListener('click', (event) => {
+    const btn = event.target.closest('.js-install-skill');
+    if (!btn || btn.disabled) return;
+    installSkillsBySlug([btn.dataset.skill], btn.dataset.skill);
+  });
+}
 
 let activeTool = 'openai-images';
 
@@ -157,12 +341,31 @@ function renderTool(toolId) {
   activeTool = toolId;
   document.getElementById('tool-title').textContent = tool.title;
   document.getElementById('tool-eyebrow').textContent = tool.eyebrow;
-  document.getElementById('open-external').href = tool.url;
   document.querySelectorAll('[data-tool-id]').forEach((button) => {
     button.classList.toggle('is-active', button.dataset.toolId === toolId);
   });
   const webview = toolWebview();
   const iframe = document.getElementById('tool-iframe');
+  const catalog = document.getElementById('tool-catalog');
+  const reloadBtn = document.getElementById('reload-tool');
+  const openBtn = document.getElementById('open-external');
+
+  if (tool.kind === 'panel') {
+    // Local catalog panel: no external frame to load.
+    unloadToolWebview();
+    webview.classList.add('hidden');
+    iframe.classList.add('hidden');
+    reloadBtn.classList.add('hidden');
+    openBtn.classList.add('hidden');
+    buildCatalog();
+    catalog.classList.remove('hidden');
+    return;
+  }
+
+  catalog.classList.add('hidden');
+  reloadBtn.classList.remove('hidden');
+  openBtn.classList.remove('hidden');
+  openBtn.href = tool.url;
   if ('src' in webview) {
     webview.src = tool.url;
     webview.classList.remove('hidden');
@@ -190,7 +393,20 @@ document.getElementById('reload-tool').addEventListener('click', () => {
 window.addEventListener('pagehide', unloadToolWebview);
 window.addEventListener('beforeunload', unloadToolWebview);
 
+// Deep-link support: #maps-skills (or any tool id) selects that tool on load.
+function toolFromHash() {
+  const id = (location.hash || '').replace(/^#/, '');
+  return tools[id] ? id : null;
+}
+const initialTool = toolFromHash();
+if (initialTool) activeTool = initialTool;
+window.addEventListener('hashchange', () => {
+  const id = toolFromHash();
+  if (id) renderTool(id);
+});
+
 renderTool(activeTool);
 </script>
 </body>
 </html>
+
