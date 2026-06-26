@@ -2030,7 +2030,7 @@ Configuration is loaded from the local MindShare workspace.
             document.getElementById('configuration-summary').textContent = 'Loading role, agent, and global files.';
             document.getElementById('configuration-status').textContent = 'Reading local source roots from MindShare Local.';
             document.getElementById('configuration-groups').innerHTML = '';
-            const client = getLocalClient();
+            const client = mindShareLocalClient();
             if (!client?.listConfigurationFiles) {
                 renderConfigurationGroups({ ok: false, error: 'MindShare Local configuration browsing is only available inside the Electron app.' });
                 return;
@@ -2044,7 +2044,7 @@ Configuration is loaded from the local MindShare workspace.
 
         async function openConfigurationFile(index, editor) {
             const file = configurationFileIndex[Number(index)];
-            const client = getLocalClient();
+            const client = mindShareLocalClient();
             if (!file || !client?.openConfigurationFile) return;
             const result = await client.openConfigurationFile({ path: file.path, app: editor });
             if (!result?.ok) {
@@ -2697,7 +2697,7 @@ Configuration is loaded from the local MindShare workspace.
         async function triggerMicrophoneShortcut() {
             const input = document.getElementById('chat-input');
             input.focus();
-            const client = getLocalClient();
+            const client = mindShareLocalClient();
             if (!client?.triggerMicrophoneShortcut) {
                 setChatStatus('Microphone shortcut is only available in the MindShare Electron app.');
                 return;
