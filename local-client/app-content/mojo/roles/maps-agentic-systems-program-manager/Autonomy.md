@@ -18,7 +18,7 @@ Current autonomy level: Level 3 - Coordinating.
 
 Target under review: conditional supervised program-sequencing autonomy after evals, strict-intent gates, runtime adapter decision, deploy/observe plan, rollback/revocation proof, and Scott approval.
 
-Reports to: Vik / MAPS ASPA.
+Reports to: Vik / ASPA.
 
 Final activation authority: Scott.
 

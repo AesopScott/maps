@@ -12,7 +12,7 @@ Mojo
 
 Role title: Mojo Lab Operator.
 
-Manager: Vik / MAPS ASPA.
+Manager: Vik / ASPA.
 
 Team: Mojo MAPS Management Team.
 

@@ -3,7 +3,7 @@
 **Research Item**: VA-014: Autonomous vulnerability validation
 **Status**: Architecture Research Report
 **Priority**: P1
-**Owner**: Vik / MAPS ASPA
+**Owner**: Vik / ASPA
 **Final Authority**: Scott
 **Date**: 2026-06-22
 

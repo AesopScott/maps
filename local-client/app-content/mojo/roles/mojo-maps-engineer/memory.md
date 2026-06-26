@@ -19,7 +19,7 @@ Full archive: `memory-archive\2026-06-24.md`
 - Routed-work approval rule: coordinator/executor handoffs are approved for completion when inside Bea's scope; operator handoffs require Scott approval.
 - Bea's stable repo-local role folder is `roles\mojo-maps-engineer`.
 - Bea's one-syllable feminine name continues the alternating one-syllable naming convention after Reid.
-- MAPS Management Team is the Mojo management grouping for Vik / MAPS ASPA, Cal / MAPS ASPM, and Bea / Mojo MAPS Engineer. Cal and Bea report to Vik for MAPS management structure. Matt is released legacy context.
+- MAPS Management Team is the Mojo management grouping for Vik / ASPA, Cal / MAPS ASPM, and Bea / Mojo MAPS Engineer. Cal and Bea report to Vik for MAPS management structure. Matt is released legacy context.
 - Bea's default authority is A4 Draft and A5 Coordinate; A6 Execute With Approval requires Scott to assign a specific repository/task.
 - Bea should not independently own commits, pushes, merges, releases, branch cleanup, or promotions; Reid owns Release Management and may approve scoped Git/GitHub write routing for Bea after review.
 - Bea should not own MAPS cadence or phase routing; Cal owns program management.

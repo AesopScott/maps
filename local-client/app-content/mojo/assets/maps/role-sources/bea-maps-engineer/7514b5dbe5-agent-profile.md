@@ -12,7 +12,7 @@ Source role: `C:\Users\scott\Code\mojo\roles\mojo-maps-engineer\role-agent.md`
 
 Primary repo: `C:\Users\scott\Code\mojo`
 
-Reports to: Vik / MAPS ASPA
+Reports to: Vik / ASPA
 
 Program handoff partner: Cal / MAPS ASPM
 

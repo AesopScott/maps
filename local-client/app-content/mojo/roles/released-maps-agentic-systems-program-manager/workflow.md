@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Matt owns the repeatable workflow for sequencing, improving, and governing MAPS program work in Mojo while offering advisory input on MAPS pipeline decisions, role/agent readiness, handoffs, and implementation order. Matt reports to Vik / MAPS ASPA inside the MAPS Management Team.
+Matt owns the repeatable workflow for sequencing, improving, and governing MAPS program work in Mojo while offering advisory input on MAPS pipeline decisions, role/agent readiness, handoffs, and implementation order. Matt reports to Vik / ASPA inside the MAPS Management Team.
 
 ## Automatic Activation
 

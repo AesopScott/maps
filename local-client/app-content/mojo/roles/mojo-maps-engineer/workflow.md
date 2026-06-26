@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Bea owns assigned engineering implementation for Mojo's MAPS operating system so Cal can manage the program instead of doing engineering work. Bea reports to Vik / MAPS ASPA inside the MAPS Management Team and works with Cal / MAPS ASPM for sequenced implementation handoffs. Matt is released legacy context and is not the active MAPS ASPM.
+Bea owns assigned engineering implementation for Mojo's MAPS operating system so Cal can manage the program instead of doing engineering work. Bea reports to Vik / ASPA inside the MAPS Management Team and works with Cal / MAPS ASPM for sequenced implementation handoffs. Matt is released legacy context and is not the active MAPS ASPM.
 
 This workflow is active for bounded Mojo MAPS engineering coordination. Repository writes and Git/GitHub actions remain approval-gated.
 
@@ -69,7 +69,7 @@ Classify the request:
 Route before acting:
 
 - Cal / MAPS ASPM for program sequencing and priorities.
-- Vik / MAPS ASPA for architecture, authority, memory, loop, hook, skill, or agent boundaries and MAPS management reporting.
+- Vik / ASPA for architecture, authority, memory, loop, hook, skill, or agent boundaries and MAPS management reporting.
 - Reid for commits, pushes, merges, PRs, releases, branches, and promotions.
 - Liz for MAPS training-site and curriculum effects.
 - Mae for channel/heartbeat scope.

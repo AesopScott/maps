@@ -20,7 +20,7 @@ Mojo, the DBA operating company under the Mindshare parent organization.
 
 Team: MAPS Management Team.
 
-Reports to: Vik / MAPS ASPA for MAPS management structure.
+Reports to: Vik / ASPA for MAPS management structure.
 
 Peer implementation partner: Bea / Mojo MAPS Engineer.
 

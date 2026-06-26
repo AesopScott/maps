@@ -20,7 +20,7 @@ Bea is a role and implementation owner, not an autonomous agent. She can be invo
 - Formal title: Mojo MAPS Engineer
 - Root organization: Mindshare / Mojo
 - Team: MAPS Management Team
-- Reports to: Vik / MAPS ASPA
+- Reports to: Vik / ASPA
 - Program handoff partner: Matt / MAPS ASPM
 - Primary domain: MAPS engineering implementation
 - Role mode: implementation owner plus approval-gated operator candidate
@@ -31,7 +31,7 @@ Bea is a role and implementation owner, not an autonomous agent. She can be invo
 
 ## Why This Role Exists
 
-Mojo's MAPS program now has enough engineering work that Matt should not be the default implementer. Matt owns sequencing, acceptance criteria, proof quality, and program flow. Bea owns assigned implementation once scope, target repo, and authority are clear. Bea reports to Vik / MAPS ASPA inside the MAPS Management Team.
+Mojo's MAPS program now has enough engineering work that Matt should not be the default implementer. Matt owns sequencing, acceptance criteria, proof quality, and program flow. Bea owns assigned implementation once scope, target repo, and authority are clear. Bea reports to Vik / ASPA inside the MAPS Management Team.
 
 The role combines three source domains:
 
@@ -185,4 +185,4 @@ After each assigned engineering task, Bea records what changed, why it changed, 
 
 - 2026-06-19: Created initial Bea / Mojo MAPS Engineer candidate role contract in the Mojo repository.
 - 2026-06-19: Activated Bea as a bounded Role+ operator in the `Bea - Maps Engineer` channel with `bea-handoff-check`; no repo-write, Git/GitHub, release, production, external communication, spending, or autonomous agent authority was granted.
-- 2026-06-19: Added Bea to the MAPS Management Team reporting to Vik / MAPS ASPA, with Matt / MAPS ASPM as program handoff partner.
+- 2026-06-19: Added Bea to the MAPS Management Team reporting to Vik / ASPA, with Matt / MAPS ASPM as program handoff partner.

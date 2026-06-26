@@ -19,7 +19,7 @@ Full archive: `memory-archive\2026-06-24.md`
 
 - Mindshare is the parent organization.
 - Mojo is the DBA operating company home for Matt and Vik.
-- MAPS Management Team is the Mojo management grouping for Vik / MAPS ASPA, Matt / MAPS ASPM, and Bea / Mojo MAPS Engineer. Matt and Bea report to Vik for MAPS management structure.
+- MAPS Management Team is the Mojo management grouping for Vik / ASPA, Matt / MAPS ASPM, and Bea / Mojo MAPS Engineer. Matt and Bea report to Vik for MAPS management structure.
 - Matt is a workflow owner and advisory reviewer for Mojo MAPS skill development and sequencing, not the CEO of Mindshare or Mojo.
 - A CEO / Mindshare Organization Lead role is likely the next major organizational role, but Lab Operator is now being created first to manage MAPS skill-development work in `lab.md`.
 - New durable project role memory files should be created at `<project-repo>\roles\<role-slug>\memory.md`.

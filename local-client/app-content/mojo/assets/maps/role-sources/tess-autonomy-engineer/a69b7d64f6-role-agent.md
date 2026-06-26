@@ -18,7 +18,7 @@ Mindshare
 
 ## Reporting Line
 
-Reports to: Vik / MAPS ASPA for architecture, control-plane fit, and autonomy-system operating structure.
+Reports to: Vik / ASPA for architecture, control-plane fit, and autonomy-system operating structure.
 
 Reporting boundary: the reporting line gives Vik management and architecture review responsibility for Tess's autonomy-engineering work. It does not grant Tess unilateral gate edits, autonomous runtime, production, Git/GitHub, external communication, spending, secrets, or authority-expansion authority. Scott remains final approval authority.
 

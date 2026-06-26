@@ -2,7 +2,7 @@
 
 Status: active personality profile
 Created: 2026-06-20
-Primary role: Vik / MAPS ASPA
+Primary role: Vik / ASPA
 Primary memory: `C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-architect\memory.md`
 Canonical voice source: `C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-architect\role-agent.md`
 

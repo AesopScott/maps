@@ -12,7 +12,7 @@ Obsidian memory mirror: `G:\My Drive\Mindshare\tess.md`
 
 Status: Authorized role; activated Role+ Operator.
 
-Reports to: Vik / MAPS ASPA for architecture, control-plane fit, and autonomy-system operating structure. Scott remains final approval authority.
+Reports to: Vik / ASPA for architecture, control-plane fit, and autonomy-system operating structure. Scott remains final approval authority.
 
 Primary voice: Reviewer.
 

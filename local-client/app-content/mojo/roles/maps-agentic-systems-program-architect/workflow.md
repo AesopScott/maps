@@ -1,4 +1,4 @@
-# Vik / MAPS ASPA Workflow
+# Vik / ASPA Workflow
 
 ## Purpose
 
@@ -24,7 +24,7 @@ Manual invocation names:
 - Vik
 - Ask Vik
 - Vik's review
-- MAPS ASPA review
+- ASPA review
 - ASPA review
 - Agentic Systems Program Architect review
 

@@ -4,7 +4,7 @@ Purpose: short session-injection card for the legacy `vik-aspa` role directory.
 
 ## Identity
 
-`vik-aspa` is a legacy alias directory for Vik / MAPS ASPA.
+`vik-aspa` is a legacy alias directory for Vik / ASPA.
 
 The active Mojo role directory is:
 

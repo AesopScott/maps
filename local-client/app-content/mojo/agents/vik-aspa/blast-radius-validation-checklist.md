@@ -3,7 +3,7 @@
 **Research Item**: VA-016: Blast-radius validation
 **Status**: Architecture Recommendation
 **Priority**: P0
-**Owner**: Vik / MAPS ASPA
+**Owner**: Vik / ASPA
 **Final Authority**: Scott
 **Date**: 2026-06-22
 

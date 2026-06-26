@@ -186,3 +186,47 @@ HTML rebuild: `pass`
 HTML changed: `True`
 
 Denied actions held: no Git/GitHub/release, production, external service contact, spending, secrets, deletes/moves, authority expansion, runtime activation, or Level 4 promotion.
+
+## 2026-06-25T09:20:28-06:00 - Lane Token Usage Script Run (scheduled)
+
+Result: eligible_work_missing_previous_hour_rows
+Logic owner: `C:\Users\scott\Code\mojo\roles\lab-operator\scripts\level4automation.py`
+Window: `2026-06-25 08:00:00 - 2026-06-25 09:00:00`
+Counts: `{"confidence_kinds": 6, "parse_errors": 0, "previous_hour_rows": 0, "token_rows": 260}`
+HTML rebuild: `pass`
+HTML changed: `True`
+
+Denied actions held: no Git/GitHub/release, production, external service contact, spending, secrets, deletes/moves, authority expansion, runtime activation, or Level 4 promotion.
+
+## 2026-06-25T09:21:33-06:00 - Lane Token Usage Script Run (scheduled)
+
+Result: no_eligible_work_previous_hour_logged
+Logic owner: `C:\Users\scott\Code\mojo\roles\lab-operator\scripts\level4automation.py`
+Window: `2026-06-25 08:00:00 - 2026-06-25 09:00:00`
+Counts: `{"confidence_kinds": 6, "parse_errors": 0, "previous_hour_rows": 1, "token_rows": 261}`
+HTML rebuild: `pass`
+HTML changed: `True`
+
+Denied actions held: no Git/GitHub/release, production, external service contact, spending, secrets, deletes/moves, authority expansion, runtime activation, or Level 4 promotion.
+
+## 2026-06-25T10:22:58-06:00 - Lane Token Usage Script Run (scheduled)
+
+Result: eligible_work_missing_previous_hour_rows
+Logic owner: `C:\Users\scott\Code\mojo\roles\lab-operator\scripts\level4automation.py`
+Window: `2026-06-25 09:00:00 - 2026-06-25 10:00:00`
+Counts: `{"confidence_kinds": 6, "parse_errors": 0, "previous_hour_rows": 0, "token_rows": 261}`
+HTML rebuild: `pass`
+HTML changed: `True`
+
+Denied actions held: no Git/GitHub/release, production, external service contact, spending, secrets, deletes/moves, authority expansion, runtime activation, or Level 4 promotion.
+
+## 2026-06-25T10:24:07-06:00 - Lane Token Usage Script Run (scheduled)
+
+Result: no_eligible_work_previous_hour_logged
+Logic owner: `C:\Users\scott\Code\mojo\roles\lab-operator\scripts\level4automation.py`
+Window: `2026-06-25 09:00:00 - 2026-06-25 10:00:00`
+Counts: `{"confidence_kinds": 6, "parse_errors": 0, "previous_hour_rows": 1, "token_rows": 262}`
+HTML rebuild: `pass`
+HTML changed: `True`
+
+Denied actions held: no Git/GitHub/release, production, external service contact, spending, secrets, deletes/moves, authority expansion, runtime activation, or Level 4 promotion.

@@ -68,7 +68,7 @@ Planned reporting route: Engineering Director once hired.
 
 Interim routing until Engineering Director and Technology Director are active:
 
-- Architecture/control-plane/data-platform fit: Vik / MAPS ASPA.
+- Architecture/control-plane/data-platform fit: Vik / ASPA.
 - Program sequencing and MAPS pipeline implications: Cal / MAPS ASPM.
 - Implementation handoff: Bea or future engineering owner when assigned.
 - Final authority, spending, production, secrets, and external communication: Scott.

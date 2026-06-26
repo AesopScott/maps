@@ -1,7 +1,7 @@
 # Vik Architecture Backlog
 
 Status: Active Level 4 research queue; queue occupancy may trigger Vik scoped research, not implementation
-Owner: Vik / MAPS ASPA
+Owner: Vik / ASPA
 Final authority: Scott
 Created: 2026-06-21
 Source prompt: Scott requested an architecture backlog seeded from the "20 Practical Agentic AI Use Cases in 5 Cybersecurity Domains" infographic by NothingCyber / Dr. Meisam Eslahi.

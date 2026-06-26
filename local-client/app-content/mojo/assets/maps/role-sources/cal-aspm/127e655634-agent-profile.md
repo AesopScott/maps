@@ -12,7 +12,7 @@ Source role: `C:\Users\scott\Code\mojo\roles\maps-agentic-systems-program-manage
 
 Primary repo: `C:\Users\scott\Code\mojo`
 
-Manager: Vik / MAPS ASPA
+Manager: Vik / ASPA
 
 Final activation authority: Scott
 
