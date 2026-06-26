@@ -173,7 +173,35 @@
 </header>
 <!-- Message Area -->
 <div class="flex-1 overflow-y-auto chat-scroll p-gutter flex flex-col gap-6 bg-surface-container-lowest silver-edge rounded-xl mx-auto my-auto mt-12" id="chat-messages" style="height: 288px; flex: 0 0 auto; width: 90%; max-width: 700px; margin: 136px auto auto; background-color: rgb(7, 14, 30); border: 1px solid rgba(190, 198, 224, 0.2);">
-<!-- Live Mara messages render here. -->
+<!-- System Greeting -->
+<!-- Mara Message -->
+<div class="flex gap-4 max-w-[85%]">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-primary/10 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-primary">smart_toy</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="bg-surface-container p-4 rounded-xl rounded-tl-none border border-white/5">
+<p class="font-body-md text-on-surface leading-relaxed">
+                                Welcome to Mindshare Central. I am <span class="text-primary font-bold">Mara</span>, your Front Desk Administrator. How can I assist with your executive operations today?
+                            </p>
+</div>
+<span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">10:42 AM</span>
+</div>
+</div>
+<!-- User Message Placeholder -->
+<div class="flex gap-4 max-w-[85%] self-end flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-primary">person</span>
+</div>
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary/10 p-4 rounded-xl rounded-tr-none border border-primary/20">
+<p class="font-body-md text-on-surface leading-relaxed">
+                                Accessing the technical logs for Sector 7.
+                            </p>
+</div>
+<span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">10:43 AM</span>
+</div>
+</div>
 <!-- Mara Typing Indicator (Hidden by default, shown when user sends) -->
 <div class="flex gap-4 max-w-[85%] hidden" id="typing-indicator">
 <div class="w-8 h-8 rounded-full bg-surface-container-high border border-primary/10 flex-shrink-0 flex items-center justify-center">
@@ -221,110 +249,67 @@
 </main>
 <!-- Micro-interactions Script -->
 <script>
-        const MARA_STORAGE_KEY = 'mindshare.frontDesk.mara.v2';
         const chatForm = document.getElementById('chat-form');
         const chatMessages = document.getElementById('chat-messages');
         const typingIndicator = document.getElementById('typing-indicator');
         const input = chatForm.querySelector('input');
-        const maraState = { sessionId: null, roleContext: null, messages: [], processing: false };
 
-        function mindShareLocalClient() { return window.MindShareLocalClient || null; }
-        function escapeHtml(value) {
-            return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-        }
-        function persistMaraState() {
-            try {
-                localStorage.setItem(MARA_STORAGE_KEY, JSON.stringify({ sessionId: maraState.sessionId, roleContext: maraState.roleContext, messages: maraState.messages }));
-            } catch {}
-        }
-        function restoreMaraState() {
-            try {
-                const saved = JSON.parse(localStorage.getItem(MARA_STORAGE_KEY) || '{}');
-                maraState.sessionId = saved.sessionId || null;
-                maraState.roleContext = saved.roleContext || null;
-                maraState.messages = Array.isArray(saved.messages) ? saved.messages : [];
-            } catch { maraState.messages = []; }
-        }
-        function setProcessing(isProcessing) {
-            maraState.processing = isProcessing;
-            input.disabled = isProcessing;
-            chatForm.querySelector('button[type="submit"]').disabled = isProcessing;
-            typingIndicator.classList.toggle('hidden', !isProcessing);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        function hasOfficeEntry() {
-            return maraState.messages.some((message) => String(message.text || '').toLowerCase().includes("mara's office"));
-        }
-        function renderMessages() {
-            [...chatMessages.children].forEach((child) => { if (child !== typingIndicator) child.remove(); });
-            maraState.messages.forEach((message) => appendMessage(message.text, message.role, { persist: false }));
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        function appendMessage(text, role, options = {}) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageDiv = document.createElement('div');
-            const safeText = escapeHtml(text);
-            const normalizedRole = role === 'user' ? 'user' : role === 'system' ? 'system' : 'mara';
-            if (normalizedRole === 'user') {
-                messageDiv.className = 'flex gap-4 max-w-[85%] self-end flex-row-reverse slide-up';
-                messageDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex-shrink-0 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-primary">person</span></div><div class="flex flex-col gap-1 items-end"><div class="bg-primary/10 p-4 rounded-xl rounded-tr-none border border-primary/20"><p class="font-body-md text-on-surface leading-relaxed">' + safeText + '</p></div><span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">' + time + '</span></div>';
-            } else if (normalizedRole === 'system') {
-                messageDiv.className = 'flex max-w-[90%] self-center slide-up';
-                messageDiv.innerHTML = '<div class="bg-surface-container-high/80 px-4 py-3 rounded-xl border border-white/10"><p class="font-label-sm text-[10px] uppercase tracking-widest text-on-surface-variant">' + safeText + '</p></div>';
-            } else {
-                messageDiv.className = 'flex gap-4 max-w-[85%] slide-up';
-                messageDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-surface-container-high border border-primary/10 flex-shrink-0 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-primary">smart_toy</span></div><div class="flex flex-col gap-1"><div class="bg-surface-container p-4 rounded-xl rounded-tl-none border border-white/5"><p class="font-body-md text-on-surface leading-relaxed">' + safeText + '</p></div><span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">' + time + '</span></div>';
-            }
-            chatMessages.insertBefore(messageDiv, typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            if (options.persist !== false) {
-                maraState.messages.push({ role: normalizedRole === 'mara' ? 'assistant' : normalizedRole, text });
-                persistMaraState();
-            }
-        }
-        async function loadMaraOffice() {
-            restoreMaraState();
-            renderMessages();
-            const local = mindShareLocalClient();
-            if (!local?.loadRoleContext || !local?.connectClaude) {
-                if (!maraState.messages.length) appendMessage('Open this page in MindShare Central to connect Mara to Claude.', 'system');
-                return;
-            }
-            try {
-                const contextPayload = await local.loadRoleContext({ roleSlug: 'mara' });
-                if (!contextPayload?.ok) { appendMessage(contextPayload?.error || "Mara's role context could not be loaded.", 'system'); return; }
-                maraState.roleContext = contextPayload.roleContext;
-                const claudePayload = await local.connectClaude({ roleSlug: 'mara' });
-                if (!claudePayload?.ok) { appendMessage(claudePayload?.message || claudePayload?.error || 'Claude CLI is not connected.', 'system'); return; }
-                maraState.sessionId = claudePayload.sessionId;
-                if (Array.isArray(claudePayload.messages) && claudePayload.messages.length && !maraState.messages.length) {
-                    maraState.messages = claudePayload.messages.map((message) => ({ role: message.role, text: message.text || message.content || '' })).filter((message) => message.text);
-                }
-                if (!hasOfficeEntry()) appendMessage(claudePayload.initialMessage || "This is Mara's office.", 'user');
-                else renderMessages();
-                persistMaraState();
-            } catch (error) { appendMessage('Mara office failed to load: ' + (error.message || error), 'system'); }
-        }
-        async function sendToMara() {
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             const text = input.value.trim();
-            if (!text || maraState.processing) return;
-            const local = mindShareLocalClient();
-            if (!local?.sendClaudeMessage) { appendMessage('MindShare Central is required to send messages to Mara.', 'system'); return; }
-            if (!maraState.sessionId) await loadMaraOffice();
-            if (!maraState.sessionId) return;
-            const transcript = maraState.messages.slice(-6);
+            if (!text) return;
+
+            // Append User Message
             appendMessage(text, 'user');
             input.value = '';
-            setProcessing(true);
-            try {
-                const payload = await local.sendClaudeMessage({ sessionId: maraState.sessionId, message: text, roleContext: maraState.roleContext, transcript });
-                if (!payload?.ok) { appendMessage(payload?.error || payload?.reply || 'Claude returned an error.', 'system'); return; }
-                appendMessage(payload.reply || '(No response)', 'mara');
-            } catch (error) { appendMessage('Lost connection to Claude: ' + (error.message || error), 'system'); }
-            finally { setProcessing(false); }
+
+            // Show Typing Indicator
+            typingIndicator.classList.remove('hidden');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate Mara Response
+            setTimeout(() => {
+                typingIndicator.classList.add('hidden');
+                appendMessage("I've acknowledged your request. Accessing operational data now. Please stand by for decryption.", 'mara');
+            }, 2000);
+        });
+
+        function appendMessage(text, role) {
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageDiv = document.createElement('div');
+            
+            if (role === 'user') {
+                messageDiv.className = 'flex gap-4 max-w-[85%] self-end flex-row-reverse slide-up';
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex-shrink-0 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[16px] text-primary">person</span>
+                    </div>
+                    <div class="flex flex-col gap-1 items-end">
+                        <div class="bg-primary/10 p-4 rounded-xl rounded-tr-none border border-primary/20">
+                            <p class="font-body-md text-on-surface leading-relaxed">${text}</p>
+                        </div>
+                        <span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">${time}</span>
+                    </div>
+                `;
+            } else {
+                messageDiv.className = 'flex gap-4 max-w-[85%] slide-up';
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-surface-container-high border border-primary/10 flex-shrink-0 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[16px] text-primary">smart_toy</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="bg-surface-container p-4 rounded-xl rounded-tl-none border border-white/5">
+                            <p class="font-body-md text-on-surface leading-relaxed">${text}</p>
+                        </div>
+                        <span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">${time}</span>
+                    </div>
+                `;
+            }
+            
+            // Insert before typing indicator
+            chatMessages.insertBefore(messageDiv, typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        chatForm.addEventListener('submit', (e) => { e.preventDefault(); sendToMara(); });
-        loadMaraOffice();
     </script>
 <style>
         .slide-up {
