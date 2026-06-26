@@ -242,6 +242,7 @@ CLEAR
         const typingIndicator = document.getElementById('typing-indicator');
         const input = chatForm.querySelector('textarea');
         const MARA_GUIDED_WELCOME = "Welcome to Mindshare Central. I'm Mara at the front desk. I can help with Mindshare, the Mindshare Central app, or agent capability. Which would you like to explore?";
+        const MARA_APP_SESSION_KEY = 'mindshare.frontDesk.mara.appSession.v2';
         const maraState = { sessionId: null, roleContext: null, messages: [], processing: false };
 
         function mindShareLocalClient() { return window.MindShareLocalClient || null; }
@@ -260,6 +261,26 @@ CLEAR
                 maraState.roleContext = saved.roleContext || null;
                 maraState.messages = Array.isArray(saved.messages) ? saved.messages : [];
             } catch { maraState.messages = []; }
+        }
+        function resetMaraStateForAppStart() {
+            let didReset = false;
+            try {
+                if (!sessionStorage.getItem(MARA_APP_SESSION_KEY)) {
+                    localStorage.removeItem(MARA_STORAGE_KEY);
+                    sessionStorage.setItem(MARA_APP_SESSION_KEY, new Date().toISOString());
+                    didReset = true;
+                }
+            } catch {
+                try { localStorage.removeItem(MARA_STORAGE_KEY); } catch {}
+                didReset = true;
+            }
+            if (didReset) {
+                maraState.sessionId = null;
+                maraState.roleContext = null;
+                maraState.messages = [];
+                maraState.processing = false;
+            }
+            return didReset;
         }
         function setProcessing(isProcessing) {
             maraState.processing = isProcessing;
@@ -308,6 +329,7 @@ CLEAR
             input.focus();
         }
         async function loadMaraOffice() {
+            const resetForAppStart = resetMaraStateForAppStart();
             restoreMaraState();
             renderMessages();
             const local = mindShareLocalClient();
@@ -319,6 +341,7 @@ CLEAR
                 const contextPayload = await local.loadRoleContext({ roleSlug: 'mara' });
                 if (!contextPayload?.ok) { appendMessage(contextPayload?.error || "Mara's role context could not be loaded.", 'system'); return; }
                 maraState.roleContext = contextPayload.roleContext;
+                if (resetForAppStart && local.resetSession) await local.resetSession({ roleSlug: 'mara', provider: 'claude' });
                 const claudePayload = await local.connectClaude({ roleSlug: 'mara' });
                 if (!claudePayload?.ok) { appendMessage(claudePayload?.message || claudePayload?.error || 'Claude CLI is not connected.', 'system'); return; }
                 maraState.sessionId = claudePayload.sessionId;
