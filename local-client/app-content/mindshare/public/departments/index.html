@@ -903,6 +903,12 @@ Configuration is loaded from the local MindShare workspace.
                 .sort((a, b) => a.score - b.score || a.name.localeCompare(b.name));
         }
 
+        function findAgentBySlug(slug) {
+            const normalized = String(slug || '').trim().toLowerCase();
+            if (!normalized) return null;
+            return allSearchableAgents().find((agent) => agent.slug.toLowerCase() === normalized) || null;
+        }
+
         function renderGlobalSearchResults(matches, query) {
             const results = document.getElementById('global-search-results');
             if (!results) return;
@@ -2965,7 +2971,9 @@ Configuration is loaded from the local MindShare workspace.
         document.addEventListener('DOMContentLoaded', async () => {
             restoreOfficeState();
             restoreAutomationRuns();
-            const requestedDivision = new URLSearchParams(window.location.search).get('division') || 'strategy-and-operations';
+            const params = new URLSearchParams(window.location.search);
+            const requestedDivision = params.get('division') || 'strategy-and-operations';
+            const requestedRole = params.get('role');
             const selectedSlug = divisionDepartments[requestedDivision] ? requestedDivision : 'strategy-and-operations';
             setActiveDivision(selectedSlug);
             await refreshProviderReadiness();
@@ -2974,6 +2982,10 @@ Configuration is loaded from the local MindShare workspace.
             renderRestoredActiveOffice();
             renderActiveSessions();
             renderAutomationRuns();
+            const linkedAgent = findAgentBySlug(requestedRole);
+            if (linkedAgent) {
+                loadAgentFromSearch(linkedAgent);
+            }
 
             document.querySelectorAll('[data-division-button]').forEach((button) => {
                 button.addEventListener('click', () => {
