@@ -1815,6 +1815,21 @@ USER: ${message}
   } catch {
     parsed = null;
   }
+
+  if (parsed?.is_error || parsed?.api_error_status || parsed?.subtype === 'error') {
+    const errorText = String(parsed?.result || parsed?.error || result.stderr || result.stdout || 'Claude CLI returned an error.').trim();
+    const isAuthError = Number(parsed?.api_error_status || 0) === 401 || /authenticate|authentication|credentials|auth/i.test(errorText);
+    return {
+      ok: false,
+      action: isAuthError ? 'login' : 'error',
+      error: isAuthError
+        ? 'Claude CLI authentication failed. Run `claude auth login` locally, then reconnect Claude in MindShare Central.'
+        : errorText,
+      claudeStatus: errorText,
+      raw: parsed
+    };
+  }
+
   const reply = parsed?.result ?? result.stdout.trim();
   const modelName = parsed?.modelUsage ? Object.keys(parsed.modelUsage)[0] : null;
   const tokenUsage = parsed?.usage
