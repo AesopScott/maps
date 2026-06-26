@@ -316,7 +316,11 @@ CLEAR
                 messageDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-surface-container-high border border-primary/10 flex-shrink-0 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-primary">smart_toy</span></div><div class="flex flex-col gap-1 min-w-0 max-w-full"><div class="message-bubble bg-surface-container p-4 rounded-xl rounded-tl-none border border-white/5"><p class="message-text font-body-md text-on-surface leading-relaxed">' + safeText + '</p></div><span class="text-[10px] font-label-sm text-on-surface-variant opacity-40">' + time + '</span></div>';
             }
             chatMessages.insertBefore(messageDiv, typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (normalizedRole === 'mara' && options.persist !== false) {
+                messageDiv.scrollIntoView({ block: 'start' });
+            } else {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
             if (options.persist !== false) {
                 maraState.messages.push({ role: normalizedRole === 'mara' ? 'assistant' : normalizedRole, text });
                 persistMaraState();
