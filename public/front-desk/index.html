@@ -186,10 +186,13 @@
 </div>
 </div>
 </div>
+<div class="absolute left-1/2 -translate-x-1/2 z-10" style="top: 430px;">
+<img alt="Mara" class="w-20 h-20 rounded-xl object-cover border border-white/20 shadow-[0_18px_40px_rgba(0,0,0,0.45)] bg-surface-container-high" src="../assets/maps/team/mara.webp">
+</div>
 <!-- Input Area -->
 <div class="p-gutter border-t border-white/5 bg-black/20 mt-auto mt-[72px] translate-y-[48px] mt-6">
 <form class="relative group" id="chat-form">
-<input class="w-full bg-surface-container-lowest border border-white/10 rounded-lg h-14 pl-6 pr-16 text-on-surface font-body-md focus:outline-none focus:border-primary/50 transition-all placeholder:text-on-surface-variant/30" placeholder="Type your command..." style="height: 80px;" type="text">
+<textarea class="w-full bg-surface-container-lowest border border-white/10 rounded-lg pl-6 pr-16 py-4 text-on-surface font-body-md focus:outline-none focus:border-primary/50 transition-all placeholder:text-on-surface-variant/30 resize-none leading-6" placeholder="Type your command..." rows="2" style="height: 80px;"></textarea>
 <button class="absolute right-2 top-2 bottom-2 w-12 bg-white text-surface-dim rounded-md flex items-center justify-center hover:bg-primary transition-all active:scale-95 group-focus-within:bg-primary" type="submit">
 <span class="material-symbols-outlined">arrow_forward</span>
 </button>
@@ -228,7 +231,7 @@
         const chatForm = document.getElementById('chat-form');
         const chatMessages = document.getElementById('chat-messages');
         const typingIndicator = document.getElementById('typing-indicator');
-        const input = chatForm.querySelector('input');
+        const input = chatForm.querySelector('textarea');
         const maraState = { sessionId: null, roleContext: null, messages: [], processing: false };
 
         function mindShareLocalClient() { return window.MindShareLocalClient || null; }
@@ -334,6 +337,12 @@
         }
         document.getElementById('clear-chat-button')?.addEventListener('click', clearMaraWindow);
         chatForm.addEventListener('submit', (e) => { e.preventDefault(); sendToMara(); });
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendToMara();
+            }
+        });
         loadMaraOffice();
     </script>
 <style>
