@@ -103,6 +103,10 @@ Not public package scope: organization scaffolding, role hiring/onboarding, priv
 
 Open `docs/phase0.html` to view the static project page for MAPS scaffolding and Phase 00 structure.
 
+## MindShare Central
+
+MindShare Central lives in `local-client/`. To run it locally or build the Windows installer, see `local-client/README.md`.
+
 ## Curation Model
 
 MAPS catalogs repos and skills by phase. A good catalog entry should explain:

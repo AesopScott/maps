@@ -16,6 +16,26 @@ npm start
 
 `npm run sync-content` rebuilds runtime content into `local-client/app-content` so the packaged app does not depend on Scott's local repo paths.
 
+## Build The Installer
+
+From `C:\Users\scott\Code\mindshare\local-client`:
+
+```powershell
+npm install
+npm run dist:win
+npm run verify:package
+```
+
+`npm run dist:win` runs the Windows package build and automatically refreshes `app-content` first through `prepack:win`. It creates:
+
+- `release\MindShare Central Setup 0.1.0.exe` - Windows installer.
+- `release\MindShare Central 0.1.0.exe` - portable Windows executable.
+- `release\win-unpacked\MindShare Central.exe` - unpacked runtime build.
+
+`npm run verify:package` confirms the expected build outputs exist and that the packaged runtime includes the bundled MindShare Central content.
+
+Do not commit the generated `release/` files. They are build artifacts and are intentionally ignored by Git.
+
 The bundled content currently includes:
 
 - MindShare public pages, roles, agents, catalogs, docs, phases, rooms, scripts, skills, templates, `AGENTS.md`, and `project-foundation.md`
